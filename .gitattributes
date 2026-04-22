@@ -1,0 +1,21 @@
+# --- END OF LINE (CRLF -> LF) ---
+* text=auto eol=lf
+
+# --- OVERRIDE linguist-language ON GITHUB ---
+*.sv linguist-language=SystemVerilog
+*.svh linguist-language=SystemVerilog
+*.v linguist-language=Verilog
+*.vh linguist-language=Verilog
+
+# --- SPECIAL CASES ---
+*.vcd binary
+*.fst binary
+*.ghw binary
+
+# RV COMPILED FILES
+*.hex text diff=hex
+*.elf binary
+*.bin binary
+
+# --- EXCLUDE FROM STATISTICS ---
+obj_dir/** linguist-generated=true
