@@ -1,0 +1,14 @@
+# --- Verible Linter Configuration ---
+
+# 1. Critical
++no-implicit-declaration
++always-ff-non-blocking
++module-port-tieoff
+
+# 2. Style
++port-name-suffix
++parameter-name-style
++signal-name-style
+
+# 3. Removed
+-line-length

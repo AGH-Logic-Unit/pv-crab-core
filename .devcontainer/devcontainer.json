@@ -1,0 +1,44 @@
+{
+    "name": "Pulsar-V Crab Core",
+    "image": "ghcr.io/AGH-Logic-Unit/pv-crab-core:main",
+    "remoteUser": "vscode",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "files.associations": {
+                    "*.sv": "systemverilog",
+                    "*.v": "verilog"
+                },
+                "python.defaultInterpreterPath": "/usr/bin/python3",
+                "editor.formatOnSave": true,
+                "verilog.linting.linter": "verible-verilog-lint",
+                "verilog.linting.veribleVerilogLint.path": "/usr/local/bin/verible-verilog-lint",
+                "verilog.linting.veribleVerilogLint.arguments" : "--rules_config .rules.verible_lint",
+                "verilog.formatting.verilogHDL.formatter": "verible-verilog-format",
+                "verilog.formatting.veribleVerilogFormatter.path": "/usr/local/bin/verible-verilog-format",
+                "verilog.languageServer.name": "verible-verilog-ls",
+                "verilog.languageServer.veribleVerilogLs.path": "/usr/local/bin/verible-verilog-ls",
+                "[verilog]": {
+                    "editor.defaultFormatter": "mshr-h.veriloghdl"
+                },
+                "[systemverilog]": {
+                    "editor.defaultFormatter": "mshr-h.veriloghdl"
+                }
+            },
+            "extensions": [
+                "mshr-h.veriloghdl",
+                "surfer-project.surfer",
+                "ms-python.python",
+                "tamasfe.even-better-toml",
+                "eamodio.gitlens"
+            ]
+        }
+    },
+    "mounts": [
+        "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,readonly,consistency=cached"
+    ],
+    "postCreateCommand": "pre-commit install || echo 'Not found .pre-commit-config.yaml, skipping'",
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+    }
+}
