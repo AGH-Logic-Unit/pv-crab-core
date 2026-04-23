@@ -60,4 +60,4 @@ RUN wget https://github.com/chipsalliance/verible/releases/download/${VERIBLE_VE
 USER vscode
 ENV PATH="/home/vscode/venv/bin:$PATH"
 RUN python3 -m venv /home/vscode/venv && \
-    /home/vscode/venv/bin/pip install --no-cache-dir cocotb pytest cocotb-test pre-commit ruff
+    /home/vscode/venv/bin/pip install --no-cache-dir cocotb pytest cocotb-test pre-commit ruff zensical
