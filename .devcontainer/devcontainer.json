@@ -37,7 +37,7 @@
     "mounts": [
         "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,readonly,consistency=cached"
     ],
-    "postCreateCommand": "pre-commit install || echo 'Not found .pre-commit-config.yaml, skipping'",
+    "postCreateCommand": "pre-commit install && pre-commit install --hook-type commit-msg",
     "features": {
         "ghcr.io/devcontainers/features/docker-in-docker:2": {}
     }
