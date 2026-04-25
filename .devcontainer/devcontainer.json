@@ -1,6 +1,6 @@
 {
     "name": "Pulsar-V Crab Core",
-    "image": "ghcr.io/AGH-Logic-Unit/pv-crab-core:main",
+    "image": "ghcr.io/agh-logic-unit/pv-crab-core:main",
     "remoteUser": "vscode",
     "customizations": {
         "vscode": {
