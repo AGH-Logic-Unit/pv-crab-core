@@ -1,0 +1,1322 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Pulsar-V Crab Core specification for RISC-V RV64GC">
+      
+      
+        <meta name="author" content="AGH Logic Unit">
+      
+      
+      
+        <link rel="prev" href="../alu/">
+      
+      
+        <link rel="next" href="../fDiv/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.43">
+    
+    
+      
+        <title>Integer Divider - Crab Docs</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../../assets/stylesheets/modern/main.fba56155.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="deep-orange" data-md-color-accent="orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#integer-divider-module" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Crab Docs" class="md-header__button md-logo" aria-label="Crab Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Crab Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Integer Divider
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="deep-orange" data-md-color-accent="orange"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Crab Docs" class="md-nav__button md-logo" aria-label="Crab Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    Crab Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Crab Core
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Uarch
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Uarch
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  L1 Data Cache Design Specs
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Types
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Execute
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Execute
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../alu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Arithmetic Logic Unit
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Integer Divider
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Integer Divider
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-changelog" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Changelog
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Overview
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-architectural-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Architectural Requirements
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Interfaces
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-functional-description" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Functional Description
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Functional Description">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-division-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.1 Division Algorithm
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-timing-and-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Timing and Performance
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Timing and Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-arbiter-stalls-output-register-bypassing" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.1 Arbiter Stalls &amp; Output Register Bypassing
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-future-superscalar-scalability" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.2 Future Superscalar Scalability
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Verification
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fDiv/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Floating-Point Divider & Square Root
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fMisc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Floating-Point Miscellaneous
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fMulAdd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Floating-Point FMA, Multiplier & Adder
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lso_amo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Load-Store & Atomic Memory Operations
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mul/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Integer Multiplier
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Writeback
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Writeback
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../writeback/writeback_bypass/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Writeback & Register Bypass Specs
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-changelog" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Changelog
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Overview
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-architectural-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Architectural Requirements
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Interfaces
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-functional-description" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Functional Description
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Functional Description">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-division-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.1 Division Algorithm
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-timing-and-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Timing and Performance
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Timing and Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-arbiter-stalls-output-register-bypassing" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.1 Arbiter Stalls &amp; Output Register Bypassing
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-future-superscalar-scalability" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.2 Future Superscalar Scalability
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Verification
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../.." class="md-path__link">
+        
+  
+  <span class="md-ellipsis">
+    Crab Core
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="../../cache/" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Uarch
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="../alu/" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Execute
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<h1 id="integer-divider-module">Integer Divider Module</h1>
+<div class="admonition abstract">
+<p class="admonition-title">Module Card</p>
+<ul>
+<li><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m.12 13.5 3.74 3.74 1.42-1.41-2.33-2.33 2.33-2.33-1.42-1.41zm11.16 0-3.74-3.74-1.42 1.41 2.33 2.33-2.33 2.33 1.42 1.41z"/></svg></span> <strong>RTL file:</strong> <code>N/A</code></li>
+<li><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 2.03v2.02c4.39.54 7.5 4.53 6.96 8.92-.46 3.64-3.32 6.53-6.96 6.96v2c5.5-.55 9.5-5.43 8.95-10.93-.45-4.75-4.22-8.5-8.95-8.97m-2 .03c-1.95.19-3.81.94-5.33 2.2L7.1 5.74c1.12-.9 2.47-1.48 3.9-1.68zM4.26 5.67A9.9 9.9 0 0 0 2.05 11h2c.19-1.42.75-2.77 1.64-3.9zM2.06 13c.2 1.96.97 3.81 2.21 5.33l1.42-1.43A8 8 0 0 1 4.06 13zm5.04 5.37-1.43 1.37A10 10 0 0 0 11 22v-2a8 8 0 0 1-3.9-1.63m9.72-3.18-4.11-4.11c.41-1.04.18-2.26-.68-3.11-.9-.91-2.25-1.09-3.34-.59l1.94 1.94-1.35 1.36-1.99-1.95c-.54 1.09-.29 2.44.59 3.35.86.86 2.08 1.08 3.12.68l4.11 4.1c.18.19.45.19.63 0l1.04-1.03c.22-.18.22-.5.04-.64"/></svg></span> <strong>Status:</strong> <code>Draft</code></li>
+</ul>
+</div>
+<h2 id="1-changelog">1. Changelog</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Date</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">2026-05-24</td>
+<td style="text-align: center;">v0.2</td>
+<td style="text-align: left;">Integrated DIVW, DIVUW, REMW, and REMUW instructions, updated operator_i width</td>
+</tr>
+<tr>
+<td style="text-align: left;">2026-05-23</td>
+<td style="text-align: center;">v0.1</td>
+<td style="text-align: left;">First draft</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-overview">2. Overview</h2>
+<h2 id="3-architectural-requirements">3. Architectural Requirements</h2>
+<p>The module is required to implement the following RISC-V Unprivileged ISA specifications:</p>
+<ul>
+<li><strong>RV64M:</strong> <code>DIV</code>, <code>DIVU</code>, <code>REM</code>, <code>REMU</code>, <code>DIVW</code>, <code>DIVUW</code>, <code>REMW</code>, <code>REMUW</code> instructions with <em>XLEN=64</em>.</li>
+<li><strong>Data width:</strong> Support for 64-bit operands.</li>
+<li><strong>Staged:</strong> Operations should be executed in 16 cycles without internal pipelining, blocking dispatch of the next division instruction until the previous one is finished and committed.</li>
+</ul>
+<h2 id="4-interfaces">4. Interfaces</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Signal</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">Width</th>
+<th style="text-align: center;">Direction</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>clk_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Clock signal</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rst_ni</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Asynchronous active-low reset signal</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>disp_valid_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Dispatcher handshake indicating valid division request</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>disp_ready_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Handshake indicating divider is ready to accept a new request</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>disp_headers_i</code></td>
+<td style="text-align: center;"><code>t__exe_headers</code></td>
+<td style="text-align: center;">-</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Input execution stage header metadata from Dispatcher</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>operand_a_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">First operand (typically RS1)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>operand_b_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Second operand (typically RS2 or IMM)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>operator_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Operation code provided by Decoder (encoding DIV, DIVU, REM, REMU, and W-variants)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>wb_valid_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Writeback handshake indicating valid result is ready</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>wb_ready_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Handshake indicating Writeback Arbiter can accept result</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>wb_result_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Calculated quotient or remainder result</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>wb_headers_o</code></td>
+<td style="text-align: center;"><code>t__exe_headers</code></td>
+<td style="text-align: center;">-</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Output execution stage header metadata to Writeback Buffer</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-functional-description">5. Functional Description</h2>
+<h3 id="51-division-algorithm">5.1 Division Algorithm</h3>
+<p>The division module implements a serial division algorithm (e.g., Radix-2 or Radix-4) to compute the quotient and remainder.</p>
+<ul>
+<li><strong>Division by Zero:</strong> According to RISC-V specification, division by zero must return all ones (<code>-1</code> or <code>0xFFFFFFFFFFFFFFFF</code> for 64-bit, <code>0xFFFFFFFF</code> for 32-bit) for the quotient, and the dividend for the remainder (<code>REM</code>/<code>REMU</code>/<code>REMW</code>/<code>REMUW</code>). This case should be detected and handled as a 1-cycle bypass.</li>
+<li><strong>Signed Overflow:</strong> The overflow condition occurs only for signed division when dividing the most negative integer (<span class="arithmatex">\(-2^{63}\)</span> for 64-bit, <span class="arithmatex">\(-2^{31}\)</span> for 32-bit) by <span class="arithmatex">\(-1\)</span>. The result should be the most negative integer for the quotient and <code>0</code> for the remainder. This should also be bypassed in 1 cycle.</li>
+<li><strong>32-bit W-variants:</strong> For <code>DIVW</code>, <code>DIVUW</code>, <code>REMW</code>, and <code>REMUW</code> instructions:</li>
+<li>Inputs <code>operand_a_i</code> and <code>operand_b_i</code> are truncated to 32 bits.</li>
+<li>The division operation is performed on these 32-bit values.</li>
+<li>The 32-bit quotient or remainder result is <strong>sign-extended</strong> to 64 bits before being driven on <code>wb_result_o</code>.</li>
+</ul>
+<h2 id="6-timing-and-performance">6. Timing and Performance</h2>
+<p>The module implements operations in 16 cycles with width optimized for performance.</p>
+<h3 id="61-arbiter-stalls-output-register-bypassing">6.1 Arbiter Stalls &amp; Output Register Bypassing</h3>
+<ul>
+<li><strong>Stalling:</strong> When the 16-cycle calculation completes, the divider registers the result in its output registers, asserts <code>wb_valid_o</code>, and deasserts <code>disp_ready_o</code>. If the Writeback Arbiter deasserts <code>wb_ready_i</code> (due to priority conflicts with other execution modules), the divider stalls, holding <code>wb_valid_o</code> and <code>wb_result_o</code> stable.</li>
+<li><strong>Bypassing:</strong> While the result is waiting in the output register (<code>wb_result_o</code>) due to a deasserted <code>wb_ready_i</code>, the register file bypass network can forward the data directly to dispatcher execution operands, resolving dependencies for subsequent instructions without stalling them.</li>
+</ul>
+<h3 id="62-future-superscalar-scalability">6.2 Future Superscalar Scalability</h3>
+<p>In a superscalar upgrade (dual/multi-issue), the Writeback Arbiter must scale to support multiple concurrent writeback channels. It is recommended that the divider's writeback port is mapped to a dedicated writeback channel or a prioritized channel that is decoupled from simple single-cycle ALU lanes to avoid stalling the divider when it completes.</p>
+<p>When no operation is being processed or stalled, the module should be clock-gated to save power.</p>
+<h2 id="7-verification">7. Verification</h2>
+<p>Division Module verification is based on constrained random tests:</p>
+<ol>
+<li><strong>Unit Tests:</strong> Verification of all valid ISA instructions with edge cases.</li>
+<li><strong>Reference Model:</strong> RTL results must be identical to the programmatic reference model (C, C++, or Python).</li>
+<li><strong>Coverage:</strong> Full 100% coverage of <code>operator_i</code> codes and all operand bits.</li>
+<li><strong>Latency:</strong> DUT must return correct headers after specified latency with adequate modifications applied.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; <year> AGH Logic Unit
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"../../..","features":["navigation.expand","navigation.sections","navigation.path"],"search":"../../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.6e5f0216.min.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
