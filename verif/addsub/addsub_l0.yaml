@@ -1,0 +1,13 @@
+config:
+  name: "addsub_sanity"
+
+tests:
+  - name: "simple"
+    module: tb_addsub
+    toplevel: addsub
+  - name: "z3"
+    module: tb_addsub
+    toplevel: addsub
+  - name: "feedback"
+    module: tb_addsub
+    toplevel: addsub
