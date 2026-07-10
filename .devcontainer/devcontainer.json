@@ -7,7 +7,9 @@
             "settings": {
                 "files.associations": {
                     "*.sv": "systemverilog",
-                    "*.v": "verilog"
+                    "*.svh": "systemverilog",
+                    "*.v": "verilog",
+                    "*.vh": "verilog"
                 },
                 "python.defaultInterpreterPath": "/usr/bin/python3",
                 "editor.formatOnSave": true,

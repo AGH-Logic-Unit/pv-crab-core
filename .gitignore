@@ -1,2 +1,11 @@
 # Zensical output
 site*/
+
+# outputs
+**__pycache__
+regression*/**
+output*/**
+
+# filelists
+*.f
+*.filelist

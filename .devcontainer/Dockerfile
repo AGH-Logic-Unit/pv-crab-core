@@ -44,8 +44,8 @@ RUN wget https://github.com/verilator/verilator/archive/refs/tags/v${VERILATOR_V
     apt clean
 
 # 4. Install Verible
-ENV VERIBLE_VERSION=v0.0-4053-g89d4d98a
-ENV VERIBLE_SHA256="1edc1f29c70d74213ed373e727183802d5a733e23f9ab9c74462f5b18b76f2c0"
+ENV VERIBLE_VERSION=v0.0-4080-ga0a8d8eb
+ENV VERIBLE_SHA256="f75daa70f29dbe9624ffee3738408341cfdadbdaf7e5d714a5bcceb9223953e6"
 RUN wget https://github.com/chipsalliance/verible/releases/download/${VERIBLE_VERSION}/verible-${VERIBLE_VERSION}-linux-static-x86_64.tar.gz -O /tmp/verible.tar.gz && \
     echo "${VERIBLE_SHA256}  /tmp/verible.tar.gz" | sha256sum -c - && \
     tar -xzf /tmp/verible.tar.gz -C /tmp && \
@@ -60,4 +60,4 @@ RUN wget https://github.com/chipsalliance/verible/releases/download/${VERIBLE_VE
 USER vscode
 ENV PATH="/home/vscode/venv/bin:$PATH"
 RUN python3 -m venv /home/vscode/venv && \
-    /home/vscode/venv/bin/pip install --no-cache-dir cocotb pytest cocotb-test pre-commit ruff zensical
+    /home/vscode/venv/bin/pip install --no-cache-dir cocotb pytest cocotb-test pre-commit ruff zensical cocotb-tools cocotb-coverage z3-solver pytest pytest-xdist pytest-html pyyaml
