@@ -1,0 +1,6 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="42" />
+    <testcase name="run_addsub_feedback_test" classname="tb_addsub_feedback" file="/workspaces/pv-crab-core/verif/addsub/tb_addsub_feedback.py" lineno="89" time="14.734602928161621" sim_time_ns="100000.0" ratio_time="6786.745492060342" />
+  </testsuite>
+</testsuites>

@@ -1,0 +1,6 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="42" />
+    <testcase name="test_edge_cases" classname="tb_sw_pp_divider" file="/workspaces/pv-crab-core/verif/sw_pp_divider/tb_sw_pp_divider.py" lineno="239" time="0.018950223922729492" sim_time_ns="2120.0" ratio_time="111872.02898733062" />
+  </testsuite>
+</testsuites>

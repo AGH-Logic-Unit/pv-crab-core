@@ -1,0 +1,72 @@
+<top abs_name="top" size="62" coverage="12" cover_percentage="19.35">
+  <op size="2" coverage="2" cover_percentage="100.0" abs_name="top.op" weight="1" at_least="1">
+    <bin0 bin="sub" hits="4998" abs_name="top.op.bin0" />
+    <bin1 bin="add" hits="5002" abs_name="top.op.bin1" />
+  </op>
+  <a_val size="5" coverage="2" cover_percentage="40.0" abs_name="top.a_val" weight="1" at_least="1">
+    <bin0 bin="zero" hits="0" abs_name="top.a_val.bin0" />
+    <bin1 bin="small_pos" hits="0" abs_name="top.a_val.bin1" />
+    <bin2 bin="large_pos" hits="6785" abs_name="top.a_val.bin2" />
+    <bin3 bin="negative" hits="3215" abs_name="top.a_val.bin3" />
+    <bin4 bin="max" hits="0" abs_name="top.a_val.bin4" />
+  </a_val>
+  <b_val size="5" coverage="2" cover_percentage="40.0" abs_name="top.b_val" weight="1" at_least="1">
+    <bin0 bin="zero" hits="0" abs_name="top.b_val.bin0" />
+    <bin1 bin="small_pos" hits="0" abs_name="top.b_val.bin1" />
+    <bin2 bin="large_pos" hits="6619" abs_name="top.b_val.bin2" />
+    <bin3 bin="negative" hits="3381" abs_name="top.b_val.bin3" />
+    <bin4 bin="max" hits="0" abs_name="top.b_val.bin4" />
+  </b_val>
+  <op_cross_a_b size="50" coverage="6" cover_percentage="12.0" abs_name="top.op_cross_a_b" weight="1" at_least="1">
+    <bin0 bin="('sub', 'zero', 'zero')" hits="0" abs_name="top.op_cross_a_b.bin0" />
+    <bin1 bin="('sub', 'zero', 'small_pos')" hits="0" abs_name="top.op_cross_a_b.bin1" />
+    <bin2 bin="('sub', 'zero', 'large_pos')" hits="0" abs_name="top.op_cross_a_b.bin2" />
+    <bin3 bin="('sub', 'zero', 'negative')" hits="0" abs_name="top.op_cross_a_b.bin3" />
+    <bin4 bin="('sub', 'zero', 'max')" hits="0" abs_name="top.op_cross_a_b.bin4" />
+    <bin5 bin="('sub', 'small_pos', 'zero')" hits="0" abs_name="top.op_cross_a_b.bin5" />
+    <bin6 bin="('sub', 'small_pos', 'small_pos')" hits="0" abs_name="top.op_cross_a_b.bin6" />
+    <bin7 bin="('sub', 'small_pos', 'large_pos')" hits="0" abs_name="top.op_cross_a_b.bin7" />
+    <bin8 bin="('sub', 'small_pos', 'negative')" hits="0" abs_name="top.op_cross_a_b.bin8" />
+    <bin9 bin="('sub', 'small_pos', 'max')" hits="0" abs_name="top.op_cross_a_b.bin9" />
+    <bin10 bin="('sub', 'large_pos', 'zero')" hits="0" abs_name="top.op_cross_a_b.bin10" />
+    <bin11 bin="('sub', 'large_pos', 'small_pos')" hits="0" abs_name="top.op_cross_a_b.bin11" />
+    <bin12 bin="('sub', 'large_pos', 'large_pos')" hits="2557" abs_name="top.op_cross_a_b.bin12" />
+    <bin13 bin="('sub', 'large_pos', 'negative')" hits="0" abs_name="top.op_cross_a_b.bin13" />
+    <bin14 bin="('sub', 'large_pos', 'max')" hits="0" abs_name="top.op_cross_a_b.bin14" />
+    <bin15 bin="('sub', 'negative', 'zero')" hits="0" abs_name="top.op_cross_a_b.bin15" />
+    <bin16 bin="('sub', 'negative', 'small_pos')" hits="0" abs_name="top.op_cross_a_b.bin16" />
+    <bin17 bin="('sub', 'negative', 'large_pos')" hits="1609" abs_name="top.op_cross_a_b.bin17" />
+    <bin18 bin="('sub', 'negative', 'negative')" hits="832" abs_name="top.op_cross_a_b.bin18" />
+    <bin19 bin="('sub', 'negative', 'max')" hits="0" abs_name="top.op_cross_a_b.bin19" />
+    <bin20 bin="('sub', 'max', 'zero')" hits="0" abs_name="top.op_cross_a_b.bin20" />
+    <bin21 bin="('sub', 'max', 'small_pos')" hits="0" abs_name="top.op_cross_a_b.bin21" />
+    <bin22 bin="('sub', 'max', 'large_pos')" hits="0" abs_name="top.op_cross_a_b.bin22" />
+    <bin23 bin="('sub', 'max', 'negative')" hits="0" abs_name="top.op_cross_a_b.bin23" />
+    <bin24 bin="('sub', 'max', 'max')" hits="0" abs_name="top.op_cross_a_b.bin24" />
+    <bin25 bin="('add', 'zero', 'zero')" hits="0" abs_name="top.op_cross_a_b.bin25" />
+    <bin26 bin="('add', 'zero', 'small_pos')" hits="0" abs_name="top.op_cross_a_b.bin26" />
+    <bin27 bin="('add', 'zero', 'large_pos')" hits="0" abs_name="top.op_cross_a_b.bin27" />
+    <bin28 bin="('add', 'zero', 'negative')" hits="0" abs_name="top.op_cross_a_b.bin28" />
+    <bin29 bin="('add', 'zero', 'max')" hits="0" abs_name="top.op_cross_a_b.bin29" />
+    <bin30 bin="('add', 'small_pos', 'zero')" hits="0" abs_name="top.op_cross_a_b.bin30" />
+    <bin31 bin="('add', 'small_pos', 'small_pos')" hits="0" abs_name="top.op_cross_a_b.bin31" />
+    <bin32 bin="('add', 'small_pos', 'large_pos')" hits="0" abs_name="top.op_cross_a_b.bin32" />
+    <bin33 bin="('add', 'small_pos', 'negative')" hits="0" abs_name="top.op_cross_a_b.bin33" />
+    <bin34 bin="('add', 'small_pos', 'max')" hits="0" abs_name="top.op_cross_a_b.bin34" />
+    <bin35 bin="('add', 'large_pos', 'zero')" hits="0" abs_name="top.op_cross_a_b.bin35" />
+    <bin36 bin="('add', 'large_pos', 'small_pos')" hits="0" abs_name="top.op_cross_a_b.bin36" />
+    <bin37 bin="('add', 'large_pos', 'large_pos')" hits="1679" abs_name="top.op_cross_a_b.bin37" />
+    <bin38 bin="('add', 'large_pos', 'negative')" hits="2549" abs_name="top.op_cross_a_b.bin38" />
+    <bin39 bin="('add', 'large_pos', 'max')" hits="0" abs_name="top.op_cross_a_b.bin39" />
+    <bin40 bin="('add', 'negative', 'zero')" hits="0" abs_name="top.op_cross_a_b.bin40" />
+    <bin41 bin="('add', 'negative', 'small_pos')" hits="0" abs_name="top.op_cross_a_b.bin41" />
+    <bin42 bin="('add', 'negative', 'large_pos')" hits="774" abs_name="top.op_cross_a_b.bin42" />
+    <bin43 bin="('add', 'negative', 'negative')" hits="0" abs_name="top.op_cross_a_b.bin43" />
+    <bin44 bin="('add', 'negative', 'max')" hits="0" abs_name="top.op_cross_a_b.bin44" />
+    <bin45 bin="('add', 'max', 'zero')" hits="0" abs_name="top.op_cross_a_b.bin45" />
+    <bin46 bin="('add', 'max', 'small_pos')" hits="0" abs_name="top.op_cross_a_b.bin46" />
+    <bin47 bin="('add', 'max', 'large_pos')" hits="0" abs_name="top.op_cross_a_b.bin47" />
+    <bin48 bin="('add', 'max', 'negative')" hits="0" abs_name="top.op_cross_a_b.bin48" />
+    <bin49 bin="('add', 'max', 'max')" hits="0" abs_name="top.op_cross_a_b.bin49" />
+  </op_cross_a_b>
+</top>
