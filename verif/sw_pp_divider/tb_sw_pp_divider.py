@@ -359,3 +359,144 @@ async def test_edge_cases(dut):
 
     assert mismatches == 0, f"Found {mismatches} mismatches in edge case tests!"
     log.info("All edge case tests PASSED!")
+
+
+# =============================================================================
+# Test: Normal Division (restoring division core)
+# Covers all 8 operators, latency spec compliance, and word garbage-upper-bits.
+# =============================================================================
+
+MAX_LATENCY_NORMAL = 16  # spec: 16 cycles for normal division
+MAX_LATENCY_EDGE   = 2   # spec: 1 cycle bypass + 1 cycle to see valid
+
+@cocotb.test()
+async def test_normal_division(dut):
+    """Verify all 8 RISC-V M-extension operators using the restoring division core."""
+    import random
+    random.seed(42)
+
+    log = logging.getLogger("cocotb.test")
+    log.info("=" * 60)
+    log.info("  Starting Normal Division Verification")
+    log.info("=" * 60)
+
+    clock = Clock(dut.clk_i, 10, unit="ns")
+    cocotb.start_soon(clock.start())
+    await reset_dut(dut)
+
+    matches    = 0
+    mismatches = 0
+    lat_errors = 0
+
+    def check(result, expected, latency, desc, max_lat=MAX_LATENCY_NORMAL):
+        nonlocal matches, mismatches, lat_errors
+        val_ok = (result == expected)
+        lat_ok = (latency <= max_lat)
+        if val_ok and lat_ok:
+            matches += 1
+            log.info(f"  PASS [{latency:2d}cyc] {desc} → 0x{result:016x}")
+        else:
+            if not val_ok:
+                mismatches += 1
+                log.error(
+                    f"  FAIL [{latency:2d}cyc] {desc} | "
+                    f"got=0x{result:016x} exp=0x{expected:016x}"
+                )
+            if not lat_ok:
+                lat_errors += 1
+                log.error(f"  LATENCY VIOLATION [{latency}cyc > {max_lat}] {desc}")
+
+    async def run(a, b, op, desc, max_lat=MAX_LATENCY_NORMAL):
+        a_u64 = a & MAX_U64
+        b_u64 = b & MAX_U64
+        exp    = model_riscv_div(a_u64, b_u64, op)
+        res, _, lat = await run_division(dut, a_u64, b_u64, op)
+        check(res, exp, lat, desc, max_lat)
+
+    # ------------------------------------------------------------------
+    # Signed 64-bit (DIV / REM)
+    # ------------------------------------------------------------------
+    log.info("  --- DIV / REM ---")
+    await run(100,           3,   OP_DIV,  "100 / 3 = 33")
+    await run(100,           3,   OP_REM,  "100 % 3 = 1")
+    await run(1,             1,   OP_DIV,  "1 / 1 = 1")
+    await run(0,             5,   OP_DIV,  "0 / 5 = 0")
+    await run(0,             5,   OP_REM,  "0 % 5 = 0")
+    await run(-7 & MAX_U64,  2,   OP_DIV,  "-7 / 2 = -3")
+    await run(-7 & MAX_U64,  2,   OP_REM,  "-7 % 2 = -1")
+    await run(7,            -2 & MAX_U64, OP_DIV, "7 / -2 = -3")
+    await run(7,            -2 & MAX_U64, OP_REM, "7 % -2 = 1")
+    await run(-7 & MAX_U64, -2 & MAX_U64, OP_DIV, "-7 / -2 = 3")
+    await run(-7 & MAX_U64, -2 & MAX_U64, OP_REM, "-7 % -2 = -1")
+    await run(1000000,       7,   OP_DIV,  "1000000 / 7")
+    await run(0x7FFFFFFFFFFFFFFF, 2, OP_DIV, "MAX_S64 / 2")
+
+    # ------------------------------------------------------------------
+    # Unsigned 64-bit (DIVU / REMU)
+    # ------------------------------------------------------------------
+    log.info("  --- DIVU / REMU ---")
+    await run(7,                  2,   OP_DIVU, "7u / 2u = 3")
+    await run(7,                  2,   OP_REMU, "7u % 2u = 1")
+    await run(0xDEAD,          0xFF,   OP_DIVU, "0xDEAD / 0xFF")
+    await run(0xDEAD,          0xFF,   OP_REMU, "0xDEAD % 0xFF")
+    await run(0x7FFFFFFFFFFFFFFF, 2,   OP_DIVU, "MAX_U63 / 2")
+    await run(0xFFFFFFFFFFFFFFFF, 3,   OP_DIVU, "MAX_U64 / 3")
+    await run(0xFFFFFFFFFFFFFFFF, 3,   OP_REMU, "MAX_U64 % 3")
+    # dividend < divisor → quotient = 0, remainder = dividend
+    await run(3,                  7,   OP_DIVU, "3u / 7u = 0")
+    await run(3,                  7,   OP_REMU, "3u % 7u = 3")
+
+    # ------------------------------------------------------------------
+    # Signed 32-bit word (DIVW / REMW) — upper 32 bits must be ignored
+    # ------------------------------------------------------------------
+    log.info("  --- DIVW / REMW (with garbage upper bits) ---")
+    await run(15,                4,   OP_DIVW, "15w / 4w = 3")
+    await run(15,                4,   OP_REMW, "15w % 4w = 3")
+    await run(-7 & MAX_U64,      2,   OP_DIVW, "-7w / 2w = -3")
+    await run(-7 & MAX_U64,      2,   OP_REMW, "-7w % 2w = -1")
+    # Garbage upper 32 bits — must be ignored, same result as above
+    await run(0xDEADBEEF_FFFFFFF9, 2, OP_DIVW, "-7w / 2w (garbage upper)")
+    await run(0xDEADBEEF_FFFFFFF9, 2, OP_REMW, "-7w % 2w (garbage upper)")
+    await run(0x12345678_0000000F, 4, OP_DIVW, "15w / 4w (garbage upper)")
+
+    # ------------------------------------------------------------------
+    # Unsigned 32-bit word (DIVUW / REMUW) — upper 32 bits must be ignored
+    # ------------------------------------------------------------------
+    log.info("  --- DIVUW / REMUW (with garbage upper bits) ---")
+    await run(15,                4,   OP_DIVUW, "15uw / 4uw = 3")
+    await run(15,                4,   OP_REMUW, "15uw % 4uw = 3")
+    await run(0xFFFFFFFF,        3,   OP_DIVUW, "MAX_U32 / 3")
+    await run(0xFFFFFFFF,        3,   OP_REMUW, "MAX_U32 % 3")
+    # Garbage upper bits
+    await run(0xDEADBEEF_0000000F, 4, OP_DIVUW, "15uw / 4uw (garbage upper)")
+    await run(0xDEADBEEF_0000000F, 4, OP_REMUW, "15uw % 4uw (garbage upper)")
+
+    # ------------------------------------------------------------------
+    # Random cases — all 8 operators, including word variants
+    # ------------------------------------------------------------------
+    log.info("  --- Random cases (all operators) ---")
+    all_ops = [OP_DIV, OP_DIVU, OP_REM, OP_REMU,
+               OP_DIVW, OP_DIVUW, OP_REMW, OP_REMUW]
+    for i in range(80):
+        a  = random.randint(1, MAX_U64)
+        b  = random.randint(1, MAX_U64)
+        op = all_ops[i % len(all_ops)]
+        a_u64 = a & MAX_U64
+        b_u64 = b & MAX_U64
+        exp = model_riscv_div(a_u64, b_u64, op)
+        res, _, lat = await run_division(dut, a_u64, b_u64, op)
+        check(res, exp, lat, f"rand {i}: {OP_NAMES[op]}")
+
+    # ------------------------------------------------------------------
+    # Summary
+    # ------------------------------------------------------------------
+    log.info("=" * 60)
+    log.info(f"  Normal Division Complete")
+    log.info(f"  Matches:           {matches}")
+    log.info(f"  Value mismatches:  {mismatches}")
+    log.info(f"  Latency errors:    {lat_errors}")
+    log.info("=" * 60)
+
+    assert mismatches == 0, f"Found {mismatches} value mismatches!"
+    assert lat_errors  == 0, f"Found {lat_errors} latency violations (>{MAX_LATENCY_NORMAL} cycles)!"
+    log.info("All normal division tests PASSED!")
