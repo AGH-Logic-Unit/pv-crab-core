@@ -20,3 +20,21 @@ repos:
           - --strict
           - --scopes
           - alu,lsu,fpu,mul,div,core
+
+  - repo: local
+    hooks:
+    - id: verible-format
+      name: Verible verilog format
+      entry: verible-verilog-format
+      language: system
+      types_or: [verilog, system-verilog]
+      args: [--flagfile, .rules.verible_format, --inline]
+
+  - repo: local
+    hooks:
+    - id: verible-lint
+      name: Verible verilog lint
+      entry: verible-verilog-lint
+      language: system
+      types_or: [verilog, system-verilog]
+      args: [--rules_config, .rules.verible_lint]

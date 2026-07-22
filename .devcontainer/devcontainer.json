@@ -13,18 +13,26 @@
                 },
                 "python.defaultInterpreterPath": "/usr/bin/python3",
                 "editor.formatOnSave": true,
+                "editor.detectIndentation": false,
                 "verilog.linting.linter": "verible-verilog-lint",
                 "verilog.linting.veribleVerilogLint.path": "/usr/local/bin/verible-verilog-lint",
-                "verilog.linting.veribleVerilogLint.arguments" : "--rules_config .rules.verible_lint",
+                "verilog.linting.veribleVerilogLint.arguments": "--rules_config .rules.verible_lint",
                 "verilog.formatting.verilogHDL.formatter": "verible-verilog-format",
                 "verilog.formatting.veribleVerilogFormatter.path": "/usr/local/bin/verible-verilog-format",
+                "verilog.formatting.veribleVerilogFormatter.arguments": "--flagfile=.rules.verible_format",
                 "verilog.languageServer.name": "verible-verilog-ls",
                 "verilog.languageServer.veribleVerilogLs.path": "/usr/local/bin/verible-verilog-ls",
                 "[verilog]": {
-                    "editor.defaultFormatter": "mshr-h.veriloghdl"
+                    "editor.defaultFormatter": "mshr-h.veriloghdl",
+                    "editor.formatOnSave": true,
+                    "editor.insertSpaces": true,
+                    "editor.tabSize": 2
                 },
                 "[systemverilog]": {
-                    "editor.defaultFormatter": "mshr-h.veriloghdl"
+                    "editor.defaultFormatter": "mshr-h.veriloghdl",
+                    "editor.formatOnSave": true,
+                    "editor.insertSpaces": true,
+                    "editor.tabSize": 2
                 }
             },
             "extensions": [
