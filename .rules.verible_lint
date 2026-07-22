@@ -1,14 +1,23 @@
 # --- Verible Linter Configuration ---
 
 # 1. Critical
-+no-implicit-declaration
 +always-ff-non-blocking
-+module-port-tieoff
++always-comb
++always-comb-blocking
++no-tabs
 
 # 2. Style
++typedef-enums
++enum-name-style
++package-filename
++module-filename
 +port-name-suffix
 +parameter-name-style
 +signal-name-style
++interface-name-style
++explicit-parameter-storage-type
++generate-label
++mismatched-labels
 
 # 3. Removed
 -line-length
