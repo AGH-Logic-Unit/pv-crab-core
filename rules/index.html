@@ -1,0 +1,1741 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Pulsar-V Crab Core specification for RISC-V RV64GC">
+      
+      
+        <meta name="author" content="AGH Logic Unit">
+      
+      
+      
+        <link rel="prev" href="./..">
+      
+      
+        <link rel="next" href="../uarch/cache/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.51">
+    
+    
+      
+        <title>Repository standards - Crab Docs</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.62c9b9cc.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="deep-orange" data-md-color-accent="orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#repository-standards-and-guidelines" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="./.." title="Crab Docs" class="md-header__button md-logo" aria-label="Crab Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Crab Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Repository standards
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="deep-orange" data-md-color-accent="orange"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="Crab Docs" class="md-nav__button md-logo" aria-label="Crab Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    Crab Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Crab Core
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Repository standards
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Repository standards
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-development-environment-workspace-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Development Environment (Workspace Setup)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Development Environment (Workspace Setup)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#starting-the-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Starting the Environment
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#container-specifications-devcontainerdockerfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Container Specifications (<code>.devcontainer/Dockerfile</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vs-code-integration-devcontainerdevcontainerjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        VS Code Integration (<code>.devcontainer/devcontainer.json</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-code-quality-and-pre-commit-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Code Quality and Pre-commit Hooks
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Code Quality and Pre-commit Hooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#general-quality-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        General Quality Hooks:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commit-guidelines-conventional-commits" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Commit Guidelines (Conventional Commits):
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#systemverilog-tooling-verible" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        SystemVerilog Tooling (Verible):
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-style-and-linting-rules-systemverilog" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Style and Linting Rules (SystemVerilog)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Style and Linting Rules (SystemVerilog)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#formatting-rulesverible_format" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Formatting (<code>.rules.verible_format</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linting-rules-rulesverible_lint" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Linting Rules (<code>.rules.verible_lint</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-repository-structure-contribution-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Repository Structure &amp; Contribution Workflow
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Repository Structure &amp; Contribution Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#repository-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Repository Map
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contribution-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Contribution Flow
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Contribution Flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-adding-or-modifying-rtl" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        A. Adding or Modifying RTL
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-implementing-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        B. Implementing Tests
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-documenting-specifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        C. Documenting Specifications
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-submitting-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        D. Submitting Changes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-verification-framework-regression" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Verification Framework &amp; Regression
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Verification Framework &amp; Regression">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generating-the-filelist" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Generating the Filelist
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yaml-testlists" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        YAML Testlists
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Running Tests
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimization-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Optimization &amp; Results
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-cicd-workflows-github-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. CI/CD Workflows (GitHub Actions)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-project-documentation-zensical" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Project Documentation (Zensical)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Project Documentation (Zensical)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#markdown-extensions-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Markdown Extensions &amp; Layout
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Uarch
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Uarch
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../uarch/cache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  L1 Data Cache Design Specs
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../uarch/types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Types
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Execute
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Execute
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../uarch/execute/alu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Arithmetic Logic Unit
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../uarch/execute/div/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Integer Divider
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../uarch/execute/fDiv/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Floating-Point Divider & Square Root
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../uarch/execute/fMisc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Floating-Point Miscellaneous
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../uarch/execute/fMulAdd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Floating-Point FMA, Multiplier & Adder
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../uarch/execute/lso_amo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Load-Store & Atomic Memory Operations
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../uarch/execute/mul/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Integer Multiplier
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Writeback
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Writeback
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../uarch/writeback/writeback_bypass/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Writeback & Register Bypass Specs
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-development-environment-workspace-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Development Environment (Workspace Setup)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Development Environment (Workspace Setup)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#starting-the-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Starting the Environment
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#container-specifications-devcontainerdockerfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Container Specifications (<code>.devcontainer/Dockerfile</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vs-code-integration-devcontainerdevcontainerjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        VS Code Integration (<code>.devcontainer/devcontainer.json</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-code-quality-and-pre-commit-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Code Quality and Pre-commit Hooks
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Code Quality and Pre-commit Hooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#general-quality-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        General Quality Hooks:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commit-guidelines-conventional-commits" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Commit Guidelines (Conventional Commits):
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#systemverilog-tooling-verible" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        SystemVerilog Tooling (Verible):
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-style-and-linting-rules-systemverilog" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Style and Linting Rules (SystemVerilog)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Style and Linting Rules (SystemVerilog)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#formatting-rulesverible_format" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Formatting (<code>.rules.verible_format</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linting-rules-rulesverible_lint" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Linting Rules (<code>.rules.verible_lint</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-repository-structure-contribution-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Repository Structure &amp; Contribution Workflow
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Repository Structure &amp; Contribution Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#repository-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Repository Map
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contribution-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Contribution Flow
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Contribution Flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-adding-or-modifying-rtl" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        A. Adding or Modifying RTL
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-implementing-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        B. Implementing Tests
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-documenting-specifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        C. Documenting Specifications
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-submitting-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        D. Submitting Changes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-verification-framework-regression" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Verification Framework &amp; Regression
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Verification Framework &amp; Regression">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generating-the-filelist" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Generating the Filelist
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yaml-testlists" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        YAML Testlists
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Running Tests
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimization-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Optimization &amp; Results
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-cicd-workflows-github-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. CI/CD Workflows (GitHub Actions)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-project-documentation-zensical" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Project Documentation (Zensical)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Project Documentation (Zensical)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#markdown-extensions-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Markdown Extensions &amp; Layout
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<h1 id="repository-standards-and-guidelines">Repository Standards and Guidelines</h1>
+<p>This document describes the coding standards, developer tools, verification processes, and CI/CD workflows established in the <strong>Pulsar-V Crab Core</strong> repository. All contributors must follow these guidelines to ensure codebase consistency, high quality, and smooth collaboration.</p>
+<hr />
+<h2 id="1-development-environment-workspace-setup">1. Development Environment (Workspace Setup)</h2>
+<p>To guarantee an identical environment for every developer and eliminate "works on my machine" issues, the project fully supports and recommends using the predefined <strong>Devcontainer</strong>.</p>
+<h3 id="starting-the-environment">Starting the Environment</h3>
+<p>You can launch the development container using <a href="https://devpod.sh/">DevPod</a> or the VS Code <a href="https://code.visualstudio.com/docs/devcontainers/containers">Dev Containers</a> extension:
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>devpod<span class="w"> </span>up<span class="w"> </span>.
+</span></code></pre></div></p>
+<h3 id="container-specifications-devcontainerdockerfile">Container Specifications (<code>.devcontainer/Dockerfile</code>)</h3>
+<p>The development container image is built on <strong>Debian 12 Slim</strong> and includes all critical dependencies for HDL design and verification:</p>
+<ul>
+<li><strong>Compilation &amp; Build Tools:</strong> <code>git</code>, <code>make</code>, <code>autoconf</code>, <code>g++</code>, <code>ccache</code>, <code>yosys</code>.</li>
+<li><strong>RISC-V Toolchain:</strong> <code>gcc-riscv64-unknown-elf</code>, <code>picolibc-riscv64-unknown-elf</code> (required to compile software targeted for the core).</li>
+<li><strong>Simulator:</strong> <a href="https://verilator.org/">Verilator</a> version <code>5.046</code> (compiled from source).</li>
+<li><strong>HDL Linter &amp; Formatter:</strong> <a href="https://github.com/chipsalliance/verible">Verible</a> (version <code>v0.0-4080-ga0a8d8eb</code>).</li>
+<li><strong>Python Toolchain:</strong> A dedicated virtual environment at <code>/home/vscode/venv</code> pre-installed with <a href="https://www.cocotb.org/">cocotb</a>, <a href="https://docs.pytest.org/">pytest</a>, <a href="https://github.com/the-cocotb-foundation/cocotb-test">cocotb-test</a>, <a href="https://github.com/cocotb/cocotb-coverage">cocotb-coverage</a>, <a href="https://github.com/Z3Prover/z3">z3-solver</a>, <a href="https://astral.sh/ruff">Ruff</a>, <a href="https://zensical.org/">Zensical</a>, and helper libraries.</li>
+</ul>
+<h3 id="vs-code-integration-devcontainerdevcontainerjson">VS Code Integration (<code>.devcontainer/devcontainer.json</code>)</h3>
+<p>When using VS Code inside the container, the editor is pre-configured with:</p>
+<ul>
+<li><strong>Extensions:</strong> <code>mshr-h.veriloghdl</code> (HDL support), <code>surfer-project.surfer</code> (fast waveform viewer), <code>ms-python.python</code> (Python test running), <code>tamasfe.even-better-toml</code> (TOML formatting), and <code>eamodio.gitlens</code> (Git utility).</li>
+<li><strong>Auto-formatting:</strong> Enabled on save (<code>editor.formatOnSave: true</code>) utilizing <code>verible-verilog-format</code> (2-space indent, 120-column limit).</li>
+<li><strong>Linting:</strong> Background linting using <code>verible-verilog-lint</code> guided by <code>.rules.verible_lint</code>.</li>
+</ul>
+<hr />
+<h2 id="2-code-quality-and-pre-commit-hooks">2. Code Quality and Pre-commit Hooks</h2>
+<p>The repository uses <a href="https://pre-commit.com/">pre-commit</a> hooks to automatically validate and format files before changes are committed to Git. The hooks are set up automatically when the devcontainer is created:
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># To manually install or update hooks:</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pre-commit<span class="w"> </span>install<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pre-commit<span class="w"> </span>install<span class="w"> </span>--hook-type<span class="w"> </span>commit-msg
+</span></code></pre></div></p>
+<p>All hook behaviors are defined in <code>.pre-commit-config.yaml</code>:</p>
+<h3 id="general-quality-hooks">General Quality Hooks:</h3>
+<ul>
+<li><code>trailing-whitespace</code> – Trims trailing whitespace from all lines.</li>
+<li><code>end-of-file-fixer</code> – Ensures files end with a newline.</li>
+<li><code>check-yaml</code> – Validates YAML syntax.</li>
+<li><code>check-added-large-files</code> – Blocks accidental staging of large binary files.</li>
+</ul>
+<h3 id="commit-guidelines-conventional-commits">Commit Guidelines (Conventional Commits):</h3>
+<p>The <a href="https://github.com/compilerla/conventional-pre-commit">conventional-pre-commit</a> hook validates commit messages during the <code>commit-msg</code> stage. Commit messages must follow the <a href="https://www.conventionalcommits.org/">Conventional Commits</a> format:
+<code>&lt;type&gt;(&lt;scope&gt;): &lt;description&gt;</code> (e.g., <code>feat(alu): add 64-bit addition support</code>).</p>
+<ul>
+<li><strong>Allowed Scopes:</strong> <code>alu</code>, <code>lsu</code>, <code>fpu</code>, <code>mul</code>, <code>div</code>, <code>core</code>.</li>
+<li><strong>Strict Mode:</strong> Enforces compliance strictly.</li>
+</ul>
+<h3 id="systemverilog-tooling-verible">SystemVerilog Tooling (Verible):</h3>
+<p>Whenever <code>.v</code> or <code>.sv</code> files are modified, pre-commit runs the following local tools:</p>
+<ol>
+<li><strong>Formatter:</strong> <code>verible-verilog-format</code> using settings from <code>.rules.verible_format</code> (overwrites the files inline via <code>--inline</code>).</li>
+<li><strong>Linter:</strong> <code>verible-verilog-lint</code> matching rules in <code>.rules.verible_lint</code>.</li>
+</ol>
+<hr />
+<h2 id="3-style-and-linting-rules-systemverilog">3. Style and Linting Rules (SystemVerilog)</h2>
+<h3 id="formatting-rulesverible_format">Formatting (<code>.rules.verible_format</code>)</h3>
+<ul>
+<li><strong>Indentation:</strong> 2 spaces (no tabs allowed).</li>
+<li><strong>Line Limit:</strong> 120 characters (<code>--column_limit=120</code>).</li>
+<li><strong>Alignment:</strong> Auto-aligns assignment statements, module port lists, net/variable declarations, struct/union members, case items, and parameters.</li>
+<li><strong>Port &amp; Parameter Indentation:</strong> Indented relative to the module declaration (<code>indent</code>).</li>
+</ul>
+<h3 id="linting-rules-rulesverible_lint">Linting Rules (<code>.rules.verible_lint</code>)</h3>
+<ul>
+<li><strong>Critical RTL Quality Rules:</strong><ul>
+<li><code>+always-ff-non-blocking</code> – Requires non-blocking assignments (<code>&lt;=</code>) inside sequential (<code>always_ff</code>) blocks.</li>
+<li><code>+always-comb</code> – Mandates modern <code>always_comb</code> blocks over legacy <code>always @(*)</code>.</li>
+<li><code>+always-comb-blocking</code> – Enforces blocking assignments (<code>=</code>) inside combinational <code>always_comb</code> blocks.</li>
+<li><code>+no-tabs</code> – Prohibits tabs in source files.</li>
+</ul>
+</li>
+<li><strong>Style and Naming Rules:</strong><ul>
+<li><code>+typedef-enums</code> – Requires defining enum types using <code>typedef</code>.</li>
+<li><code>+enum-name-style</code> – Enforces a consistent style for enum names.</li>
+<li><code>+module-filename</code> / <code>+package-filename</code> – Requires the module/package name to match its physical filename.</li>
+<li><code>+port-name-suffix</code> – Standardizes port suffixes (e.g., <code>_i</code> for inputs, <code>_o</code> for outputs).</li>
+<li><code>+parameter-name-style</code> / <code>+signal-name-style</code> / <code>+interface-name-style</code> – Enforces uniform naming styles across signals, parameters, and interfaces.</li>
+<li><code>+explicit-parameter-storage-type</code> – Parameters must have an explicitly specified storage type.</li>
+<li><code>+generate-label</code> / <code>+mismatched-labels</code> – Requires generate blocks to be labeled and verifies label matching.</li>
+</ul>
+</li>
+<li><strong>Disabled Rules:</strong><ul>
+<li><code>-line-length</code> – No hard limit enforced by the linter parser (formatting rules still target 120 characters).</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="4-repository-structure-contribution-workflow">4. Repository Structure &amp; Contribution Workflow</h2>
+<p>To maintain a clean and modular design, the codebase is strictly organized by concerns. Contributors should locate their changes and construct additions within the corresponding directories.</p>
+<h3 id="repository-map">Repository Map</h3>
+<ul>
+<li><code>rtl/</code> – Core hardware design files. Each design unit (such as <code>addsub</code> or execution stages) occupies its own subfolder.</li>
+<li><code>verif/</code> – Verification testbenches, reference models, and testlist definitions matching the structure of <code>rtl/</code>.</li>
+<li><code>docs/</code> – Markdown documentation files. Detailed design specifications of microarchitecture stages reside in subfolders (e.g., <code>docs/uarch/execute/</code>).</li>
+<li><code>scripts/</code> – Repository helper and toolchain scripts (e.g., test runners, filelist generators).</li>
+<li><code>regression/</code> – Holds output results, waveforms, and coverage data generated by test runner executions.</li>
+<li><code>site/</code> – Compiled production documentation HTML generated by Zensical.</li>
+</ul>
+<h3 id="contribution-flow">Contribution Flow</h3>
+<p>When adding or modifying components, please adhere to the following sequence:</p>
+<h4 id="a-adding-or-modifying-rtl">A. Adding or Modifying RTL</h4>
+<ol>
+<li>Place new SystemVerilog files inside a dedicated subdirectory in <code>rtl/</code> (e.g., <code>rtl/my_module/my_module.sv</code>).</li>
+<li>Module names must match their corresponding filename (e.g., <code>module my_module</code> inside <code>my_module.sv</code>).</li>
+<li>Re-generate the global filelist to register the new files:
+   <div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>python<span class="w"> </span>scripts/gen_filelist.py<span class="w"> </span>-o<span class="w"> </span>verible.filelist
+</span></code></pre></div></li>
+</ol>
+<h4 id="b-implementing-tests">B. Implementing Tests</h4>
+<ol>
+<li>Test directories should mirror the RTL structure under <code>verif/</code> (e.g., <code>verif/my_module/</code>).</li>
+<li>Create Python cocotb test benches (<code>tb_my_module.py</code>) and write validation scenarios.</li>
+<li>Define or append a YAML testlist (e.g., <code>verif/my_module/my_module_l0.yaml</code>) listing the top-level modules, Python test files, and target settings.</li>
+<li>Execute testlists locally to confirm validation:
+   <div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>scripts/test.py<span class="w"> </span>--testlist<span class="w"> </span>verif/my_module/my_module_l0.yaml<span class="w"> </span>--waves
+</span></code></pre></div></li>
+</ol>
+<h4 id="c-documenting-specifications">C. Documenting Specifications</h4>
+<ol>
+<li>Create or update design specification Markdown files inside <code>docs/uarch/</code> matching the subcomponent's category.</li>
+<li>Link the new specifications within the documentation index in <code>docs/index.md</code>.</li>
+<li>Validate document compilation locally using Zensical:
+   <div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>zensical<span class="w"> </span>build<span class="w"> </span>--clean
+</span></code></pre></div></li>
+</ol>
+<h4 id="d-submitting-changes">D. Submitting Changes</h4>
+<ol>
+<li>Run pre-commit checks locally before staging to resolve styling/lint errors automatically:
+   <div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
+</span></code></pre></div></li>
+<li>Commit your changes using a Conventional Commit style message scoped to the component (e.g., <code>feat(alu): add double-precision float support</code>).</li>
+</ol>
+<hr />
+<h2 id="5-verification-framework-regression">5. Verification Framework &amp; Regression</h2>
+<p>Hardware verification is powered by <a href="https://docs.pytest.org/">pytest</a> combined with <a href="https://www.cocotb.org/">cocotb</a> (via the <a href="https://github.com/the-cocotb-foundation/cocotb-test">cocotb-test</a> package).</p>
+<h3 id="generating-the-filelist">Generating the Filelist</h3>
+<p>Before running simulations or starting the Verible Language Server, you must generate a filelist of the SystemVerilog sources:
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>scripts/gen_filelist.py<span class="w"> </span>-o<span class="w"> </span>verible.filelist
+</span></code></pre></div>
+This script recursively scans <code>rtl/</code> and <code>verif/</code> for source files (<code>.v</code>, <code>.sv</code>) and header files (<code>.vh</code>, <code>.svh</code>). It places packages (files with <code>pkg</code> in their name) at the top of the compilation order to avoid compilation errors.</p>
+<h3 id="yaml-testlists">YAML Testlists</h3>
+<p>Test configurations are structured in YAML files within the verification folders (e.g., <code>verif/addsub/addsub_l0.yaml</code> in the <code>examples</code> branch). A typical testlist structure:
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">config</span><span class="p">:</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;addsub_sanity&quot;</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nt">simulator</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;verilator&quot;</span><span class="w">  </span><span class="c1"># Default simulator</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="nt">coverage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nt">tests</span><span class="p">:</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;simple&quot;</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tb_addsub</span><span class="w">     </span><span class="c1"># Name of the Python test bench module (without .py)</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="nt">toplevel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">addsub</span><span class="w">      </span><span class="c1"># Name of the SystemVerilog top-level module</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">    </span><span class="nt">filelist</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">verible.filelist</span>
+</span></code></pre></div></p>
+<h3 id="running-tests">Running Tests</h3>
+<p>All tests are executed via <code>pytest</code> using the runner entry script <code>scripts/test.py</code>:
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Run a specific testlist</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>scripts/test.py<span class="w"> </span>--testlist<span class="w"> </span>verif/addsub/addsub_l0.yaml
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Run tests with a specified filelist</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>scripts/test.py<span class="w"> </span>--testlist<span class="w"> </span>verif/addsub/addsub_l0.yaml<span class="w"> </span>--filelist<span class="w"> </span>verible.filelist
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Force a specific randomization seed</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>scripts/test.py<span class="w"> </span>--testlist<span class="w"> </span>verif/addsub/addsub_l0.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">12345</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Enable waveform dumping (VCD/FST dumps)</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>scripts/test.py<span class="w"> </span>--testlist<span class="w"> </span>verif/addsub/addsub_l0.yaml<span class="w"> </span>--waves
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Enable functional/code coverage collection</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>scripts/test.py<span class="w"> </span>--testlist<span class="w"> </span>verif/addsub/addsub_l0.yaml<span class="w"> </span>--coverage
+</span></code></pre></div></p>
+<h3 id="optimization-results">Optimization &amp; Results</h3>
+<ul>
+<li><strong>Shared Build Directory (<code>output/sim_build</code>)</strong>: Simulations share a build directory to cache and reuse Verilator compile objects, drastically reducing incremental compile times.</li>
+<li><strong>Results Archiving (<code>regression/results</code>)</strong>: Upon simulation completion, results (JUnit reports <code>results.xml</code>, waveforms <code>.vcd</code>/<code>.fst</code>, and coverage databases <code>coverage.dat</code>/<code>coverage.xml</code>) are copied to a designated folder:
+    <code>regression/results/&lt;testlist_name&gt;/&lt;test_name&gt;/</code>
+    Temporary waveforms and build residues in <code>sim_build</code> are cleaned up automatically to conserve disk space.</li>
+</ul>
+<hr />
+<h2 id="6-cicd-workflows-github-actions">6. CI/CD Workflows (GitHub Actions)</h2>
+<p>The repository runs 3 automated GitHub workflows:</p>
+<ol>
+<li><strong>Verible Verification (<code>verible-check.yaml</code>)</strong><ul>
+<li><strong>Trigger:</strong> On every Pull Request targeted at the <code>main</code> branch.</li>
+<li><strong>Actions:</strong><ul>
+<li>Runs <code>chipsalliance/verible-linter-action</code> using <code>.rules.verible_lint</code> config on modified <code>.v</code>, <code>.sv</code>, <code>.vh</code>, and <code>.svh</code> files.</li>
+<li>Verifies style formatting using <code>verible-verilog-format --verify --flagfile=.rules.verible_format</code> against the PR base branch.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Devcontainer Deployment (<code>build-devcontainer.yaml</code>)</strong><ul>
+<li><strong>Trigger:</strong> On pushes to <code>main</code> involving <code>.devcontainer/Dockerfile</code> or the workflow itself.</li>
+<li><strong>Actions:</strong> Builds the Docker image and publishes it to GitHub Container Registry at <code>ghcr.io/agh-logic-unit/pv-crab-core:main</code>. Employs GHA caches to speed up docker layer generation.</li>
+</ul>
+</li>
+<li><strong>Documentation Publishing (<code>docs.yaml</code>)</strong><ul>
+<li><strong>Trigger:</strong> On pushes to <code>main</code> modifying files under <code>docs/**</code>, the configuration <code>zensical.toml</code>, or the workflow file.</li>
+<li><strong>Actions:</strong> Installs <strong>Zensical</strong>, compiles the markdown document source using <code>zensical build --clean</code>, and deploys the contents of <code>./site</code> to the <code>gh-pages</code> branch.</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h2 id="7-project-documentation-zensical">7. Project Documentation (Zensical)</h2>
+<p>Static documentation is generated using <a href="https://zensical.org/">Zensical</a> (configured in <code>zensical.toml</code>).</p>
+<h3 id="markdown-extensions-layout">Markdown Extensions &amp; Layout</h3>
+<p>The setup supports rich Markdown extensions suitable for hardware specification:</p>
+<ul>
+<li><strong>Mermaid</strong> – Embeds sequence, state, and block diagrams directly in documents using markdown fences.</li>
+<li><strong>MathJax</strong> – Evaluates LaTeX formatting for equations (via the <code>arithmatex</code> extension).</li>
+<li><strong>Admonitions</strong> – Provides notice blocks (e.g., <code>!!! note "Title"</code> or <code>!!! warning</code>).</li>
+<li><strong>Task lists</strong> – Interoperable todo lists.</li>
+<li><strong>Code Highlighting</strong> – Styled syntax formatting with line numbering anchors (<code>anchor_linenums: true</code>).</li>
+</ul>
+<p>The documentation sources reside in <code>docs/</code> (as Markdown), with the landing page at <code>docs/index.md</code>. The production HTML output goes to the <code>site/</code> folder.</p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; <year> AGH Logic Unit
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["navigation.expand","navigation.sections","navigation.path"],"search":"../assets/javascripts/workers/search.b6b7e04f.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7f30b55.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
