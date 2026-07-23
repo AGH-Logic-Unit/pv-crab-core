@@ -14,6 +14,8 @@ Crab is an in-order RISC-V core (hart) designed to implement the RV64GC ISA for 
 
 Documentation is structured as follows:
 
+*   **Guides & Guidelines:**
+    *   [Repository Standards](rules.md) — Guidelines for code quality, formatting, verification, and contribution workflows.
 *   **Microarchitecture (uArch):** Detailed specifications of the core stages and components:
     *   **Common Types:**
         *   [uArch Types](uarch/types.md) — Base data types and headers.
