@@ -5,7 +5,7 @@ on:
       - main
     paths:
       - 'docs/**'
-      - 'zensical.yaml'
+      - 'zensical.toml'
       - '.github/workflows/**'
 
 permissions:
