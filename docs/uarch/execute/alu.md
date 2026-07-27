@@ -37,7 +37,7 @@ The module is required to fully implement the following RISC-V Unprivileged ISA 
 | `operand_b_i` | `logic` | 64 | IN | Second operand (typically RS2 or IMM) |
 | `operator_i` | `logic` | 5 | IN | Operation code provided by Decoder |
 | `result_o` | `logic` | 64 | OUT | Result of selected operation |
-| `branch_valid_o` | `logic` | 1 | OUT | Flag indicating that branch comparison condition was met `1` or not `0` |
+| `zero_o` | `logic` | 1 | OUT | Flag indicating result being zero |
 
 ## 5. Functional Description
 
