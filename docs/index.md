@@ -31,7 +31,9 @@ Documentation is structured as follows:
         *   [FP Divider/Sqrt (fDiv)](uarch/execute/fDiv.md) — Non-pipelined division and square root.
         *   [FP Miscellaneous (fMisc)](uarch/execute/fMisc.md) — Moves, conversions, comparisons, and classification.
     *   **Writeback Stage (`writeback/`):**
-        *   [Writeback & Register Bypass](uarch/writeback/writeback_bypass.md) — Scoreboarding, priority writeback, and data forwarding.
+        *   [Register Bypass Notes](uarch/writeback/writeback_bypass.md) — Scoreboarding, priority writeback, and data forwarding.
+        *   [Writeback Stage](uarch/writeback/writeback.md) — Retirement Buffer (ROB) layout, Split-Array ROB, dynamic stalls, and retirement commits.
+        *   [Control & Status Registers (CSR)](uarch/writeback/csr.md) — System state, privilege levels, trap handling, and Physical Memory Protection (PMP).
 
 ---
 !!! note "Project Status"
