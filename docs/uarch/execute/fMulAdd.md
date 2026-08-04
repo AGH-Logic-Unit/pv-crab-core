@@ -37,7 +37,7 @@ The module is required to implement the following RISC-V Unprivileged ISA specif
 | `flush_i` | `logic` | 1 | IN | Pipeline flush signal (clears all FMA pipeline registers) |
 | `disp_valid_i` | `logic` | 1 | IN | Dispatcher handshake indicating valid FMA instruction |
 | `disp_ready_o` | `logic` | 1 | OUT | Handshake indicating unit can accept new inputs |
-| `disp_headers_i`| `t__exe_headers`| - | IN | Input execution stage header metadata from Dispatcher |
+| `disp_headers_i`| `exe_headers_t`| - | IN | Input execution stage header metadata from Dispatcher |
 | `operand_a_i` | `logic` | 64 | IN | First floating-point operand (multiplicand, or first term for FADD/FSUB) |
 | `operand_b_i` | `logic` | 64 | IN | Second floating-point operand (multiplier, or set to 1.0 for FADD/FSUB) |
 | `operand_c_i` | `logic` | 64 | IN | Third floating-point operand (addend for FMA, second term for FADD/FSUB, tied to 0 for FMUL) |
@@ -47,7 +47,7 @@ The module is required to implement the following RISC-V Unprivileged ISA specif
 | `wb_ready_i` | `logic` | 1 | IN | Handshake indicating Writeback Arbiter can accept result |
 | `wb_result_o` | `logic` | 64 | OUT | Calculated floating-point result (NaN-boxed to 64 bits for single-precision) |
 | `wb_fflags_o` | `logic` | 5 | OUT | Floating-point exception flags: `{NV, DZ, OF, UF, NX}` |
-| `wb_headers_o` | `t__exe_headers`| - | OUT | Output execution stage header metadata to Writeback Buffer |
+| `wb_headers_o` | `exe_headers_t`| - | OUT | Output execution stage header metadata to Writeback Buffer |
 
 ## 5. Functional Description
 

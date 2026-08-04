@@ -19,6 +19,7 @@ Documentation is structured as follows:
 *   **Microarchitecture (uArch):** Detailed specifications of the core stages and components:
     *   **Common Types:**
         *   [uArch Types](uarch/types.md) — Base data types and headers.
+        *   [uArch Parameters](uarch/parameters.md) - Global parameters and config.
     *   **Memory Subsystem:**
         *   [L1 Data Cache Design](uarch/cache.md) — Write policy, local reservations, and core-side AMOs.
     *   **Execute Stage (`execute/`):**

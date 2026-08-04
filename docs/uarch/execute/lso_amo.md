@@ -51,7 +51,7 @@ The module is required to implement the following RISC-V Unprivileged ISA specif
 | `flush_i` | `logic` | 1 | IN | Pipeline flush signal |
 | `disp_valid_i` | `logic` | 1 | IN | Dispatcher handshake indicating valid memory/AMO request |
 | `disp_ready_o` | `logic` | 1 | OUT | Handshake indicating unit is ready to accept a new instruction |
-| `disp_headers_i`| `t__exe_headers`| - | IN | Input execution stage header metadata from Dispatcher |
+| `disp_headers_i`| `exe_headers_t`| - | IN | Input execution stage header metadata from Dispatcher |
 | `operand_a_i` | `logic` | 64 | IN | Base address register (typically RS1) |
 | `operand_b_i` | `logic` | 64 | IN | Store data (integer or float) or AMO operand (typically RS2 or FRS2) |
 | `imm_i` | `logic` | 64 | IN | Immediate offset value (used for load/store address generation) |
@@ -61,7 +61,7 @@ The module is required to implement the following RISC-V Unprivileged ISA specif
 | `wb_valid_o` | `logic` | 1 | OUT | Writeback handshake indicating valid result/exception is ready |
 | `wb_ready_i` | `logic` | 1 | IN | Handshake indicating Writeback Arbiter can accept result |
 | `wb_result_o` | `logic` | 64 | OUT | Read data (loads/AMOs, integer or float) or SC result to write back to destination register (GPR or FPR) |
-| `wb_headers_o` | `t__exe_headers`| - | OUT | Output execution stage header metadata to Writeback Buffer |
+| `wb_headers_o` | `exe_headers_t`| - | OUT | Output execution stage header metadata to Writeback Buffer |
 
 ### 4.2 D-Cache / Memory Interface
 
