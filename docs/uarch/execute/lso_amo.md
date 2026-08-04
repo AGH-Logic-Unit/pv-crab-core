@@ -12,6 +12,7 @@ title: Load-Store & Atomic Memory Operations
 
 | Date | Version | Description |
 | :-- | :--: | :-- |
+| 2026-08-05 | v0.4 | Added flush_i port and speculative load/store flush behavior, and renamed headers to exe_headers_t |
 | 2026-05-24 | v0.3 | Added RV64FD floating-point load and store operations |
 | 2026-05-23 | v0.2 | Complete rewrite specifying Load-Store and RV64A AMO FSM |
 | 2026-04-26 | v0.1 | First draft (placeholder) |
@@ -47,6 +48,7 @@ The module is required to implement the following RISC-V Unprivileged ISA specif
 | :--- | :---: | :---: | :---: | :--- |
 | `clk_i` | `logic` | 1 | IN | Clock signal |
 | `rst_ni` | `logic` | 1 | IN | Asynchronous active-low reset signal |
+| `flush_i` | `logic` | 1 | IN | Pipeline flush signal |
 | `disp_valid_i` | `logic` | 1 | IN | Dispatcher handshake indicating valid memory/AMO request |
 | `disp_ready_o` | `logic` | 1 | OUT | Handshake indicating unit is ready to accept a new instruction |
 | `disp_headers_i`| `t__exe_headers`| - | IN | Input execution stage header metadata from Dispatcher |
@@ -182,6 +184,15 @@ Floating-point loads and stores are processed by the memory FSM similarly to int
 * **`FLD` / `FSD`:** Transferred as 64-bit doublewords (`dmem_size_o = 2'b11`). Data passes directly between memory and FPRs.
 * **`FLW`:** Transferred as a 32-bit word (`dmem_size_o = 2'b10`). Read data returned from memory is **NaN-boxed** to 64 bits (upper 32 bits set to `0xFFFFFFFF`) before being driven on `wb_result_o` to satisfy the RV64F specification.
 * **`FSW`:** Transferred as a 32-bit word (`dmem_size_o = 2'b10`). The store data is extracted from the lower 32 bits of `operand_b_i` (the source FPR value).
+
+### 5.6 Speculative Flush (Memory Request Invalidation)
+Memory operations require careful speculative handling to avoid corrupting core or memory state:
+* **Speculative Loads:** If a load instruction is in-flight (e.g. waiting in `MEM_READ_WAIT` for `dmem_rvalid_i`) and a pipeline flush occurs (`flush_i == 1`):
+  - The LSO-AMO FSM immediately aborts the operation and returns to the `IDLE` state.
+  - Any data returned by the memory subsystem (`dmem_rdata_i`) in subsequent cycles is discarded and **never** written back to the GPR/FPR file or the ROB.
+* **Speculative Stores:** Stores in the Execute stage only perform address generation and alignment validation. They **never** issue a memory write request (`dmem_req_o` is kept low) during Stage 8. Writes are only issued to the Store Buffer (STB) / D-Cache at retirement (Stage 9) when they are guaranteed to commit.
+* **Atomic Memory Operations (AMOs):** AMOs operate under an **Execute-at-Retire** strategy. They are held in the ROB and only executed by the LSO-AMO FSM at retirement (Stage 9), preventing speculative memory lock and write operations.
+* **Speculative Flush during active AMO:** Since AMOs only execute at retirement, they cannot be flushed once they start. If a flush is requested due to a concurrent asynchronous interrupt at retirement, the AMO executes to completion before the interrupt handler is entered.
 
 ---
 

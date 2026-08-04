@@ -12,6 +12,7 @@ title: Integer Divider
 
 | Date | Version | Description |
 | :-- | :--: | :-- |
+| 2026-08-05 | v0.3 | Added flush_i port and active reset behavior, and renamed headers to exe_headers_t |
 | 2026-05-24 | v0.2 | Integrated DIVW, DIVUW, REMW, and REMUW instructions, updated operator_i width |
 | 2026-05-23 | v0.1 | First draft |
 
@@ -31,6 +32,7 @@ The module is required to implement the following RISC-V Unprivileged ISA specif
 | :--- | :---: | :---: | :---: | :--- |
 | `clk_i` | `logic` | 1 | IN | Clock signal |
 | `rst_ni` | `logic` | 1 | IN | Asynchronous active-low reset signal |
+| `flush_i` | `logic` | 1 | IN | Pipeline flush signal (resets execution state to IDLE) |
 | `disp_valid_i` | `logic` | 1 | IN | Dispatcher handshake indicating valid division request |
 | `disp_ready_o` | `logic` | 1 | OUT | Handshake indicating divider is ready to accept a new request |
 | `disp_headers_i`| `t__exe_headers`| - | IN | Input execution stage header metadata from Dispatcher |
@@ -53,6 +55,13 @@ The division module implements a serial division algorithm (e.g., Radix-2 or Rad
   - Inputs `operand_a_i` and `operand_b_i` are truncated to 32 bits.
   - The division operation is performed on these 32-bit values.
   - The 32-bit quotient or remainder result is **sign-extended** to 64 bits before being driven on `wb_result_o`.
+
+### 5.2 Speculative Flush (Active Reset)
+To prevent the **Late Writeback Hazard** (where a flushed multicycle division completes after the ROB tag has been reassigned to a new instruction), the divider actively monitors the `flush_i` signal:
+* When `flush_i` is asserted, any ongoing division calculation is immediately aborted.
+* The internal serial control logic, counters, and registers are reset.
+* The module deasserts `wb_valid_o` and transitions back to the `IDLE` state in the same cycle.
+* This ensures that no invalid results are written back to the ROB and that the unit is immediately ready to receive new instructions, preventing structural resource blocks.
 
 ## 6. Timing and Performance
 

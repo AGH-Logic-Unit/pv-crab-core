@@ -12,6 +12,7 @@ title: Floating-Point FMA, Multiplier & Adder
 
 | Date | Version | Description |
 | :-- | :--: | :-- |
+| 2026-08-05 | v0.2 | Added flush_i port and active pipeline reset, and renamed headers to exe_headers_t |
 | 2026-05-23 | v0.1 | Initial draft template |
 
 ## 2. Overview
@@ -33,6 +34,7 @@ The module is required to implement the following RISC-V Unprivileged ISA specif
 | :--- | :---: | :---: | :---: | :--- |
 | `clk_i` | `logic` | 1 | IN | Clock signal |
 | `rst_ni` | `logic` | 1 | IN | Asynchronous active-low reset signal |
+| `flush_i` | `logic` | 1 | IN | Pipeline flush signal (clears all FMA pipeline registers) |
 | `disp_valid_i` | `logic` | 1 | IN | Dispatcher handshake indicating valid FMA instruction |
 | `disp_ready_o` | `logic` | 1 | OUT | Handshake indicating unit can accept new inputs |
 | `disp_headers_i`| `t__exe_headers`| - | IN | Input execution stage header metadata from Dispatcher |
@@ -59,7 +61,13 @@ All operations are mapped to the core Fused Multiply-Accumulate logic:
 - `FNMADD`: Computes $-(A \times B + C)$.
 - `FNMSUB`: Computes $-(A \times B - C)$.
 
-### 5.2 NaN-boxing
+### 5.2 Speculative Flush (Active Pipeline Reset)
+To prevent the **Late Writeback Hazard** (where an FMA instruction completes after its ROB tag is reassigned), the FMA unit actively monitors `flush_i`:
+* When `flush_i` is asserted, all internal pipeline registers of the FMA execution unit are immediately cleared.
+* Valid bits associated with each pipeline stage are reset to `0`, and `wb_valid_o` is deasserted.
+* This actively kills any in-flight floating-point multiply-add operations, ensuring they never write back stale results or flags to the ROB.
+
+### 5.3 NaN-boxing
 Inputs are checked for 32-bit NaN-boxing compliance. Single-precision operations will produce 64-bit outputs with the upper 32 bits set to `0xFFFFFFFF`.
 
 ## 6. Timing and Performance
