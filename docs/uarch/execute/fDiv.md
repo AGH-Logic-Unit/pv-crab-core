@@ -12,6 +12,7 @@ title: Floating-Point Divider & Square Root
 
 | Date | Version | Description |
 | :-- | :--: | :-- |
+| 2026-08-05 | v0.2 | Added flush_i port and active reset behavior, and renamed headers to exe_headers_t |
 | 2026-05-23 | v0.1 | Initial draft template |
 
 ## 2. Overview
@@ -33,6 +34,7 @@ The module is required to implement the following RISC-V Unprivileged ISA specif
 | :--- | :---: | :---: | :---: | :--- |
 | `clk_i` | `logic` | 1 | IN | Clock signal |
 | `rst_ni` | `logic` | 1 | IN | Asynchronous active-low reset signal |
+| `flush_i` | `logic` | 1 | IN | Pipeline flush signal (resets execution state to IDLE) |
 | `disp_valid_i` | `logic` | 1 | IN | Dispatcher handshake indicating valid division request |
 | `disp_ready_o` | `logic` | 1 | OUT | Handshake indicating unit is ready to accept a new request |
 | `disp_headers_i`| `t__exe_headers`| - | IN | Input execution stage header metadata from Dispatcher |
@@ -52,6 +54,13 @@ The module is required to implement the following RISC-V Unprivileged ISA specif
 To minimize area, the module implements a digit-recurrence division and square root algorithm (e.g., Radix-2 or Radix-4 SRT algorithm).
 
 * **NaN-boxing:** For single-precision operations on a 64-bit FPU, inputs are checked for proper NaN-boxing (upper 32 bits must be all ones). The output of single-precision operations is NaN-boxed (upper 32 bits set to `0xFFFFFFFF`).
+
+### 5.2 Speculative Flush (Active Reset)
+To prevent the **Late Writeback Hazard** (where a multi-cycle FPU division/square root completes after its ROB tag is reassigned), the module actively monitors `flush_i`:
+* When `flush_i` is asserted, any ongoing FPU division/square root calculation is immediately aborted.
+* The internal SRT state machine, counters, and registers are reset.
+* The module deasserts `wb_valid_o` and transitions back to the `IDLE` state in the same cycle.
+* This ensures that no invalid FPU results or flags are written back to the ROB.
 
 ## 6. Timing and Performance
 

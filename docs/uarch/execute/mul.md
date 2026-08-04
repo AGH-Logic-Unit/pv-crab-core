@@ -12,6 +12,7 @@ title: Integer Multiplier
 
 | Date | Version | Description |
 | :-- | :--: | :-- |
+| 2026-08-05 | v0.2 | Added flush_i port and active pipeline clear, and renamed headers to exe_headers_t |
 | 2026-05-23 | v0.1 | First draft |
 
 ## 2. Overview
@@ -30,6 +31,7 @@ The module is required to implement the following RISC-V Unprivileged ISA specif
 | :--- | :---: | :---: | :---: | :--- |
 | `clk_i` | `logic` | 1 | IN | Clock signal |
 | `rst_ni` | `logic` | 1 | IN | Asynchronous active-low reset signal |
+| `flush_i` | `logic` | 1 | IN | Pipeline flush signal (clears pipeline stages EX1, EX2, EX3) |
 | `disp_valid_i` | `logic` | 1 | IN | Dispatcher handshake indicating valid multiplication request |
 | `disp_ready_o` | `logic` | 1 | OUT | Handshake indicating multiplier is ready to accept a new request |
 | `disp_headers_i`| `t__exe_headers`| - | IN | Input execution stage header metadata from Dispatcher |
@@ -49,6 +51,12 @@ To meet timing requirements, the multiplier is split into three pipeline stages 
 * **`MULH`**: Returns the upper 64 bits of the signed $\times$ signed product.
 * **`MULHU`**: Returns the upper 64 bits of the unsigned $\times$ unsigned product.
 * **`MULHSU`**: Returns the upper 64 bits of the signed $\times$ unsigned product.
+
+### 5.2 Speculative Flush (Active Pipeline Reset)
+To prevent the **Late Writeback Hazard** (where a multiplication completes after its ROB tag is reassigned), the multiplier actively monitors `flush_i`:
+* When `flush_i` is asserted, all internal pipeline registers (EX1, EX2, EX3) are immediately cleared.
+* Valid bits associated with each pipeline stage are reset to `0`, and `wb_valid_o` is deasserted.
+* This actively kills any in-flight multiplication operations, ensuring they never write back stale results to the ROB after a flush.
 
 ## 6. Timing and Performance
 
