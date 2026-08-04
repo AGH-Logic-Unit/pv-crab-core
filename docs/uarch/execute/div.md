@@ -35,14 +35,14 @@ The module is required to implement the following RISC-V Unprivileged ISA specif
 | `flush_i` | `logic` | 1 | IN | Pipeline flush signal (resets execution state to IDLE) |
 | `disp_valid_i` | `logic` | 1 | IN | Dispatcher handshake indicating valid division request |
 | `disp_ready_o` | `logic` | 1 | OUT | Handshake indicating divider is ready to accept a new request |
-| `disp_headers_i`| `t__exe_headers`| - | IN | Input execution stage header metadata from Dispatcher |
+| `disp_headers_i`| `exe_headers_t`| - | IN | Input execution stage header metadata from Dispatcher |
 | `operand_a_i` | `logic` | 64 | IN | First operand (typically RS1) |
 | `operand_b_i` | `logic` | 64 | IN | Second operand (typically RS2 or IMM) |
 | `operator_i` | `logic` | 3 | IN | Operation code provided by Decoder (encoding DIV, DIVU, REM, REMU, and W-variants) |
 | `wb_valid_o` | `logic` | 1 | OUT | Writeback handshake indicating valid result is ready |
 | `wb_ready_i` | `logic` | 1 | IN | Handshake indicating Writeback Arbiter can accept result |
 | `wb_result_o` | `logic` | 64 | OUT | Calculated quotient or remainder result |
-| `wb_headers_o` | `t__exe_headers`| - | OUT | Output execution stage header metadata to Writeback Buffer |
+| `wb_headers_o` | `exe_headers_t`| - | OUT | Output execution stage header metadata to Writeback Buffer |
 
 ## 5. Functional Description
 
