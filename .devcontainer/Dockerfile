@@ -4,6 +4,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 USER root
 
+ARG TARGETARCH
+
 # 1. Install minimum dependencies
 RUN apt update && apt install -y --no-install-recommends \
     git make autoconf g++ flex bison ccache \
@@ -12,7 +14,8 @@ RUN apt update && apt install -y --no-install-recommends \
     curl wget tar ca-certificates \
     yosys nodejs npm \
     gcc-riscv64-unknown-elf picolibc-riscv64-unknown-elf \
-    sudo openssh-client\
+    sudo openssh-client \
+    z3 libz3-dev libsystemc-dev \
     && rm -rf /var/lib/apt/lists/*
 
 
@@ -28,13 +31,20 @@ ENV VERILATOR_SHA256="002bc6d92b203eb8b4612e1d198d8108517d4ec9859e131ef328015352
 RUN wget https://github.com/verilator/verilator/archive/refs/tags/v${VERILATOR_VERSION}.tar.gz -O /tmp/verilator.tar.gz && \
     echo "${VERILATOR_SHA256}  /tmp/verilator.tar.gz" | sha256sum -c - && \
     tar -xzf /tmp/verilator.tar.gz -C /tmp && \
+    if [ "$TARGETARCH" = "arm64" ] && grep -q -i "Intel\|AMD" /proc/cpuinfo; then \
+        MAKE_JOBS=1 && MAKE_FLAGS="VL_NOOPT=1"; \
+    else \
+        MAKE_JOBS=$(nproc) && MAKE_FLAGS=""; \
+    fi && \
     cd /tmp/verilator-${VERILATOR_VERSION} && \
     autoconf && \
     ./configure && \
     # Create dummy man pages to skip help2man requirement
     touch verilator.1 verilator_coverage.1 verilator_gantt.1 verilator_profcfunc.1 && \
-    make -j$(nproc) && \
-    make install && \
+    make -C src -j${MAKE_JOBS} ${MAKE_FLAGS} opt && \
+    cp bin/verilator_bin bin/verilator_bin_dbg && \
+    cp bin/verilator_bin bin/verilator_coverage_bin_dbg && \
+    make install-all && \
     rm -rf /tmp/verilator*/tmp/verilator.tar.gz && \
     # Remove documentation bloat
     rm -rf /usr/local/share/man /usr/local/share/doc/verilator && \
@@ -45,8 +55,14 @@ RUN wget https://github.com/verilator/verilator/archive/refs/tags/v${VERILATOR_V
 
 # 4. Install Verible
 ENV VERIBLE_VERSION=v0.0-4080-ga0a8d8eb
-ENV VERIBLE_SHA256="f75daa70f29dbe9624ffee3738408341cfdadbdaf7e5d714a5bcceb9223953e6"
-RUN wget https://github.com/chipsalliance/verible/releases/download/${VERIBLE_VERSION}/verible-${VERIBLE_VERSION}-linux-static-x86_64.tar.gz -O /tmp/verible.tar.gz && \
+RUN if [ "$TARGETARCH" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then \
+        VERIBLE_ARCH="arm64" && \
+        VERIBLE_SHA256="f573e073251032eff8245a7ff04ec88f08a624105748f986b822af43dbaeddce"; \
+    else \
+        VERIBLE_ARCH="x86_64" && \
+        VERIBLE_SHA256="f75daa70f29dbe9624ffee3738408341cfdadbdaf7e5d714a5bcceb9223953e6"; \
+    fi && \
+    wget https://github.com/chipsalliance/verible/releases/download/${VERIBLE_VERSION}/verible-${VERIBLE_VERSION}-linux-static-${VERIBLE_ARCH}.tar.gz -O /tmp/verible.tar.gz && \
     echo "${VERIBLE_SHA256}  /tmp/verible.tar.gz" | sha256sum -c - && \
     tar -xzf /tmp/verible.tar.gz -C /tmp && \
     cp /tmp/verible-*/bin/* /usr/local/bin/ && \
@@ -60,4 +76,4 @@ RUN wget https://github.com/chipsalliance/verible/releases/download/${VERIBLE_VE
 USER vscode
 ENV PATH="/home/vscode/venv/bin:$PATH"
 RUN python3 -m venv /home/vscode/venv && \
-    /home/vscode/venv/bin/pip install --no-cache-dir cocotb pytest cocotb-test pre-commit ruff zensical cocotb-tools cocotb-coverage z3-solver pytest pytest-xdist pytest-html pyyaml
+    /home/vscode/venv/bin/pip install --no-cache-dir cocotb pytest cocotb-test pre-commit ruff zensical cocotb-tools cocotb-coverage "z3-solver==4.13.0.0" pytest-xdist pytest-html pyyaml
