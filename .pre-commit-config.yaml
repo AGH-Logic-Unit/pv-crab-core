@@ -28,6 +28,7 @@ repos:
       entry: verible-verilog-format
       language: system
       types_or: [verilog, system-verilog]
+      exclude: ^vendor/
       args: [--flagfile, .rules.verible_format, --inline]
 
   - repo: local
@@ -37,4 +38,5 @@ repos:
       entry: verible-verilog-lint
       language: system
       types_or: [verilog, system-verilog]
+      exclude: ^vendor/
       args: [--rules_config, .rules.verible_lint]
