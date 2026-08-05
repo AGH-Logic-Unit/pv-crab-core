@@ -1,0 +1,135 @@
+name: Pull Request Checks
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  commit-lint:
+    name: Validate Commit Messages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pre-commit
+
+      - name: Cache pre-commit environments
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
+          restore-keys: |
+            pre-commit-${{ runner.os }}-
+
+      - name: Lint commit messages
+        run: |
+          git fetch origin ${{ github.base_ref }} --depth=1
+          commits=$(git log --no-merges --format="%H" origin/${{ github.base_ref }}..HEAD)
+
+          if [ -z "$commits" ]; then
+            echo "No commits found in this PR range."
+            exit 0
+          fi
+
+          echo "Checking commits..."
+          failed=0
+          for commit in $commits; do
+            git log --format="%B" -n 1 "$commit" > commit_msg.txt
+            echo "--- Checking commit: $commit ---"
+            cat commit_msg.txt
+            echo "--------------------------------"
+
+            if ! pre-commit run conventional-pre-commit --hook-stage commit-msg --commit-msg-filename commit_msg.txt; then
+              echo "❌ Commit message is not conventional!"
+              failed=1
+            else
+              echo "✅ Commit message format is valid."
+            fi
+          done
+
+          rm -f commit_msg.txt
+
+          if [ $failed -ne 0 ]; then
+            echo "Error: One or more commits in this PR do not match Conventional Commits rules."
+            exit 1
+          fi
+
+  pre-commit:
+    name: Run Pre-commit Hooks
+    needs: commit-lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install pre-commit
+        run: pip install pre-commit
+
+      - name: Cache pre-commit environments
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
+          restore-keys: |
+            pre-commit-${{ runner.os }}-
+
+      - name: Run pre-commit
+        run: |
+          git fetch origin ${{ github.base_ref }} --depth=1
+          SKIP=verible-format,verible-lint pre-commit run --from-ref origin/${{ github.base_ref }} --to-ref HEAD --show-diff-on-failure
+
+  verible-ci:
+    name: Verible Lint & Format
+    needs: pre-commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Verible Linter
+        uses: chipsalliance/verible-linter-action@main
+        with:
+          config_file: '.rules.verible_lint'
+          extensions: |
+            .sv
+            .v
+            .vh
+            .svh
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check Formatting
+        run: |
+          git fetch origin ${{ github.base_ref }} --depth=1
+          FILES=$(git diff --name-only origin/${{ github.base_ref }} | grep -E '\.(v|sv|vh|svh)$' || true)
+
+          if [ -n "$FILES" ]; then
+            echo "Checking formatting for:"
+            echo "$FILES"
+            verible-verilog-format --verify --flagfile=.rules.verible_format $FILES
+          else
+            echo "No Verilog/SystemVerilog files modified. Skipping check."
+          fi
