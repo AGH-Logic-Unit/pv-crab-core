@@ -44,9 +44,16 @@ RUN wget https://github.com/verilator/verilator/archive/refs/tags/v${VERILATOR_V
     apt clean
 
 # 4. Install Verible
+ARG TARGETARCH
 ENV VERIBLE_VERSION=v0.0-4080-ga0a8d8eb
-ENV VERIBLE_SHA256="f75daa70f29dbe9624ffee3738408341cfdadbdaf7e5d714a5bcceb9223953e6"
-RUN wget https://github.com/chipsalliance/verible/releases/download/${VERIBLE_VERSION}/verible-${VERIBLE_VERSION}-linux-static-x86_64.tar.gz -O /tmp/verible.tar.gz && \
+RUN if [ "$TARGETARCH" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then \
+        VERIBLE_ARCH="arm64" && \
+        VERIBLE_SHA256="f573e073251032eff8245a7ff04ec88f08a624105748f986b822af43dbaeddce"; \
+    else \
+        VERIBLE_ARCH="x86_64" && \
+        VERIBLE_SHA256="f75daa70f29dbe9624ffee3738408341cfdadbdaf7e5d714a5bcceb9223953e6"; \
+    fi && \
+    wget https://github.com/chipsalliance/verible/releases/download/${VERIBLE_VERSION}/verible-${VERIBLE_VERSION}-linux-static-${VERIBLE_ARCH}.tar.gz -O /tmp/verible.tar.gz && \
     echo "${VERIBLE_SHA256}  /tmp/verible.tar.gz" | sha256sum -c - && \
     tar -xzf /tmp/verible.tar.gz -C /tmp && \
     cp /tmp/verible-*/bin/* /usr/local/bin/ && \
