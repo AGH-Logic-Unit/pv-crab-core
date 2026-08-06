@@ -98,7 +98,7 @@ The Retirement Buffer is designed using a **Split-Array Architecture** to avoid 
 
 1. **Metadata Array (Static Tablica):**
       * **Ports:** 1 Write Port (used by Decode/Dispatch at Stage 7), 1 Read Port (used by Retire at Stage 9).
-      * **Contents:** `pc` (64-bit program counter, see Section 6.4 for `PC[0]` optimization), `rd_addr` (5-bit), `rd_type` (1-bit), `rd_we` (1-bit), `op_class` (3-bit `op_class_t`), and CSR static metadata (`meta.csr.addr`, `meta.csr.op`, `meta.trap.is_interrupt`).
+      * **Contents:** `pc` (64-bit program counter), `is_rvc` (1-bit compressed instruction flag), `rd_addr` (5-bit), `rd_type` (1-bit), `rd_we` (1-bit), `op_class` (3-bit `op_class_t`), and CSR static metadata (`meta.csr.addr`, `meta.csr.op`, `meta.trap.is_interrupt`).
       * **Behavior:** Written once at Dispatch. It is never modified by execution stages.
 
 2. **Result/Status Array (Dynamic Tablica):**
@@ -116,7 +116,8 @@ The Retirement Buffer is designed using a **Split-Array Architecture** to avoid 
 | `rd_we` | `logic` | 1 | Destination register write enable (in Metadata Array) |
 | `rd_type` | `logic` | 1 | Destination register type (`0` = GPR, `1` = FPR) (in Metadata Array) |
 | `rd_addr` | `logic` | 5 | Destination register address (in Metadata Array) |
-| `pc` | `logic` | 64 | Program Counter (in Metadata Array, LSB represents `is_rvc`) |
+| `pc` | `logic` | 64 | Program Counter (in Metadata Array) |
+| `is_rvc` | `logic` | 1 | RVC compressed instruction indicator (in Metadata Array) |
 | `result` | `logic` | 64 | Execution result / CSR `wdata` / Trap `badaddr` (in Result Array) |
 | `meta` | `rb_meta_t` | 14 | Packed union: FPU flag `fflags` / trap `cause`/`is_interrupt` / CSR `addr`/`op` |
 
@@ -180,10 +181,10 @@ When a CSR instruction (`op_class == OP_CLASS_CSR` and `trap == 0`) reaches the 
 3. If `commit_illegal_i == 1`, the instruction traps (see Section 6.5).
 4. Otherwise, the old value from `commit_rdata_i` is written to GPR under `rd_addr` (if `rd_we == 1`).
 5. **System-Critical / PMP Security Redirect:** If `commit_flush_req_i == 1`, a global pipeline flush is requested (`flush_req_o = 1`). This is critical when changing page tables (`satp`) or security configuration registers (`pmpcfg*`, `pmpaddr*`) to clear all speculative instructions from the pipeline.
-      * The next PC target is calculated locally using the **PC LSB Optimization**:
-      Redirection target = `base_pc + (pc[0] ? 2 : 4)`, where `base_pc = {pc[63:1], 1'b0}`.
+      * The next PC target is calculated locally:
+      Redirection target = `pc + (is_rvc ? 2 : 4)`.
 
-      * This target PC is sent back to Stage 1. Since CSR and PMP instructions are strictly 32-bit (4-byte), `PC[0]` is `0` and the offset is `+4`.
+      * This target PC is sent back to Stage 1. Since CSR and PMP instructions are strictly 32-bit (4-byte), `is_rvc` is `0` and the offset is `+4`.
 
 ---
 
