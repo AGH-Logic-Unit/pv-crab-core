@@ -233,28 +233,29 @@ When the Writeback stage detects `trap == 1` at the head of the Retirement Buffe
     * Because the interrupt cause code is at most 6 bits, the offset `4 * cause` fits entirely within 8 bits (maximum offset of `252` or `8'b11111100`).
     * Rather than using a full 64-bit adder, the CSR unit calculates the target trap vector address using **bitwise concatenation** (zero hardware adders):
       ```systemverilog
-      assign trap_vector_o = {tvec_val[63:8], (tvec_val[0] && trap_is_interrupt_i) ? trap_cause_i[5:0] : 6'b00, 2'b00};
+      logic [63:0] base_address;
+      assign base_address = {tvec_val[63:2], 2'b00};
+      assign trap_vector_o = (tvec_val[1:0] == 2'b01 && trap_is_interrupt_i) ?
+                             {tvec_val[63:8], trap_cause_i[5:0], 2'b00} :
+                             base_address;
       ```
     * The calculated address is output on `trap_vector_o` to redirect the Fetch stage.
 
-### 6.5 Instruction Length & Redirection PC Optimization (LSB PC / RVC)
+### 6.5 Instruction Length & Redirection PC Calculation (Dedicated is_rvc)
 
-Upon a pipeline redirect (e.g. system-critical write flush or exception/branch flush), the target PC must be calculated. To avoid passing an extra `is_rvc` bit through all pipeline stages and Retirement Buffer arrays, the PV-Crab core utilizes a **PC LSB Optimization**:
+Upon a pipeline redirect (e.g. system-critical write flush or exception/branch flush), the target PC must be calculated. The PV-Crab core uses a dedicated `is_rvc` signal alongside the PC to represent instruction length:
 
-* Since RISC-V instructions are always aligned to at least a 16-bit (2-byte) boundary, the actual address bit `PC[0]` is always `0`.
-* The `PC[0]` bit is repurposed throughout the pipeline and Retirement FIFO to carry the **`is_rvc` flag** (where `1` indicates a compressed 16-bit instruction and `0` indicates a standard 32-bit instruction).
-* At the Decode stage, this bit is injected: `dec_pc[0] = is_rvc`.
-* Any stage requiring redirect PC calculation (e.g. Writeback for system flush, Execute for branches) extracts the base address and length, and calculates the next PC locally using a small localized incrementer:
+* The actual address bit `PC[0]` is always `0` throughout the pipeline to guarantee architectural correctness and prevent errors in instructions like `AUIPC`, `JAL`, and `JALR`.
+* The `is_rvc` flag is carried in the pipeline stages and stored in the Retirement Buffer (ROB) Metadata Array.
+* Any stage requiring redirect PC calculation (e.g. Writeback for system flush, Execute for branches) calculates the next PC locally:
   ```systemverilog
-  logic [63:0] base_pc;
   logic [2:0]  instr_len;
   logic [63:0] next_pc;
 
-  assign base_pc   = {stage_pc[63:1], 1'b0};
-  assign instr_len = stage_pc[0] ? 3'd2 : 3'd4;
-  assign next_pc   = base_pc + instr_len;
+  assign instr_len = is_rvc ? 3'd2 : 3'd4;
+  assign next_pc   = stage_pc + instr_len;
   ```
-* When writing the PC to CSRs (such as `mepc`/`sepc`), the LSB is masked back to `0`.
+* When writing the PC to CSRs (such as `mepc`/`sepc`), the value is written directly without LSB masking because `PC[0]` is naturally `0`.
 
 ---
 
