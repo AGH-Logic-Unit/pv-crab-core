@@ -28,17 +28,17 @@ Standard loads and stores are completed by interfacing directly with the Data Ca
 The module is required to implement the following RISC-V Unprivileged ISA specifications:
 
 - **RV64I Load/Store Instructions:**
-  - Loads: `LB`, `LBU` (byte), `LH`, `LHU` (halfword), `LW`, `LWU` (word), `LD` (doubleword).
-  - Stores: `SB` (byte), `SH` (halfword), `SW` (word), `SD` (doubleword).
+    - Loads: `LB`, `LBU` (byte), `LH`, `LHU` (halfword), `LW`, `LWU` (word), `LD` (doubleword).
+    - Stores: `SB` (byte), `SH` (halfword), `SW` (word), `SD` (doubleword).
 - **RV64A Atomic Instructions (XLEN=64):**
-  - Load-Reserved: `LR.W`, `LR.D`.
-  - Store-Conditional: `SC.W`, `SC.D`.
-  - Atomic Memory Operations (AMO): `AMOSWAP`, `AMOADD`, `AMOAND`, `AMOOR`, `AMOXOR`, `AMOMIN`, `AMOMAX`, `AMOMINU`, `AMOMAXU` in word (`.W`) and doubleword (`.D`) variants.
+    - Load-Reserved: `LR.W`, `LR.D`.
+    - Store-Conditional: `SC.W`, `SC.D`.
+    - Atomic Memory Operations (AMO): `AMOSWAP`, `AMOADD`, `AMOAND`, `AMOOR`, `AMOXOR`, `AMOMIN`, `AMOMAX`, `AMOMINU`, `AMOMAXU` in word (`.W`) and doubleword (`.D`) variants.
 - **RV64FD Floating-Point Load/Store Instructions:**
-  - Floating Loads: `FLW` (single-precision), `FLD` (double-precision).
-  - Floating Stores: `FSW` (single-precision), `FSD` (double-precision).
+    - Floating Loads: `FLW` (single-precision), `FLD` (double-precision).
+    - Floating Stores: `FSW` (single-precision), `FSD` (double-precision).
 - **Alignment:**
-  - The module requires natural alignment for all memory accesses. If an address is not aligned to the size of the access, a misaligned address exception is raised.
+    - The module requires natural alignment for all memory accesses. If an address is not aligned to the size of the access, a misaligned address exception is raised.
 
 ## 4. Interfaces
 
@@ -84,13 +84,13 @@ The module is required to implement the following RISC-V Unprivileged ISA specif
 ## 5. Functional Description
 
 ### 5.1 Address Generation and Alignment Check
-* **Load/Store Address:** Address is calculated as $Addr = \text{operand\_a\_i} + \text{imm\_i}$.
-* **AMO / LR / SC Address:** Address is taken directly from $\text{operand\_a\_i}$ (no immediate offset is applied).
+* **Load/Store Address:** Address is calculated as `Addr = operand_a_i + imm_i`.
+* **AMO / LR / SC Address:** Address is taken directly from `operand_a_i` (no immediate offset is applied).
 * **Alignment Validation:** The lower bits of the calculated address must be zero based on the size:
-  - Doubleword (`64b`): `addr[2:0] == 3'b000`
-  - Word (`32b`): `addr[1:0] == 2'b00`
-  - Halfword (`16b`): `addr[0] == 1'b0`
-  - Byte (`8b`): Always aligned.
+    - Doubleword (`64b`): `addr[2:0] == 3'b000`
+    - Word (`32b`): `addr[1:0] == 2'b00`
+    - Halfword (`16b`): `addr[0] == 1'b0`
+    - Byte (`8b`): Always aligned.
   If alignment fails, `wb_headers_o.exc_valid` is set to `1` and `wb_headers_o.exc_code` is loaded with the appropriate cause code (e.g. Load Address Misaligned or Store/AMO Address Misaligned), bypassing the memory request phase.
 
 ### 5.2 Load-Reserved / Store-Conditional Logic
@@ -98,12 +98,12 @@ The module is required to implement the following RISC-V Unprivileged ISA specif
 * **Cache-Line Granularity:** To support future multi-hart cache coherence, `reservation_addr` stores the address at **cache-line granularity** (e.g., comparing only the upper bits `addr[63:6]` for a 64-byte cache line).
 * **LR Execution:** Executes as a standard load, but stores the cache-line address in `reservation_addr` and sets `reservation_valid = 1`.
 * **SC Execution:** Checks the reservation logic:
-  - If `reservation_valid` is set and the access address's cache line matches `reservation_addr`, the write is issued to memory. Upon memory completion, `wb_result_o` is set to `0` (success) and `reservation_valid` is cleared.
-  - If `reservation_valid` is cleared or the cache-line address does not match, the write request to memory is bypassed. `wb_result_o` is immediately set to `1` (failure) and returned.
+    - If `reservation_valid` is set and the access address's cache line matches `reservation_addr`, the write is issued to memory. Upon memory completion, `wb_result_o` is set to `0` (success) and `reservation_valid` is cleared.
+    - If `reservation_valid` is cleared or the cache-line address does not match, the write request to memory is bypassed. `wb_result_o` is immediately set to `1` (failure) and returned.
 * **Reservation Invalidation:** The reservation is automatically cleared (`reservation_valid = 0`) on:
-  - Any standard store instruction executed by the local hart.
-  - An exception or interrupt occurrence (to prevent context switch leakage).
-  - External snoop invalidation triggers: when `disp_snoop_invalidate_valid_i` is high and `disp_snoop_invalidate_addr_i[63:6] == reservation_addr`.
+    - Any standard store instruction executed by the local hart.
+    - An exception or interrupt occurrence (to prevent context switch leakage).
+    - External snoop invalidation triggers: when `disp_snoop_invalidate_valid_i` is high and `disp_snoop_invalidate_addr_i[63:6] == reservation_addr`.
 
 ---
 
@@ -181,15 +181,17 @@ During the **`AMO_ALU`** state, a dedicated ALU inside the LSO-AMO module perfor
 
 ### 5.5 Floating-Point Loads and Stores
 Floating-point loads and stores are processed by the memory FSM similarly to integer loads/stores:
+
 * **`FLD` / `FSD`:** Transferred as 64-bit doublewords (`dmem_size_o = 2'b11`). Data passes directly between memory and FPRs.
 * **`FLW`:** Transferred as a 32-bit word (`dmem_size_o = 2'b10`). Read data returned from memory is **NaN-boxed** to 64 bits (upper 32 bits set to `0xFFFFFFFF`) before being driven on `wb_result_o` to satisfy the RV64F specification.
 * **`FSW`:** Transferred as a 32-bit word (`dmem_size_o = 2'b10`). The store data is extracted from the lower 32 bits of `operand_b_i` (the source FPR value).
 
 ### 5.6 Speculative Flush (Memory Request Invalidation)
 Memory operations require careful speculative handling to avoid corrupting core or memory state:
+
 * **Speculative Loads:** If a load instruction is in-flight (e.g. waiting in `MEM_READ_WAIT` for `dmem_rvalid_i`) and a pipeline flush occurs (`flush_i == 1`):
-  - The LSO-AMO FSM immediately aborts the operation and returns to the `IDLE` state.
-  - Any data returned by the memory subsystem (`dmem_rdata_i`) in subsequent cycles is discarded and **never** written back to the GPR/FPR file or the ROB.
+    - The LSO-AMO FSM immediately aborts the operation and returns to the `IDLE` state.
+    - Any data returned by the memory subsystem (`dmem_rdata_i`) in subsequent cycles is discarded and **never** written back to the GPR/FPR file or the ROB.
 * **Speculative Stores:** Stores in the Execute stage only perform address generation and alignment validation. They **never** issue a memory write request (`dmem_req_o` is kept low) during Stage 8. Writes are only issued to the Store Buffer (STB) / D-Cache at retirement (Stage 9) when they are guaranteed to commit.
 * **Atomic Memory Operations (AMOs):** AMOs operate under an **Execute-at-Retire** strategy. They are held in the ROB and only executed by the LSO-AMO FSM at retirement (Stage 9), preventing speculative memory lock and write operations.
 * **Speculative Flush during active AMO:** Since AMOs only execute at retirement, they cannot be flushed once they start. If a flush is requested due to a concurrent asynchronous interrupt at retirement, the AMO executes to completion before the interrupt handler is entered.
@@ -210,9 +212,9 @@ LSO-AMO module verification is based on constrained random verification:
 
 1. **FSM Coverage:** Ensure 100% state and transition coverage of the AMO control FSM.
 2. **LR/SC Reservation Integrity:** Verifying that:
-   - Reservations are set correctly on LR.
-   - SC succeeds only on matching addresses with active reservation.
-   - Reservations are cleared correctly by any intervening store, exception, or reset.
+    - Reservations are set correctly on LR.
+    - SC succeeds only on matching addresses with active reservation.
+    - Reservations are cleared correctly by any intervening store, exception, or reset.
 3. **Misaligned Address Triggers:** Injecting misaligned addresses for all sizes (16-bit, 32-bit, 64-bit) to verify exception generation.
 4. **Memory Subsystem Backpressure:** Simulating late grants (`dmem_gnt_i`) and late read validations (`dmem_rvalid_i`) to ensure FSM remains stable.
 

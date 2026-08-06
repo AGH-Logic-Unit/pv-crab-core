@@ -47,6 +47,7 @@ The module is required to implement the following RISC-V Unprivileged ISA specif
 
 ### 5.1 Multiplication Architecture
 To meet timing requirements, the multiplier is split into three pipeline stages (EX1, EX2, EX3). It calculates the full 128-bit product of the two 64-bit inputs to support high-part multiplication:
+
 * **`MUL` / `MULW`**: Returns the lower 64 bits of the product. `MULW` truncates inputs to 32 bits and sign-extends the 32-bit result.
 * **`MULH`**: Returns the upper 64 bits of the signed $\times$ signed product.
 * **`MULHU`**: Returns the upper 64 bits of the unsigned $\times$ unsigned product.
@@ -54,6 +55,7 @@ To meet timing requirements, the multiplier is split into three pipeline stages 
 
 ### 5.2 Speculative Flush (Active Pipeline Reset)
 To prevent the **Late Writeback Hazard** (where a multiplication completes after its ROB tag is reassigned), the multiplier actively monitors `flush_i`:
+
 * When `flush_i` is asserted, all internal pipeline registers (EX1, EX2, EX3) are immediately cleared.
 * Valid bits associated with each pipeline stage are reset to `0`, and `wb_valid_o` is deasserted.
 * This actively kills any in-flight multiplication operations, ensuring they never write back stale results to the ROB after a flush.

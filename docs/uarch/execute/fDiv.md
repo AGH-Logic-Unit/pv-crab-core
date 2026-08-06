@@ -57,6 +57,7 @@ To minimize area, the module implements a digit-recurrence division and square r
 
 ### 5.2 Speculative Flush (Active Reset)
 To prevent the **Late Writeback Hazard** (where a multi-cycle FPU division/square root completes after its ROB tag is reassigned), the module actively monitors `flush_i`:
+
 * When `flush_i` is asserted, any ongoing FPU division/square root calculation is immediately aborted.
 * The internal SRT state machine, counters, and registers are reset.
 * The module deasserts `wb_valid_o` and transitions back to the `IDLE` state in the same cycle.
@@ -65,6 +66,7 @@ To prevent the **Late Writeback Hazard** (where a multi-cycle FPU division/squar
 ## 6. Timing and Performance
 
 The module is non-pipelined and blocks dispatch of subsequent floating-point division/square root operations while executing.
+
 - **Single-Precision Division (`FDIV.S`):** ~15 clock cycles.
 - **Double-Precision Division (`FDIV.D`):** ~30 clock cycles.
 - **Single-Precision Square Root (`FSQRT.S`):** ~15 clock cycles.
@@ -78,5 +80,6 @@ The module is non-pipelined and blocks dispatch of subsequent floating-point div
 ## 7. Verification
 
 Verification is based on comparison against reference models:
+
 1. **Test Vectors:** Verification using Berkeley TestFloat vectors to cover boundary conditions, extreme rounding scenarios, and exception flag generation.
 2. **FSM State Coverage:** Verify FSM stalls, backpressure from pipeline `ready_i`, and clock-gating during idle cycles.

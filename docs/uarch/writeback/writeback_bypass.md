@@ -17,6 +17,7 @@ Instead of complex multi-entry multiplexing from the writeback/retirement buffer
 ## 2. Register Scoreboard & Tracking
 
 To track outstanding writes to the Register File (GPR/FPR):
+
 * **Pending Status (Busy Bit):** Each register is associated with a single pending (busy) bit in the Scoreboard.
 * **Allocation:** When an instruction is dispatched, its destination register `rd` is marked as pending (busy).
 * **Commit:** When the instruction completes writeback and commits to the architectural Register File at the Retirement stage (Stage 9), the pending bit is cleared.
@@ -53,6 +54,7 @@ Unlike complex designs, operands are **not** forwarded from the Retirement FIFO 
 ## 5. Physical Layout & Area Efficiency
 
 By restricting bypass forwarding inputs strictly to:
+
 1. The combinational ALU output (0-cycle).
 2. The active execution module outputs (`wb_result_o` from active units).
 
