@@ -96,12 +96,12 @@ The interface between the Writeback Arbiter and each execution module (ALU, Divi
 
 The Retirement Buffer is designed using a **Split-Array Architecture** to avoid the hardware overhead and timing bottlenecks of dual-write-port (2W) RAM structures. It is partitioned into two physically distinct, single-write-port arrays:
 
-1. **Metadata Array (Static Tablica):**
-      * **Ports:** 1 Write Port (used by Decode/Dispatch at Stage 7), 1 Read Port (used by Retire at Stage 9).
-      * **Contents:** `pc` (64-bit program counter), `is_rvc` (1-bit compressed instruction flag), `rd_addr` (5-bit), `rd_type` (1-bit), `rd_we` (1-bit), `op_class` (3-bit `op_class_t`), and CSR static metadata (`meta.csr.addr`, `meta.csr.op`, `meta.trap.is_interrupt`).
+1. **Metadata Array (Static Array):**
+      * **Ports:** 1 Write Port (used by Decode/Dispatch at Stage 5), 1 Read Port (used by Retire at Stage 7).
+      * **Contents:** `pc` (64-bit program counter, see Section 6.4 for `PC[0]` optimization), `rd_addr` (5-bit), `rd_type` (1-bit), `rd_we` (1-bit), `op_class` (3-bit `op_class_t`), and CSR static metadata (`meta.csr.addr`, `meta.csr.op`, `meta.trap.is_interrupt`).
       * **Behavior:** Written once at Dispatch. It is never modified by execution stages.
 
-2. **Result/Status Array (Dynamic Tablica):**
+2. **Result/Status Array (Dynamic Array):**
       * **Ports:** 1 Write Port (used by the Writeback Arbiter / Flush controller), 1 Read Port (used by Retire).
       * **Contents:** `valid` (1-bit completion flag), `trap` (1-bit trap flag), `result` (64-bit data), and execution-dynamic status (`meta.fp.fflags`, `meta.trap.cause`).
       * **Behavior:** Written by execution units via the Writeback Arbiter upon completion.
@@ -152,10 +152,10 @@ For standard instructions (`op_class == OP_CLASS_NORMAL` or `OP_CLASS_FPU` when 
 
 1. **Register Writeback:** Writeback asserts the GPR/FPR write enable `commit_rd_we_o` using the slot's `rd_we` and `rd_type`. The destination register address `commit_rd_addr_o` receives `rd_addr`, and the data is read from the slot's `result`.
 2. **FPU Flag Accumulation:** If `op_class == OP_CLASS_FPU`:
-      * Writeback asserts `commit_fpu_valid_o = 1` and routes `commit_fflags_o = meta.fp.fflags` (which was generated speculatively in Stage 8 by FMA/FDiv/FMisc units and stored in the ROB Result Array) to the CSR unit.
+      * Writeback asserts `commit_fpu_valid_o = 1` and routes `commit_fflags_o = meta.fp.fflags` (which was generated speculatively in Stage 6 by FMA/FDiv/FMisc units and stored in the ROB Result Array) to the CSR unit.
       * The CSR unit merges these accrued exceptions into the architectural `fflags` CSR using a bitwise OR operation: `fflags <= fflags | commit_fflags_i`.
       * The CSR unit also updates the floating-point state status `mstatus.FS` to `2'b11` (Dirty) to indicate FPR/FPU CSR changes.
-      * *Security Check:* If `mstatus.FS == 2'b00` (Off) when the FPU instruction was decoded, the instruction is tagged with an Illegal Instruction exception at Stage 6 and traps at retirement (Stage 9), skipping normal commit.
+      * *Security Check:* If `mstatus.FS == 2'b00` (Off) when the FPU instruction was decoded, the instruction is tagged with an Illegal Instruction exception at Stage 4 (Decode) and traps at retirement (Stage 7), skipping normal commit.
 3. **Scoreboard Release:** The scoreboard clears the busy bit corresponding to the retired tag, making it available for subsequent instructions.
 
 For Store/AMO instructions (`op_class == OP_CLASS_STORE`):
@@ -200,7 +200,7 @@ When an instruction reaches the head of the Retirement FIFO with the `trap` bit 
       * `trap_badaddr_o = result` (the bad memory address/instruction code causing the exception)
       * `trap_pc_o = pc` (LSB masked to `0` before writing to `mepc`/`sepc`)
 3. The CSR unit updates the architectural exception status registers and outputs `trap_vector_i`.
-4. Writeback asserts `flush_req_o = 1` to clear stages 1-8 and the Retirement Buffer, and updates Stage 1 to fetch from `trap_vector_i`.
+4. Writeback asserts `flush_req_o = 1` to clear stages 1-6 and the Retirement Buffer, and updates Stage 1 to fetch from `trap_vector_i`.
 
 ---
 

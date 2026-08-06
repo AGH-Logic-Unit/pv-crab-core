@@ -22,7 +22,7 @@ title: Control and Status Registers (CSR)
 
 The Control and Status Registers (CSR) module is responsible for managing the processor's internal state, configuration of privilege levels, trap handling, virtual memory configurations (`satp` register), physical memory protection (PMP), performance counters, and floating-point control/status (`fcsr`).
 
-To maximize core performance and simplify the Dispatch unit, the PV-Crab core uses an optimized **Execute-at-Retire with No-Stall Dispatch** strategy. CSR instructions flow through the pipeline without stalling the Dispatch stage. Both the read of the old value and the write of the new value are deferred to **Stage 9 (Retire & Writeback)**.
+To maximize core performance and simplify the Dispatch unit, the PV-Crab core uses an optimized **Execute-at-Retire with No-Stall Dispatch** strategy. CSR instructions flow through the pipeline without stalling the Dispatch stage. Both the read of the old value and the write of the new value are deferred to **Stage 7 (Retire & Writeback)**.
 
 ---
 
@@ -64,7 +64,7 @@ To support multi-core scaling and allow hardware customization, the machine info
 
 ### 3.1 Writeback <-> CSR Unit Port List
 
-The ports defined below reflect the optimized interface where CSR metadata and operands are retrieved from the Retirement Buffer slots at the Commit point (Stage 9).
+The ports defined below reflect the optimized interface where CSR metadata and operands are retrieved from the Retirement Buffer slots at the Commit point (Stage 7).
 
 | Signal | Type | Width | Direction | Description |
 | :--- | :---: | :---: | :---: | :--- |
@@ -73,7 +73,7 @@ The ports defined below reflect the optimized interface where CSR metadata and o
 | `rst_ni` | `logic` | 1 | IN | Asynchronous active-low reset |
 | **Global State Outputs** | | | | |
 | `priv_mode_o` | `priv_mode_t` | 2 | OUT | Active CPU privilege level (sent to Decode for security checks) |
-| **Stage 9 Commit Interface** | | | | |
+| **Stage 7 Commit Interface** | | | | |
 | `commit_valid_i` | `logic` | 1 | IN | High when the instruction at the head of the Retirement FIFO is committing |
 | `commit_csr_valid_i` | `logic` | 1 | IN | Asserted if the committing instruction is a CSR instruction (`op_class == OP_CLASS_CSR`) |
 | `commit_csr_addr_i` | `logic` | 12 | IN | Target CSR address (from `meta.csr.addr`) |
@@ -97,7 +97,7 @@ The ports defined below reflect the optimized interface where CSR metadata and o
 | `mstatus_o` | `logic` | 64 | OUT | Machine status register (sent to Interrupt Controller/Control logic) |
 | `mie_o` | `logic` | 64 | OUT | Machine interrupt enables (sent to Interrupt Controller) |
 | `mip_o` | `logic` | 64 | OUT | Machine interrupt pending flags (sent to Interrupt Controller) |
-| `frm_o` | `logic` | 3 | OUT | Floating-point dynamic rounding mode (sent directly to FPU in Stage 8) |
+| `frm_o` | `logic` | 3 | OUT | Floating-point dynamic rounding mode (sent directly to FPU in Stage 6) |
 | `pmpcfg_o` | `logic [15][7:0]` | 128 | OUT | Exported PMP entry configurations (16 entries * 8 bits, sent to I/D Memory Access Filters) |
 | `pmpaddr_o` | `logic [15][53:0]` | 864 | OUT | Exported PMP physical address bounds (16 entries * 54 bits, holding address bits [55:2], sent to Filters) |
 | **Hardware Counter Interface** | | | | |
@@ -203,7 +203,7 @@ The core implements a RISC-V Physical Memory Protection (PMP) unit supporting 16
 * **Hardware Signal Export:**
     * The CSR unit continuously exports all 16 configuration fields as a packed array on `pmpcfg_o` (`16 * 8 = 128` bits).
     * It exports all 16 address registers (holding physical address bits `[55:2]`) on `pmpaddr_o` (`16 * 54 = 864` bits).
-    * These exported signals are routed directly to the Stage 1 Fetch security filter and the Stage 8 LSO-AMO memory access filter.
+    * These exported signals are routed directly to the Stage 1 Fetch security filter and the Stage 6 LSO-AMO memory access filter.
 * **PMP Writes and Security Pipeline Flushes:**
     * Any write to a `pmpcfg*` or `pmpaddr*` register changes the system's memory security policy.
     * To prevent instructions fetched or executing under stale permissions from executing, a write to any PMP register causes the CSR unit to assert `commit_flush_req_o = 1`.
@@ -270,8 +270,8 @@ Due to the Execute-at-Retire design, the CSR module operates entirely within a s
 
 To maintain a target minimum frequency of **100MHz**, the logic must be highly optimized. If timing closure becomes critical, the Retirement/Writeback stage can be split into two sub-stages:
 
-* **Stage 9a (Read & Verify):** Fetch the CSR register value, perform privilege checks, and route `commit_rdata_o` to the GPR file write ports.
-* **Stage 9b (Execute & Commit):** Perform the CSR ALU modify operation and write the new value back to the CSR register.
+* **Stage 7a (Read & Verify):** Fetch the CSR register value, perform privilege checks, and route `commit_rdata_o` to the GPR file write ports.
+* **Stage 7b (Execute & Commit):** Perform the CSR ALU modify operation and write the new value back to the CSR register.
 
 ---
 
