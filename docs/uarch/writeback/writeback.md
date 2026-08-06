@@ -98,7 +98,7 @@ The Retirement Buffer is designed using a **Split-Array Architecture** to avoid 
 
 1. **Metadata Array (Static Array):**
       * **Ports:** 1 Write Port (used by Decode/Dispatch at Stage 5), 1 Read Port (used by Retire at Stage 7).
-      * **Contents:** `pc` (64-bit program counter, see Section 6.4 for `PC[0]` optimization), `rd_addr` (5-bit), `rd_type` (1-bit), `rd_we` (1-bit), `op_class` (3-bit `op_class_t`), and CSR static metadata (`meta.csr.addr`, `meta.csr.op`, `meta.trap.is_interrupt`).
+      * **Contents:** `pc` (64-bit program counter), `is_rvc` (1-bit compressed instruction flag), `rd_addr` (5-bit), `rd_type` (1-bit), `rd_we` (1-bit), `op_class` (3-bit `op_class_t`), and CSR static metadata (`meta.csr.addr`, `meta.csr.op`, `meta.trap.is_interrupt`).
       * **Behavior:** Written once at Dispatch. It is never modified by execution stages.
 
 2. **Result/Status Array (Dynamic Array):**
