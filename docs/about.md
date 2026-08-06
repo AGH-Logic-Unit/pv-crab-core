@@ -17,25 +17,23 @@ The project naming scheme is inspired by astrophysics:
 *   **Pulsar-V** refers to **pulsars** (rotating neutron stars).
 *   **Crab** is the first core model of the family, named after the **Crab Nebula** (which contains the Crab Pulsar at its center).
 
-The **Crab Core** is designed specifically as an in-order core (hart) and features a **9-stage in-order pipeline** optimized for frequency and area efficiency.
+The **Crab Core** is designed specifically as an in-order core (hart) and features a **7-stage in-order pipeline** optimized for frequency and area efficiency.
 
 ```mermaid
 graph TD
-    subgraph Instruction Fetch & Pre-Decode
-        S1["PC & BTB"] --> S2["Fetch 1"]
-        S2 --> S3["Fetch 2"]
-        S3 --> S4["Pre-Decode"]
-        S4 --> S5["BPU & Fetch FIFO"]
+    subgraph Instruction Fetch & BPU
+        S1["PC Gen & Index"] --> S2["Cache Tag & Filter"]
+        S2 --> S3["Pre-Decode & BPU"]
     end
 
     subgraph Instruction Decode & Issue
-        S5 --> S6["Decode"]
-        S6 --> S7["Dispatch"]
+        S3 --> S4["Decode"]
+        S4 --> S5["Dispatch"]
     end
 
     subgraph Execution & Writeback
-        S7 --> S8["Execute & LSAMO"]
-        S8 --> S9["Retire & Writeback"]
+        S5 --> S6["Execute & LSAMO"]
+        S6 --> S7["Retire & Writeback"]
     end
 ```
 
@@ -77,4 +75,4 @@ The development of the Crab Core is based on the following technical strategies:
 *   **Virtual Memory:** Sv39 Virtual Memory support enabling translation of 39-bit virtual addresses into physical addresses. Includes fully associative Instruction TLB (I-TLB) and Data TLB (D-TLB) backed by a hardware Page Table Walker (PTW).
 *   **Memory Subsystem:**
     *   **L1 Instruction Cache:** 64-bit fetch width to resolve compressed instruction alignment across boundaries.
-    *   **L1 Data Cache:** High-speed cache supporting write policies, local reservations, and core-side AMOs.
+    *   **L1 Data Cache:** High-speed cache supporting write-back/write-allocate policies, local reservations, and cache-side AMOs.

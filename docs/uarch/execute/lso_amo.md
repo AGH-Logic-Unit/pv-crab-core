@@ -192,8 +192,8 @@ Memory operations require careful speculative handling to avoid corrupting core 
 * **Speculative Loads:** If a load instruction is in-flight (e.g. waiting in `MEM_READ_WAIT` for `dmem_rvalid_i`) and a pipeline flush occurs (`flush_i == 1`):
     - The LSO-AMO FSM immediately aborts the operation and returns to the `IDLE` state.
     - Any data returned by the memory subsystem (`dmem_rdata_i`) in subsequent cycles is discarded and **never** written back to the GPR/FPR file or the ROB.
-* **Speculative Stores:** Stores in the Execute stage only perform address generation and alignment validation. They **never** issue a memory write request (`dmem_req_o` is kept low) during Stage 8. Writes are only issued to the Store Buffer (STB) / D-Cache at retirement (Stage 9) when they are guaranteed to commit.
-* **Atomic Memory Operations (AMOs):** AMOs operate under an **Execute-at-Retire** strategy. They are held in the ROB and only executed by the LSO-AMO FSM at retirement (Stage 9), preventing speculative memory lock and write operations.
+* **Speculative Stores:** Stores in the Execute stage only perform address generation and alignment validation. They **never** issue a memory write request (`dmem_req_o` is kept low) during Stage 6. Writes are only issued to the Store Buffer (STB) / D-Cache at retirement (Stage 7) when they are guaranteed to commit.
+* **Atomic Memory Operations (AMOs):** AMOs operate under an **Execute-at-Retire** strategy. They are held in the ROB and only executed by the LSO-AMO FSM at retirement (Stage 7), preventing speculative memory lock and write operations.
 * **Speculative Flush during active AMO:** Since AMOs only execute at retirement, they cannot be flushed once they start. If a flush is requested due to a concurrent asynchronous interrupt at retirement, the AMO executes to completion before the interrupt handler is entered.
 
 ---
