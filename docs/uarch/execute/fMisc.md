@@ -26,22 +26,22 @@ Many of these instructions read from or write to the General Purpose Registers (
 The module is required to implement the following RISC-V Unprivileged ISA specifications:
 
 - **RV32F / RV64F (Single-Precision):**
-  - **Float to Integer:** `FCVT.W.S`, `FCVT.WU.S`, `FCVT.L.S` (RV64), `FCVT.LU.S` (RV64).
-  - **Integer to Float:** `FCVT.S.W`, `FCVT.S.WU`, `FCVT.S.L` (RV64), `FCVT.S.LU` (RV64).
-  - **Sign Injection:** `FSGNJ.S`, `FSGNJN.S`, `FSGNJX.S`.
-  - **Comparisons:** `FEQ.S`, `FLT.S`, `FLE.S`.
-  - **Min/Max:** `FMIN.S`, `FMAX.S`.
-  - **Classification:** `FCLASS.S`.
-  - **Data Movement (FPR <-> GPR):** `FMV.X.W`, `FMV.W.X`.
+    - **Float to Integer:** `FCVT.W.S`, `FCVT.WU.S`, `FCVT.L.S` (RV64), `FCVT.LU.S` (RV64).
+    - **Integer to Float:** `FCVT.S.W`, `FCVT.S.WU`, `FCVT.S.L` (RV64), `FCVT.S.LU` (RV64).
+    - **Sign Injection:** `FSGNJ.S`, `FSGNJN.S`, `FSGNJX.S`.
+    - **Comparisons:** `FEQ.S`, `FLT.S`, `FLE.S`.
+    - **Min/Max:** `FMIN.S`, `FMAX.S`.
+    - **Classification:** `FCLASS.S`.
+    - **Data Movement (FPR <-> GPR):** `FMV.X.W`, `FMV.W.X`.
 - **RV32D / RV64D (Double-Precision):**
-  - **Float to Integer:** `FCVT.W.D`, `FCVT.WU.D`, `FCVT.L.D` (RV64), `FCVT.LU.D` (RV64).
-  - **Integer to Float:** `FCVT.D.W`, `FCVT.D.WU`, `FCVT.D.L` (RV64), `FCVT.D.LU` (RV64).
-  - **Float to Float:** `FCVT.S.D`, `FCVT.D.S`.
-  - **Sign Injection:** `FSGNJ.D`, `FSGNJN.D`, `FSGNJX.D`.
-  - **Comparisons:** `FEQ.D`, `FLT.D`, `FLE.D`.
-  - **Min/Max:** `FMIN.D`, `FMAX.D`.
-  - **Classification:** `FCLASS.D`.
-  - **Data Movement (FPR <-> GPR):** `FMV.X.D`, `FMV.D.X`.
+    - **Float to Integer:** `FCVT.W.D`, `FCVT.WU.D`, `FCVT.L.D` (RV64), `FCVT.LU.D` (RV64).
+    - **Integer to Float:** `FCVT.D.W`, `FCVT.D.WU`, `FCVT.D.L` (RV64), `FCVT.D.LU` (RV64).
+    - **Float to Float:** `FCVT.S.D`, `FCVT.D.S`.
+    - **Sign Injection:** `FSGNJ.D`, `FSGNJN.D`, `FSGNJX.D`.
+    - **Comparisons:** `FEQ.D`, `FLT.D`, `FLE.D`.
+    - **Min/Max:** `FMIN.D`, `FMAX.D`.
+    - **Classification:** `FCLASS.D`.
+    - **Data Movement (FPR <-> GPR):** `FMV.X.D`, `FMV.D.X`.
 - **Rounding Modes:** Support for all RISC-V rounding modes (`RNE`, `RTZ`, `RDN`, `RUP`, `RMM`, dynamic rounding via `frm`) during conversion operations.
 
 ## 4. Interfaces
@@ -67,6 +67,7 @@ The module is required to implement the following RISC-V Unprivileged ISA specif
 
 ### 5.1 Berkeley HardFloat Integration
 To accelerate development and ensure correctness, the module relies on the following Berkeley HardFloat IP blocks:
+
 - **`recFNToIN` (Float-to-Integer):** Performs conversion from recoded floats to signed/unsigned 32-bit and 64-bit integers.
 - **`iNToRecFN` (Integer-to-Float):** Performs conversion from signed/unsigned integers to recoded floats.
 - **`recFNToRecFN` (Float-to-Float):** Converts between double-precision and single-precision recoded formats.
@@ -74,12 +75,13 @@ To accelerate development and ensure correctness, the module relies on the follo
 
 ### 5.2 Single-Cycle Combinatorial Operations
 For non-conversion operations, the module operates combinatorially and bypasses pipeline stages to complete in **1 cycle**:
+
 - **Sign Injection (`FSGNJ`/`FSGNJN`/`FSGNJX`):** Computes results by combining the sign bit of `operand_b_i` with the exponent and significand of `operand_a_i`.
 - **Classification (`FCLASS`):** Checks the exponent, fraction, and sign of the input to output a 10-bit mask identifying the category of the floating-point value (negative infinity, negative normal, negative subnormal, etc.).
 - **Min/Max (`FMIN`/`FMAX`):** Employs the `compareRecFN` block to determine the minimum/maximum of two inputs. Handles special IEEE 754 NaN propagation rules (e.g., if one input is NaN, returns the other).
 - **Data Movement (`FMV`):** Copies raw bits between General Purpose Registers (GPRs) and Floating-Point Registers (FPRs) without any numerical conversion:
-  - `FMV.X.W` / `FMV.X.D`: Moves the bit pattern from FPR `operand_a_i` to GPR output `wb_result_o`. For `FMV.X.W`, the 32-bit pattern is sign-extended to 64 bits.
-  - `FMV.W.X` / `FMV.D.X`: Moves the bit pattern from GPR `operand_a_i` to FPR output `wb_result_o`. For `FMV.W.X`, the 32-bit pattern is NaN-boxed (upper 32 bits set to `0xFFFFFFFF`).
+    - `FMV.X.W` / `FMV.X.D`: Moves the bit pattern from FPR `operand_a_i` to GPR output `wb_result_o`. For `FMV.X.W`, the 32-bit pattern is sign-extended to 64 bits.
+    - `FMV.W.X` / `FMV.D.X`: Moves the bit pattern from GPR `operand_a_i` to FPR output `wb_result_o`. For `FMV.W.X`, the 32-bit pattern is NaN-boxed (upper 32 bits set to `0xFFFFFFFF`).
 
 ### 5.3 NaN-boxing
 - **Inputs:** Float inputs are checked for 32-bit NaN-boxing. If a single-precision input is not properly NaN-boxed (upper 32 bits are not all 1s), it is treated as a default NaN (`0x7FC00000`).
@@ -99,5 +101,6 @@ If the Writeback Arbiter deasserts `wb_ready_i`, the pipeline output registers a
 ## 7. Verification
 
 Verification is based on comparison against reference models:
+
 1. **Berkeley TestFloat:** Exhaustive verification of conversion rounding modes, integer bounds check, and comparison exception behaviors.
 2. **Corner-Case Analysis:** Verifying NaN-boxing logic on inputs and outputs.

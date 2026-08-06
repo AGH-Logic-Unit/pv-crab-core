@@ -52,12 +52,13 @@ The division module implements a serial division algorithm (e.g., Radix-2 or Rad
 * **Division by Zero:** According to RISC-V specification, division by zero must return all ones (`-1` or `0xFFFFFFFFFFFFFFFF` for 64-bit, `0xFFFFFFFF` for 32-bit) for the quotient, and the dividend for the remainder (`REM`/`REMU`/`REMW`/`REMUW`). This case should be detected and handled as a 1-cycle bypass.
 * **Signed Overflow:** The overflow condition occurs only for signed division when dividing the most negative integer ($-2^{63}$ for 64-bit, $-2^{31}$ for 32-bit) by $-1$. The result should be the most negative integer for the quotient and `0` for the remainder. This should also be bypassed in 1 cycle.
 * **32-bit W-variants:** For `DIVW`, `DIVUW`, `REMW`, and `REMUW` instructions:
-  - Inputs `operand_a_i` and `operand_b_i` are truncated to 32 bits.
-  - The division operation is performed on these 32-bit values.
-  - The 32-bit quotient or remainder result is **sign-extended** to 64 bits before being driven on `wb_result_o`.
+    - Inputs `operand_a_i` and `operand_b_i` are truncated to 32 bits.
+    - The division operation is performed on these 32-bit values.
+    - The 32-bit quotient or remainder result is **sign-extended** to 64 bits before being driven on `wb_result_o`.
 
 ### 5.2 Speculative Flush (Active Reset)
 To prevent the **Late Writeback Hazard** (where a flushed multicycle division completes after the ROB tag has been reassigned to a new instruction), the divider actively monitors the `flush_i` signal:
+
 * When `flush_i` is asserted, any ongoing division calculation is immediately aborted.
 * The internal serial control logic, counters, and registers are reset.
 * The module deasserts `wb_valid_o` and transitions back to the `IDLE` state in the same cycle.

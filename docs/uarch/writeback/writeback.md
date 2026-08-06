@@ -97,14 +97,14 @@ The interface between the Writeback Arbiter and each execution module (ALU, Divi
 The Retirement Buffer is designed using a **Split-Array Architecture** to avoid the hardware overhead and timing bottlenecks of dual-write-port (2W) RAM structures. It is partitioned into two physically distinct, single-write-port arrays:
 
 1. **Metadata Array (Static Tablica):**
-   * **Ports:** 1 Write Port (used by Decode/Dispatch at Stage 7), 1 Read Port (used by Retire at Stage 9).
-   * **Contents:** `pc` (64-bit program counter, see Section 6.4 for `PC[0]` optimization), `rd_addr` (5-bit), `rd_type` (1-bit), `rd_we` (1-bit), `op_class` (3-bit `op_class_t`), and CSR static metadata (`meta.csr.addr`, `meta.csr.op`, `meta.trap.is_interrupt`).
-   * **Behavior:** Written once at Dispatch. It is never modified by execution stages.
+      * **Ports:** 1 Write Port (used by Decode/Dispatch at Stage 7), 1 Read Port (used by Retire at Stage 9).
+      * **Contents:** `pc` (64-bit program counter, see Section 6.4 for `PC[0]` optimization), `rd_addr` (5-bit), `rd_type` (1-bit), `rd_we` (1-bit), `op_class` (3-bit `op_class_t`), and CSR static metadata (`meta.csr.addr`, `meta.csr.op`, `meta.trap.is_interrupt`).
+      * **Behavior:** Written once at Dispatch. It is never modified by execution stages.
 
 2. **Result/Status Array (Dynamic Tablica):**
-   * **Ports:** 1 Write Port (used by the Writeback Arbiter / Flush controller), 1 Read Port (used by Retire).
-   * **Contents:** `valid` (1-bit completion flag), `trap` (1-bit trap flag), `result` (64-bit data), and execution-dynamic status (`meta.fp.fflags`, `meta.trap.cause`).
-   * **Behavior:** Written by execution units via the Writeback Arbiter upon completion.
+      * **Ports:** 1 Write Port (used by the Writeback Arbiter / Flush controller), 1 Read Port (used by Retire).
+      * **Contents:** `valid` (1-bit completion flag), `trap` (1-bit trap flag), `result` (64-bit data), and execution-dynamic status (`meta.fp.fflags`, `meta.trap.cause`).
+      * **Behavior:** Written by execution units via the Writeback Arbiter upon completion.
 
 #### Register contents
 
@@ -122,6 +122,7 @@ The Retirement Buffer is designed using a **Split-Array Architecture** to avoid 
 
 #### Invalidation upon Flush:
 When a pipeline flush is triggered:
+
 * **Tail Pointer Rollback:** The ROB tail pointer is rolled back to `head_ptr + 1` (or `head_ptr`). Any slot outside the active pointer window is treated as empty. This rollback method invalidates speculative instructions in a single cycle with **zero register-write energy overhead**.
 * **Register Clearing (Optional):** If registers are explicitly cleared, the `valid` bit in the **Result/Status Array** is written to `0` for the flushed slots. Since all preceding pipeline stages are frozen during a flush, there are no write conflicts with the Writeback Arbiter.
 
@@ -133,6 +134,7 @@ The Writeback Arbiter prioritizes and routes results from execution units (ALU, 
 
 #### Dynamic Stall Handshake
 PV-Crab implements a distributed **ready-valid handshake (back-pressure)** rather than a complex centralized hazard controller:
+
 * If the Writeback stage cannot accept a result (e.g. because a structural hazard is present or the ROB is full), the Writeback Arbiter deasserts `ex_ready_o` to the respective execution module.
 * The execution module stalls internally and deasserts its ready signal to the Dispatch stage.
 * This back-pressure automatically propagates backward to Decode and Fetch, stalling the pipeline dynamically.
@@ -146,15 +148,17 @@ Priority rules for execution units completing in the same cycle:
 ### 6.3 Committing & FPU Flag Accumulation
 
 For standard instructions (`op_class == OP_CLASS_NORMAL` or `OP_CLASS_FPU` when `trap == 0`):
+
 1. **Register Writeback:** Writeback asserts the GPR/FPR write enable `commit_rd_we_o` using the slot's `rd_we` and `rd_type`. The destination register address `commit_rd_addr_o` receives `rd_addr`, and the data is read from the slot's `result`.
 2. **FPU Flag Accumulation:** If `op_class == OP_CLASS_FPU`:
-   * Writeback asserts `commit_fpu_valid_o = 1` and routes `commit_fflags_o = meta.fp.fflags` (which was generated speculatively in Stage 8 by FMA/FDiv/FMisc units and stored in the ROB Result Array) to the CSR unit.
-   * The CSR unit merges these accrued exceptions into the architectural `fflags` CSR using a bitwise OR operation: `fflags <= fflags | commit_fflags_i`.
-   * The CSR unit also updates the floating-point state status `mstatus.FS` to `2'b11` (Dirty) to indicate FPR/FPU CSR changes.
-   * *Security Check:* If `mstatus.FS == 2'b00` (Off) when the FPU instruction was decoded, the instruction is tagged with an Illegal Instruction exception at Stage 6 and traps at retirement (Stage 9), skipping normal commit.
+      * Writeback asserts `commit_fpu_valid_o = 1` and routes `commit_fflags_o = meta.fp.fflags` (which was generated speculatively in Stage 8 by FMA/FDiv/FMisc units and stored in the ROB Result Array) to the CSR unit.
+      * The CSR unit merges these accrued exceptions into the architectural `fflags` CSR using a bitwise OR operation: `fflags <= fflags | commit_fflags_i`.
+      * The CSR unit also updates the floating-point state status `mstatus.FS` to `2'b11` (Dirty) to indicate FPR/FPU CSR changes.
+      * *Security Check:* If `mstatus.FS == 2'b00` (Off) when the FPU instruction was decoded, the instruction is tagged with an Illegal Instruction exception at Stage 6 and traps at retirement (Stage 9), skipping normal commit.
 3. **Scoreboard Release:** The scoreboard clears the busy bit corresponding to the retired tag, making it available for subsequent instructions.
 
 For Store/AMO instructions (`op_class == OP_CLASS_STORE`):
+
 1. Assert `stb_commit_valid_o = 1` and `stb_commit_tag_o = tag`.
 2. The Store Buffer (STB) receives the signal and commits the speculative store to the memory system.
 
@@ -163,34 +167,37 @@ For Store/AMO instructions (`op_class == OP_CLASS_STORE`):
 ### 6.4 CSR/PMP Execution-at-Retirement & PC Redirection
 
 When a CSR instruction (`op_class == OP_CLASS_CSR` and `trap == 0`) reaches the head of the Retirement FIFO:
+
 1. The Writeback stage halts GPR writes and outputs:
-   * `commit_csr_valid_o = 1`
-   * `commit_csr_addr_o = meta.csr.addr`
-   * `commit_csr_op_o = meta.csr.op`
-   * `commit_wdata_o = result` (containing the operand from `rs1` or `zimm`)
+      * `commit_csr_valid_o = 1`
+      * `commit_csr_addr_o = meta.csr.addr`
+      * `commit_csr_op_o = meta.csr.op`
+      * `commit_wdata_o = result` (containing the operand from `rs1` or `zimm`)
 2. The CSR unit processes the read-modify-write operation and returns:
-   * `commit_rdata_i` (the old value of the CSR register)
-   * `commit_illegal_i` (if a security violation is caught at retirement)
-   * `commit_flush_req_i` (if a system-critical register like `satp` or PMP `pmpcfg*`/`pmpaddr*` was updated)
+      * `commit_rdata_i` (the old value of the CSR register)
+      * `commit_illegal_i` (if a security violation is caught at retirement)
+      * `commit_flush_req_i` (if a system-critical register like `satp` or PMP `pmpcfg*`/`pmpaddr*` was updated)
 3. If `commit_illegal_i == 1`, the instruction traps (see Section 6.5).
 4. Otherwise, the old value from `commit_rdata_i` is written to GPR under `rd_addr` (if `rd_we == 1`).
 5. **System-Critical / PMP Security Redirect:** If `commit_flush_req_i == 1`, a global pipeline flush is requested (`flush_req_o = 1`). This is critical when changing page tables (`satp`) or security configuration registers (`pmpcfg*`, `pmpaddr*`) to clear all speculative instructions from the pipeline.
-   * The next PC target is calculated locally using the **PC LSB Optimization**:
-     Redirection target = `base_pc + (pc[0] ? 2 : 4)`, where `base_pc = {pc[63:1], 1'b0}`.
-   * This target PC is sent back to Stage 1. Since CSR and PMP instructions are strictly 32-bit (4-byte), `PC[0]` is `0` and the offset is `+4`.
+      * The next PC target is calculated locally using the **PC LSB Optimization**:
+      Redirection target = `base_pc + (pc[0] ? 2 : 4)`, where `base_pc = {pc[63:1], 1'b0}`.
+
+      * This target PC is sent back to Stage 1. Since CSR and PMP instructions are strictly 32-bit (4-byte), `PC[0]` is `0` and the offset is `+4`.
 
 ---
 
 ### 6.5 Trap handling
 
 When an instruction reaches the head of the Retirement FIFO with the `trap` bit set to `1`:
+
 1. Normal commit processing for this and all subsequent instructions is halted.
 2. The Writeback stage routes the trap parameters to the CSR unit:
-   * `trap_valid_o = 1`
-   * `trap_cause_o = meta.trap.cause`
-   * `trap_is_interrupt_o = meta.trap.is_interrupt`
-   * `trap_badaddr_o = result` (the bad memory address/instruction code causing the exception)
-   * `trap_pc_o = pc` (LSB masked to `0` before writing to `mepc`/`sepc`)
+      * `trap_valid_o = 1`
+      * `trap_cause_o = meta.trap.cause`
+      * `trap_is_interrupt_o = meta.trap.is_interrupt`
+      * `trap_badaddr_o = result` (the bad memory address/instruction code causing the exception)
+      * `trap_pc_o = pc` (LSB masked to `0` before writing to `mepc`/`sepc`)
 3. The CSR unit updates the architectural exception status registers and outputs `trap_vector_i`.
 4. Writeback asserts `flush_req_o = 1` to clear stages 1-8 and the Retirement Buffer, and updates Stage 1 to fetch from `trap_vector_i`.
 
@@ -203,6 +210,7 @@ A flush signal is global but only invalidates instructions in stages *prior* to 
 
 #### Late Writeback Hazard Prevention
 When the tail pointer of the ROB is rolled back during a flush, tags are freed and can be reassigned to new instructions at Dispatch. To prevent a long-latency execution unit (e.g., Divider or FPU) from writing back a late result to a tag that has already been reassigned:
+
 * All multi-cycle execution units (Divider, FPU, D-Cache controller) receive the global `flush` signal.
 * Upon detecting a flush, they immediately abort their current operations and reset their pipelines.
 * Consequently, they will never assert `valid` or attempt to write back for the flushed tags, making tag reassignment 100% hazard-free.

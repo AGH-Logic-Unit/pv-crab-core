@@ -53,6 +53,7 @@ The module is required to implement the following RISC-V Unprivileged ISA specif
 
 ### 5.1 FMA Operations
 All operations are mapped to the core Fused Multiply-Accumulate logic:
+
 - `FADD`: Computes $A \times 1.0 + C$ (where $A$ is the first input operand and $C$ is the second input operand, with the multiplier operand internally forced or provided as $1.0$).
 - `FSUB`: Computes $A \times 1.0 - C$ (where $A$ is the first input operand and $C$ is the second input operand, with the multiplier operand internally forced or provided as $1.0$).
 - `FMUL`: Computes $A \times B + 0$.
@@ -63,6 +64,7 @@ All operations are mapped to the core Fused Multiply-Accumulate logic:
 
 ### 5.2 Speculative Flush (Active Pipeline Reset)
 To prevent the **Late Writeback Hazard** (where an FMA instruction completes after its ROB tag is reassigned), the FMA unit actively monitors `flush_i`:
+
 * When `flush_i` is asserted, all internal pipeline registers of the FMA execution unit are immediately cleared.
 * Valid bits associated with each pipeline stage are reset to `0`, and `wb_valid_o` is deasserted.
 * This actively kills any in-flight floating-point multiply-add operations, ensuring they never write back stale results or flags to the ROB.
@@ -73,6 +75,7 @@ Inputs are checked for 32-bit NaN-boxing compliance. Single-precision operations
 ## 6. Timing and Performance
 
 The module is fully pipelined, allowing a new operation to start every cycle:
+
 - **Pipeline Latency:** 3 clock cycles.
 - **Clock Gating:** Active clock gating on registers when the pipeline contains no valid calculations to reduce dynamic power.
 
@@ -84,5 +87,6 @@ The module is fully pipelined, allowing a new operation to start every cycle:
 ## 7. Verification
 
 Verification is based on comparison against reference models:
+
 1. **Berkeley TestFloat:** Extensively testing FMA operations across all rounding modes and edge cases (denormals, infinity, signaling NaN).
 2. **Pipeline Hazard Tests:** Validating correctness under pipeline stalls (`ready_i` asserted/deasserted).

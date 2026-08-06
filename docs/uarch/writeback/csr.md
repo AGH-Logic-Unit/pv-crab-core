@@ -31,18 +31,18 @@ To maximize core performance and simplify the Dispatch unit, the PV-Crab core us
 Under the **RISC-V RV64GC** specifications, the system must support:
 
 1. **CSR Instructions:**
-   * `CSRRW` / `CSRRWI` (Atomic Read/Write CSR)
-   * `CSRRS` / `CSRRSI` (Atomic Read and Set Bits)
-   * `CSRRC` / `CSRRCI` (Atomic Read and Clear Bits)
+    * `CSRRW` / `CSRRWI` (Atomic Read/Write CSR)
+    * `CSRRS` / `CSRRSI` (Atomic Read and Set Bits)
+    * `CSRRC` / `CSRRCI` (Atomic Read and Clear Bits)
 2. **Three Privilege Levels:**
-   * **Machine Mode (M-mode):** Highest privilege (required).
-   * **Supervisor Mode (S-mode):** OS level privilege (required for virtual memory Sv39 and Linux support).
-   * **User Mode (U-mode):** Application level privilege.
+    * **Machine Mode (M-mode):** Highest privilege (required).
+    * **Supervisor Mode (S-mode):** OS level privilege (required for virtual memory Sv39 and Linux support).
+    * **User Mode (U-mode):** Application level privilege.
 3. **Required CSR Register Set:**
-   * **M-mode:** `mstatus`, `misa`, `medeleg`, `mideleg`, `mie`, `mtvec`, `mscratch`, `mepc`, `mcause`, `mtval`, `mip`, `mcycle`, `minstret`, `mhartid`, `mvendorid`, `marchid`, `mimpid`.
-   * **S-mode:** `sstatus`, `sie`, `stvec`, `sscratch`, `sepc`, `scause`, `stval`, `sip`, `satp`.
-   * **U-mode (FP extension):** `fcsr` (consisting of `frm` and `fflags`).
-   * **Counters:** `cycle`, `time`, `instret`.
+    * **M-mode:** `mstatus`, `misa`, `medeleg`, `mideleg`, `mie`, `mtvec`, `mscratch`, `mepc`, `mcause`, `mtval`, `mip`, `mcycle`, `minstret`, `mhartid`, `mvendorid`, `marchid`, `mimpid`.
+    * **S-mode:** `sstatus`, `sie`, `stvec`, `sscratch`, `sepc`, `scause`, `stval`, `sip`, `satp`.
+    * **U-mode (FP extension):** `fcsr` (consisting of `frm` and `fflags`).
+    * **Counters:** `cycle`, `time`, `instret`.
 4. **Trap Handling:** Atomic privilege escalation/de-escalation, vector addressing (Vectored/Direct modes), exception delegation to S-mode via `medeleg`/`mideleg`.
 
 ---
@@ -112,14 +112,14 @@ The ports defined below reflect the optimized interface where CSR metadata and o
 The CSR ALU performs atomic read-modify-write bit operations on the active register state. In the equations below, `csr_val` is the old value read from the register file, and `op_val` is the operand provided by `commit_wdata_i` (representing the GPR value `rs1` or zero-extended immediate `zimm`):
 
 * **`CSRRW(I)` (Read/Write):**
-  $$\text{new\_val} = \text{op\_val}$$
-  $$\text{rd} = \text{csr\_val}$$
+    * `new_val = op_val`
+    * `rd = csr_val`
 * **`CSRRS(I)` (Bitwise Set):**
-  $$\text{new\_val} = \text{csr\_val} \mid \text{op\_val}$$
-  $$\text{rd} = \text{csr\_val}$$
+    * `new_val = csr_val | op_val`
+    * `rd = csr_val`
 * **`CSRRC(I)` (Bitwise Clear):**
-  $$\text{new\_val} = \text{csr\_val} \ \& \ \sim\text{op\_val}$$
-  $$\text{rd} = \text{csr\_val}$$
+    * `new_val = csr_val & ~op_val`
+    * `rd = csr_val`
 
 #### Special Case `rs1 == x0` / `zimm == 0`
 If the source register index `rs1` is `0` (or `zimm` immediate is `0`) for `CSRRS` and `CSRRC` instructions, no write side-effects are triggered. The register file is not updated, allowing read-only access to read-only CSR registers (such as performance counters) without triggering privilege violations on writes.
@@ -175,6 +175,7 @@ Any access to an unimplemented or unsupported CSR address triggers an **Illegal 
 ## 6.3 Privilege Modes and Control
 
 Security checks are performed in **Stage 6 (Decode)** based on `priv_mode_o` output by the CSR unit:
+
 1. **Privilege Violations:** The current privilege level of the core (`curr_priv`) must be greater than or equal to the privilege level required by the CSR (encoded in bits `[9:8]` of the CSR address).
 2. **Write Violations:** An instruction must not attempt a write to a read-only CSR (bits `[11:10] == 2'b11`).
 
@@ -182,29 +183,31 @@ If a violation is detected during Decode, the instruction is tagged with a trap 
 
 #### FPU State Management (`mstatus.FS`)
 The floating-point state is monitored using the `FS` field in `mstatus` (bits `[14:13]`):
+
 * `2'b00` (Off): Any attempt to execute an FPU instruction or access `fcsr`/`frm`/`fflags` triggers an **Illegal Instruction Exception**.
 * `2'b01` (Initial) / `2'b10` (Clean): Permission granted.
 * `2'b11` (Dirty): Must be set automatically by the CSR unit whenever FPU registers or FPU CSRs are updated.
 
 #### Physical Memory Protection (PMP)
 The core implements a RISC-V Physical Memory Protection (PMP) unit supporting 16 entries to enforce access permissions on physical addresses:
+
 * **Architectural Registers:**
-  * `pmpcfg0` and `pmpcfg2` (in RV64, `pmpcfg0` configures entries 0–7, and `pmpcfg2` configures entries 8–15).
-  * `pmpaddr0` to `pmpaddr15` (16 address registers).
+    * `pmpcfg0` and `pmpcfg2` (in RV64, `pmpcfg0` configures entries 0–7, and `pmpcfg2` configures entries 8–15).
+    * `pmpaddr0` to `pmpaddr15` (16 address registers).
 * **PMP Entry Configuration Format (8 bits per entry):**
-  * `R` (bit 0): Read permission.
-  * `W` (bit 1): Write permission.
-  * `X` (bit 2): Execute (instruction fetch) permission.
-  * `A` (bits 4:3): Address matching mode (00 = OFF, 01 = TOR (Top of Range), 10 = NA4 (Naturally Aligned 4-byte), 11 = NAPOT (Naturally Aligned Power-of-Two, $\ge$ 8 bytes)).
-  * `L` (bit 7): Lock bit (enforces restrictions on M-mode and locks configuration until reset).
+    * `R` (bit 0): Read permission.
+    * `W` (bit 1): Write permission.
+    * `X` (bit 2): Execute (instruction fetch) permission.
+    * `A` (bits 4:3): Address matching mode (00 = OFF, 01 = TOR (Top of Range), 10 = NA4 (Naturally Aligned 4-byte), 11 = NAPOT (Naturally Aligned Power-of-Two, $\ge$ 8 bytes)).
+    * `L` (bit 7): Lock bit (enforces restrictions on M-mode and locks configuration until reset).
 * **Hardware Signal Export:**
-  * The CSR unit continuously exports all 16 configuration fields as a packed array on `pmpcfg_o` (`16 * 8 = 128` bits).
-  * It exports all 16 address registers (holding physical address bits `[55:2]`) on `pmpaddr_o` (`16 * 54 = 864` bits).
-  * These exported signals are routed directly to the Stage 1 Fetch security filter and the Stage 8 LSO-AMO memory access filter.
+    * The CSR unit continuously exports all 16 configuration fields as a packed array on `pmpcfg_o` (`16 * 8 = 128` bits).
+    * It exports all 16 address registers (holding physical address bits `[55:2]`) on `pmpaddr_o` (`16 * 54 = 864` bits).
+    * These exported signals are routed directly to the Stage 1 Fetch security filter and the Stage 8 LSO-AMO memory access filter.
 * **PMP Writes and Security Pipeline Flushes:**
-  * Any write to a `pmpcfg*` or `pmpaddr*` register changes the system's memory security policy.
-  * To prevent instructions fetched or executing under stale permissions from executing, a write to any PMP register causes the CSR unit to assert `commit_flush_req_o = 1`.
-  * The Writeback stage registers this request, invalidates all in-flight speculative instructions, and redirects the Fetch stage to the sequential next instruction (`PC + 4`) to execute it under the newly established security permissions.
+    * Any write to a `pmpcfg*` or `pmpaddr*` register changes the system's memory security policy.
+    * To prevent instructions fetched or executing under stale permissions from executing, a write to any PMP register causes the CSR unit to assert `commit_flush_req_o = 1`.
+    * The Writeback stage registers this request, invalidates all in-flight speculative instructions, and redirects the Fetch stage to the sequential next instruction (`PC + 4`) to execute it under the newly established security permissions.
 
 ---
 
@@ -215,27 +218,29 @@ When the Writeback stage detects `trap == 1` at the head of the Retirement Buffe
 1. **PC Preservation:** The faulting instruction's PC (`trap_pc_i`) is written to `mepc` (or `sepc` if delegated). The LSB is masked to `0` during write: `mepc <= {trap_pc_i[63:1], 1'b0}`.
 2. **Trap Context:** The exception code (`trap_cause_i`) is written to `mcause` (`scause`), and any bad address (`trap_badaddr_i`) is written to `mtval` (`stval`).
 3. **Privilege Delegation:** The CSR unit checks exception delegation registers (`medeleg` for exceptions, `mideleg` for interrupts). If S-mode is active and the bit corresponding to the trap is set in the delegation register, the trap is routed to S-mode:
-   * Privilege level transitions to Supervisor (`curr_priv = PRIV_SUPERVISOR`).
-   * `sstatus.SPP` is set to `curr_priv`.
-   * `sstatus.SPIE` is set to `sstatus.SIE`, and `sstatus.SIE` is cleared to `0`.
-   * Target PC is read from `stvec`.
-   Otherwise, the trap goes to Machine Mode:
-   * Privilege level transitions to Machine (`curr_priv = PRIV_MACHINE`).
-   * `mstatus.MPP` is set to `curr_priv`.
-   * `mstatus.MPIE` is set to `mstatus.MIE`, and `mstatus.MIE` is cleared to `0`.
-   * Target PC is read from `mtvec`.
+    * Privilege level transitions to Supervisor (`curr_priv = PRIV_SUPERVISOR`).
+    * `sstatus.SPP` is set to `curr_priv`.
+    * `sstatus.SPIE` is set to `sstatus.SIE`, and `sstatus.SIE` is cleared to `0`.
+    * Target PC is read from `stvec`.
+    Otherwise, the trap goes to Machine Mode:
+
+    * Privilege level transitions to Machine (`curr_priv = PRIV_MACHINE`).
+    * `mstatus.MPP` is set to `curr_priv`.
+    * `mstatus.MPIE` is set to `mstatus.MIE`, and `mstatus.MIE` is cleared to `0`.
+    * Target PC is read from `mtvec`.
 4. **Zero-Adder Vector Address Calculation:**
-   * Under the RISC-V Privileged Specification, when Vectored Mode is enabled, the base address of the trap vector (`BASE` in `mtvec`/`stvec`) **must be aligned to a 256-byte boundary**. Therefore, the lower 8 bits of `BASE` are always `8'b00000000`.
-   * Because the interrupt cause code is at most 6 bits, the offset `4 * cause` fits entirely within 8 bits (maximum offset of `252` or `8'b11111100`).
-   * Rather than using a full 64-bit adder, the CSR unit calculates the target trap vector address using **bitwise concatenation** (zero hardware adders):
-     ```systemverilog
-     assign trap_vector_o = {tvec_val[63:8], (tvec_val[0] && trap_is_interrupt_i) ? trap_cause_i[5:0] : 6'b00, 2'b00};
-     ```
-   * The calculated address is output on `trap_vector_o` to redirect the Fetch stage.
+    * Under the RISC-V Privileged Specification, when Vectored Mode is enabled, the base address of the trap vector (`BASE` in `mtvec`/`stvec`) **must be aligned to a 256-byte boundary**. Therefore, the lower 8 bits of `BASE` are always `8'b00000000`.
+    * Because the interrupt cause code is at most 6 bits, the offset `4 * cause` fits entirely within 8 bits (maximum offset of `252` or `8'b11111100`).
+    * Rather than using a full 64-bit adder, the CSR unit calculates the target trap vector address using **bitwise concatenation** (zero hardware adders):
+      ```systemverilog
+      assign trap_vector_o = {tvec_val[63:8], (tvec_val[0] && trap_is_interrupt_i) ? trap_cause_i[5:0] : 6'b00, 2'b00};
+      ```
+    * The calculated address is output on `trap_vector_o` to redirect the Fetch stage.
 
 ### 6.5 Instruction Length & Redirection PC Optimization (LSB PC / RVC)
 
 Upon a pipeline redirect (e.g. system-critical write flush or exception/branch flush), the target PC must be calculated. To avoid passing an extra `is_rvc` bit through all pipeline stages and Retirement Buffer arrays, the PV-Crab core utilizes a **PC LSB Optimization**:
+
 * Since RISC-V instructions are always aligned to at least a 16-bit (2-byte) boundary, the actual address bit `PC[0]` is always `0`.
 * The `PC[0]` bit is repurposed throughout the pipeline and Retirement FIFO to carry the **`is_rvc` flag** (where `1` indicates a compressed 16-bit instruction and `0` indicates a standard 32-bit instruction).
 * At the Decode stage, this bit is injected: `dec_pc[0] = is_rvc`.
@@ -257,11 +262,13 @@ Upon a pipeline redirect (e.g. system-critical write flush or exception/branch f
 
 ### 7.1 Critical Paths
 Due to the Execute-at-Retire design, the CSR module operates entirely within a single cycle. The critical path involves:
+
 1. Reading the target CSR register value.
 2. Routing this value to `commit_rdata_o` for writeback to the GPR file.
 3. Performing the ALU operation and updating the register file.
 
 To maintain a target minimum frequency of **100MHz**, the logic must be highly optimized. If timing closure becomes critical, the Retirement/Writeback stage can be split into two sub-stages:
+
 * **Stage 9a (Read & Verify):** Fetch the CSR register value, perform privilege checks, and route `commit_rdata_o` to the GPR file write ports.
 * **Stage 9b (Execute & Commit):** Perform the CSR ALU modify operation and write the new value back to the CSR register.
 
@@ -270,6 +277,7 @@ To maintain a target minimum frequency of **100MHz**, the logic must be highly o
 ## 8. Verification Plan
 
 The CSR unit must undergo rigorous block-level and system-level verification:
+
 1. **Access Control Tests:** Attempt to write to read-only CSRs, and access M-mode registers from S-mode/U-mode to verify illegal instruction traps.
 2. **FPU State Checks:** Verify that FPU instructions trap when `mstatus.FS = 0`, and that the dirty bit is set correctly (`mstatus.FS = 2'b11`) upon register updates.
 3. **Trap Routing Tests:** Verify correct exception delegation to `sepc`/`scause` using different configurations of `medeleg`/`mideleg`.
