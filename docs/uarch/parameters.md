@@ -30,4 +30,4 @@ Module-specific or local parameters (such as pipeline latencies, buffer sizes, o
 | `PA_LEN` | `int` | `56` | Physical address width (56 bits for RISC-V Sv39 physical addressing). |
 | `VA_LEN` | `int` | `39` | Virtual address width (39 bits for Sv39 virtual translation). |
 | `CACHE_LINE_BYTES`| `int` | `64` | Coherence line size in bytes (used for L1 caches, and PMP NAPOT address matching). |
-| `PMP_ENTRIES` | `int` | `16` | Number of implemented Physical Memory Protection entries (affects CSR configuration registers, Stage 1 Fetch filter, and Stage 8 LSO-AMO filter). |
+| `PMP_ENTRIES` | `int` | `16` | Number of implemented Physical Memory Protection entries (affects CSR configuration registers, Stage 1 Fetch filter, and Stage 6 LSO-AMO filter). |

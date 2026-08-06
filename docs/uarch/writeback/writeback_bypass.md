@@ -20,7 +20,7 @@ To track outstanding writes to the Register File (GPR/FPR):
 
 * **Pending Status (Busy Bit):** Each register is associated with a single pending (busy) bit in the Scoreboard.
 * **Allocation:** When an instruction is dispatched, its destination register `rd` is marked as pending (busy).
-* **Commit:** When the instruction completes writeback and commits to the architectural Register File at the Retirement stage (Stage 9), the pending bit is cleared.
+* **Commit:** When the instruction completes writeback and commits to the architectural Register File at the Retirement stage (Stage 7), the pending bit is cleared.
 
 ---
 
@@ -36,18 +36,17 @@ To track outstanding writes to the Register File (GPR/FPR):
 
 To maximize Instruction Per Cycle (IPC) performance, a simple, direct forwarding network is implemented from the execution module outputs back to the Dispatcher's operand selection multiplexers.
 
-Unlike complex designs, operands are **not** forwarded from the Retirement FIFO (Stage 9) or the Writeback Buffer. Consequently, bypassed data is only available for a limited window.
+Unlike complex designs, operands are **not** forwarded from the Retirement FIFO (Stage 7) or the Writeback Buffer. Consequently, bypassed data is only available for a limited window.
 
 ### 4.1 0-Cycle Combinational ALU Bypass
 * Since the ALU is purely combinational, its output is available in the same cycle as dispatch.
 * The combinational output is routed directly back to the dispatcher's operand multiplexers, allowing back-to-back dependent ALU instructions to execute without stalls.
 
 ### 4.2 1-Cycle Execute Output Forwarding
-* The outputs of all stateful execution modules (Multiplier, Divider, FPU, LSAMO) are connected directly back to the Dispatch stage operand selection multiplexers.
-* When an execution unit completes its operation and drives its result on `wb_result_o` (valid when `wb_valid_o` is asserted), a dependent instruction in the Dispatch stage (Stage 7) can read this value directly.
+* When an execution unit completes its operation and drives its result on `wb_result_o` (valid when `wb_valid_o` is asserted), a dependent instruction in the Dispatch stage (Stage 5) can read this value directly.
 * **1-Cycle Window Constraint:** The bypassed data is **only available for exactly one cycle**—the cycle in which the execution unit completes and exposes its result.
-* **Valid Flag Clearing:** This 1-cycle availability window is a direct consequence of the writeback handshake. When the Writeback Arbiter reads/accepts the result from the execution unit to buffer it into the Retirement FIFO (Stage 9), the execution unit immediately clears its `wb_valid_o` flag in the next clock cycle. This prevents the forwarding network from pulling duplicate or stale data from completed units.
-* If the dependent instruction in the Dispatch stage cannot be dispatched in that exact cycle (due to structural stalls, branch mispredict flushes, or other hazards), the result is buffered into the Retirement FIFO (Stage 9) and is **no longer available** on the forwarding network. In this case, the dependent instruction must stall until the writing instruction commits (retires) and writes its result to the Register File, after which it is read normally from the Register File.
+* **Valid Flag Clearing:** This 1-cycle availability window is a direct consequence of the writeback handshake. When the Writeback Arbiter reads/accepts the result from the execution unit to buffer it into the Retirement FIFO (Stage 7), the execution unit immediately clears its `wb_valid_o` flag in the next clock cycle. This prevents the forwarding network from pulling duplicate or stale data from completed units.
+* If the dependent instruction in the Dispatch stage cannot be dispatched in that exact cycle (due to structural stalls, branch mispredict flushes, or other hazards), the result is buffered into the Retirement FIFO (Stage 7) and is **no longer available** on the forwarding network. In this case, the dependent instruction must stall until the writing instruction commits (retires) and writes its result to the Register File, after which it is read normally from the Register File.
 
 ---
 

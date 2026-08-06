@@ -62,7 +62,7 @@ A 14-bit packed union constructed at Decode/Dispatch and stored in the ROB. It o
 
 | Field Group | Sub-Field Name | Width | Bit Range | Description / Conditions |
 | :--- | :--- | :---: | :---: | :--- |
-| **FPU (fp)** | `fflags` | 5 | `[4:0]` | Speculative FPU exception flags generated in Stage 8. |
+| **FPU (fp)** | `fflags` | 5 | `[4:0]` | Speculative FPU exception flags generated in Stage 6. |
 | | *unused* | 9 | `[13:5]` | Zero padding. |
 | **Trap (trap)** | `cause` | 6 | `[5:0]` | Trap exception cause code (valid when `trap == 1` at retirement). |
 | | `is_interrupt` | 1 | `[6]` | Asynchronous interrupt indicator. |
