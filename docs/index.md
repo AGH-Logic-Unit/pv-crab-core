@@ -1,21 +1,17 @@
 ---
-title: Crab Core
+title: Index
 ---
 
 # Pulsar-V in-order core - Crab
 
 Welcome to the official **Crab Core** documentation, an in-order core implementing RV64GC.
 
-## About Project
+## Documentation Map
 
-Crab is an in-order RISC-V core (hart) designed to implement the RV64GC ISA for general-purpose CPU usage. It is performance optimized for both FPGA and ASIC implementations.
-
-## Structure of Documentation
-
-Documentation is structured as follows:
-
-*   **Guides & Guidelines:**
+*   **Project Overview:**
+    *   [About & Goals](about.md) — High-level description, goals, and key hardware requirements of Crab Core.
     *   [Repository Standards](rules.md) — Guidelines for code quality, formatting, verification, and contribution workflows.
+
 *   **Microarchitecture (uArch):** Detailed specifications of the core stages and components:
     *   **Common Types:**
         *   [uArch Types](uarch/types.md) — Base data types and headers.
