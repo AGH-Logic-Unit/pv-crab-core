@@ -1,0 +1,2136 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Pulsar-V Crab Core specification for RISC-V RV64GC">
+      
+      
+        <meta name="author" content="AGH Logic Unit">
+      
+      
+      
+        <link rel="prev" href="../csr/">
+      
+      
+        <link rel="next" href="../writeback_bypass/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.53">
+    
+    
+      
+        <title>Writeback Module - Crab Docs</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../../assets/stylesheets/modern/main.20815dad.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="deep-orange" data-md-color-accent="orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#writeback" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Crab Docs" class="md-header__button md-logo" aria-label="Crab Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Crab Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Writeback Module
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="deep-orange" data-md-color-accent="orange"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Crab Docs" class="md-nav__button md-logo" aria-label="Crab Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    Crab Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Index
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  About
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Repository Standards
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Uarch
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Uarch
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  L1 Data Cache Design Specs
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Parameters
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Types
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Execute
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Execute
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/alu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Arithmetic Logic Unit
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/div/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Integer Divider
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/fDiv/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Floating-Point Divider & Square Root
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/fMisc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Floating-Point Miscellaneous
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/fMulAdd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Floating-Point FMA, Multiplier & Adder
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/lso_amo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Load-Store & Atomic Memory Operations
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/mul/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Integer Multiplier
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Writeback
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Writeback
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../csr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Control and Status Registers (CSR)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Writeback Module
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Writeback Module
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-changelog" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Changelog
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Overview
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-architectural-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Architectural Requirements
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-parameterization" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Parameterization
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Interfaces
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Interfaces">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-execution-module-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.1 Execution module interfaces
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-functional-description" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Functional Description
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Functional Description">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-retirement-buffer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.1 Retirement buffer
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.1 Retirement buffer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#register-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Register contents
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#invalidation-upon-flush" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Invalidation upon Flush:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-readout-arbiter-dynamic-stall-back-pressure" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.2 Readout Arbiter &amp; Dynamic Stall (Back-pressure)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.2 Readout Arbiter &amp; Dynamic Stall (Back-pressure)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-stall-handshake" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dynamic Stall Handshake
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readout-arbitration" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Readout Arbitration
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-committing-fpu-flag-accumulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.3 Committing &amp; FPU Flag Accumulation
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-csrpmp-execution-at-retirement-pc-redirection" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.4 CSR/PMP Execution-at-Retirement &amp; PC Redirection
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65-trap-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.5 Trap handling
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#66-global-flush-clock-gating-late-writeback-hazard-prevention" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.6 Global Flush, Clock-gating &amp; Late Writeback Hazard Prevention
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.6 Global Flush, Clock-gating &amp; Late Writeback Hazard Prevention">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pipeline-flush-clock-gating" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pipeline Flush &amp; Clock-gating
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#late-writeback-hazard-prevention" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Late Writeback Hazard Prevention
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-timing-and-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Timing and Performance
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Verification
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../writeback_bypass/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Writeback & Register Bypass Specs
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-changelog" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Changelog
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Overview
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-architectural-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Architectural Requirements
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-parameterization" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Parameterization
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Interfaces
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Interfaces">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-execution-module-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.1 Execution module interfaces
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-functional-description" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Functional Description
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Functional Description">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-retirement-buffer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.1 Retirement buffer
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.1 Retirement buffer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#register-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Register contents
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#invalidation-upon-flush" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Invalidation upon Flush:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-readout-arbiter-dynamic-stall-back-pressure" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.2 Readout Arbiter &amp; Dynamic Stall (Back-pressure)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.2 Readout Arbiter &amp; Dynamic Stall (Back-pressure)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-stall-handshake" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dynamic Stall Handshake
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readout-arbitration" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Readout Arbitration
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-committing-fpu-flag-accumulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.3 Committing &amp; FPU Flag Accumulation
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-csrpmp-execution-at-retirement-pc-redirection" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.4 CSR/PMP Execution-at-Retirement &amp; PC Redirection
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65-trap-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.5 Trap handling
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#66-global-flush-clock-gating-late-writeback-hazard-prevention" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.6 Global Flush, Clock-gating &amp; Late Writeback Hazard Prevention
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.6 Global Flush, Clock-gating &amp; Late Writeback Hazard Prevention">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pipeline-flush-clock-gating" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pipeline Flush &amp; Clock-gating
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#late-writeback-hazard-prevention" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Late Writeback Hazard Prevention
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-timing-and-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Timing and Performance
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Verification
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../.." class="md-path__link">
+        
+  
+  <span class="md-ellipsis">
+    Index
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="../../cache/" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Uarch
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="../csr/" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Writeback
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<h1 id="writeback">Writeback</h1>
+<div class="admonition abstract">
+<p class="admonition-title">Module Card</p>
+<ul>
+<li><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m.12 13.5 3.74 3.74 1.42-1.41-2.33-2.33 2.33-2.33-1.42-1.41zm11.16 0-3.74-3.74-1.42 1.41 2.33 2.33-2.33 2.33 1.42 1.41z"/></svg></span> <strong>RTL file:</strong> <code>N/A</code></li>
+<li><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 2.03v2.02c4.39.54 7.5 4.53 6.96 8.92-.46 3.64-3.32 6.53-6.96 6.96v2c5.5-.55 9.5-5.43 8.95-10.93-.45-4.75-4.22-8.5-8.95-8.97m-2 .03c-1.95.19-3.81.94-5.33 2.2L7.1 5.74c1.12-.9 2.47-1.48 3.9-1.68zM4.26 5.67A9.9 9.9 0 0 0 2.05 11h2c.19-1.42.75-2.77 1.64-3.9zM2.06 13c.2 1.96.97 3.81 2.21 5.33l1.42-1.43A8 8 0 0 1 4.06 13zm5.04 5.37-1.43 1.37A10 10 0 0 0 11 22v-2a8 8 0 0 1-3.9-1.63m9.72-3.18-4.11-4.11c.41-1.04.18-2.26-.68-3.11-.9-.91-2.25-1.09-3.34-.59l1.94 1.94-1.35 1.36-1.99-1.95c-.54 1.09-.29 2.44.59 3.35.86.86 2.08 1.08 3.12.68l4.11 4.1c.18.19.45.19.63 0l1.04-1.03c.22-.18.22-.5.04-.64"/></svg></span> <strong>Status:</strong> <code>Draft</code></li>
+</ul>
+</div>
+<h2 id="1-changelog">1. Changelog</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Date</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">2026-08-05</td>
+<td style="text-align: center;">v0.2</td>
+<td style="text-align: left;">Integrated Split-Array ROB, dynamic stall handshakes, RVC PC[0] redirection, and FPU exception flags accumulation</td>
+</tr>
+<tr>
+<td style="text-align: left;">2026-07-31</td>
+<td style="text-align: center;">v0.1</td>
+<td style="text-align: left;">Initial draft</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-overview">2. Overview</h2>
+<p>Writeback Stage is the last stage of Crab pipeline and it's <strong>only one</strong> commit point.</p>
+<h2 id="3-architectural-requirements">3. Architectural Requirements</h2>
+<p>Writeback module must implement the following functional requirements:</p>
+<ul>
+<li><strong>Retirement Buffer</strong>: FIFO register addressable by <em>Operation Tag</em> assigned by <em>Dispatch</em>, storing PC and output of execution stage. Buffer is responsible for ensuring in-order retirement of instructions (similar to ROB in Out-of-Order execution).</li>
+<li><strong>Priority executed operation handling</strong>: Module is responsible for passing finished instruction passed by Execution Stage to the correct address in Buffer. It handles output of each execution module by following priority rules.</li>
+<li><strong>Instruction commit</strong>: Writeback is the primary and single commit point in Crab pipeline. Each completed instruction, ready and valid, should be committed overriding corresponding register in Register File. <em>Store</em> instructions should await commit from writeback to be written into memory, as well as AMO instructions.</li>
+<li><strong>Trap handling</strong>: When trap instruction or exception was encountered while committing, and have not yet been resolved, should be handled according to RISC-V trap specification.</li>
+<li><strong>CSR</strong>: UArch follows Execute-at-Retire philosophy for CSR instructions. That said, writeback must strictly cooperate with CSR module.</li>
+</ul>
+<h2 id="4-parameterization">4. Parameterization</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">Default</th>
+<th style="text-align: left;">Description</th>
+<th style="text-align: left;">Architectural Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>RB_SIZE</code></td>
+<td style="text-align: center;"><code>int unsigned</code></td>
+<td style="text-align: center;"><code>8</code></td>
+<td style="text-align: left;">Total slots in the Retirment Buffer.</td>
+<td style="text-align: left;">Determines tag width: <code>TAG_WIDTH = $clog2(RB_SIZE)</code>. Affects occupancy tracking. Must be a power of 2.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>TAG_WIDTH</code></td>
+<td style="text-align: center;"><code>int unsigned</code></td>
+<td style="text-align: center;"><code>$clog2(RB_SIZE)</code></td>
+<td style="text-align: left;">Bit width of tag assigned to operation.</td>
+<td style="text-align: left;">Affects size of registers in execute modules.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-interfaces">5. Interfaces</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Signal</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">Width</th>
+<th style="text-align: center;">Direction</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Global Signals</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>clk_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">System clock</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rst_ni</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Asynchronous reset (active-low)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pipeline Control</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>flush_req_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Pipeline flush request</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>CSR interface</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>commit_csr_valid_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Committing instruction is CSR</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>commit_csr_addr_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Target CSR address</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>commit_csr_op_o</code></td>
+<td style="text-align: center;"><code>csr_op_t</code></td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">CSR operation type</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>commit_wdata_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">CSR write data (rs1 or zimm operand)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>commit_rdata_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Old CSR register value read from CSR Unit</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>commit_illegal_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Illegal instruction exception flag</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>commit_flush_req_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">System-critical CSR write flush request</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>FPU interface</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>commit_fpu_valid_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Committing instruction is FPU</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>commit_fflags_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">speculative FPU exception flags</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Commit Interface</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>commit_valid_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Instruction commit valid</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>commit_tag_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;"><code>TAG_WIDTH</code></td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Tag of the committing instruction</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>commit_rd_addr_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Committing destination register address</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>commit_rd_type_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Committing destination type (<code>0</code> = GPR, <code>1</code> = FPR)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>commit_rd_we_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Committing write enable</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>STB Interface</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>stb_commit_valid_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Commit valid for store/AMO</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>stb_commit_tag_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;"><code>TAG_WIDTH</code></td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Tag of the store to commit</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Trap Interface</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>trap_valid_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Trap condition active at retirement head</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>trap_cause_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Trap exception cause code</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>trap_is_interrupt_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Asynchronous interrupt indicator</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>trap_badaddr_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Bad virtual address / instruction word</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>trap_pc_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">PC of the faulting instruction</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>trap_vector_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Target trap vector address from CSR unit</td>
+</tr>
+</tbody>
+</table>
+<h3 id="51-execution-module-interfaces">5.1 Execution module interfaces</h3>
+<p>The interface between the Writeback Arbiter and each execution module (ALU, Divider, FPU, LSO-AMO) carries the dynamic results and execution flags to be written into the ROB Result/Status Array:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Signal</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">Width</th>
+<th style="text-align: center;">Direction</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>ex_valid_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Writeback handshake indicating valid result is ready</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ex_ready_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Handshake indicating Writeback Arbiter can accept result</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ex_result_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Operation result / CSR <code>wdata</code> / Exception <code>badaddr</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ex_fflags_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Dynamic Floating-Point exception flags (from FPU modules, otherwise 0)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ex_trap_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Asserted if the instruction encountered a synchronous exception (e.g. page fault, misaligned)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ex_cause_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Exception cause code (valid when <code>ex_trap_i</code> is 1)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ex_headers_i</code></td>
+<td style="text-align: center;"><code>exe_headers_t</code></td>
+<td style="text-align: center;">-</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Carry-over tracking header (contains only the <code>tag</code>)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-functional-description">6. Functional Description</h2>
+<h3 id="61-retirement-buffer">6.1 Retirement buffer</h3>
+<p>The Retirement Buffer is designed using a <strong>Split-Array Architecture</strong> to avoid the hardware overhead and timing bottlenecks of dual-write-port (2W) RAM structures. It is partitioned into two physically distinct, single-write-port arrays:</p>
+<ol>
+<li>
+<p><strong>Metadata Array (Static Tablica):</strong></p>
+<ul>
+<li><strong>Ports:</strong> 1 Write Port (used by Decode/Dispatch at Stage 7), 1 Read Port (used by Retire at Stage 9).</li>
+<li><strong>Contents:</strong> <code>pc</code> (64-bit program counter), <code>is_rvc</code> (1-bit compressed instruction flag), <code>rd_addr</code> (5-bit), <code>rd_type</code> (1-bit), <code>rd_we</code> (1-bit), <code>op_class</code> (3-bit <code>op_class_t</code>), and CSR static metadata (<code>meta.csr.addr</code>, <code>meta.csr.op</code>, <code>meta.trap.is_interrupt</code>).</li>
+<li><strong>Behavior:</strong> Written once at Dispatch. It is never modified by execution stages.</li>
+</ul>
+</li>
+<li>
+<p><strong>Result/Status Array (Dynamic Tablica):</strong></p>
+<ul>
+<li><strong>Ports:</strong> 1 Write Port (used by the Writeback Arbiter / Flush controller), 1 Read Port (used by Retire).</li>
+<li><strong>Contents:</strong> <code>valid</code> (1-bit completion flag), <code>trap</code> (1-bit trap flag), <code>result</code> (64-bit data), and execution-dynamic status (<code>meta.fp.fflags</code>, <code>meta.trap.cause</code>).</li>
+<li><strong>Behavior:</strong> Written by execution units via the Writeback Arbiter upon completion.</li>
+</ul>
+</li>
+</ol>
+<h4 id="register-contents">Register contents</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Name</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">Width</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>valid</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Operation completed, result/metadata valid (in Result Array)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>trap</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Instruction encountered a trap (in Result Array)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>op_class</code></td>
+<td style="text-align: center;"><code>op_class_t</code></td>
+<td style="text-align: center;">3</td>
+<td style="text-align: left;">Class of operation (in Metadata Array)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rd_we</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Destination register write enable (in Metadata Array)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rd_type</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Destination register type (<code>0</code> = GPR, <code>1</code> = FPR) (in Metadata Array)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rd_addr</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">5</td>
+<td style="text-align: left;">Destination register address (in Metadata Array)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pc</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: left;">Program Counter (in Metadata Array)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>is_rvc</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">RVC compressed instruction indicator (in Metadata Array)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>result</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: left;">Execution result / CSR <code>wdata</code> / Trap <code>badaddr</code> (in Result Array)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>meta</code></td>
+<td style="text-align: center;"><code>rb_meta_t</code></td>
+<td style="text-align: center;">14</td>
+<td style="text-align: left;">Packed union: FPU flag <code>fflags</code> / trap <code>cause</code>/<code>is_interrupt</code> / CSR <code>addr</code>/<code>op</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="invalidation-upon-flush">Invalidation upon Flush:</h4>
+<p>When a pipeline flush is triggered:</p>
+<ul>
+<li><strong>Tail Pointer Rollback:</strong> The ROB tail pointer is rolled back to <code>head_ptr + 1</code> (or <code>head_ptr</code>). Any slot outside the active pointer window is treated as empty. This rollback method invalidates speculative instructions in a single cycle with <strong>zero register-write energy overhead</strong>.</li>
+<li><strong>Register Clearing (Optional):</strong> If registers are explicitly cleared, the <code>valid</code> bit in the <strong>Result/Status Array</strong> is written to <code>0</code> for the flushed slots. Since all preceding pipeline stages are frozen during a flush, there are no write conflicts with the Writeback Arbiter.</li>
+</ul>
+<hr />
+<h3 id="62-readout-arbiter-dynamic-stall-back-pressure">6.2 Readout Arbiter &amp; Dynamic Stall (Back-pressure)</h3>
+<p>The Writeback Arbiter prioritizes and routes results from execution units (ALU, Divider, FPU, Memory) to the Result/Status Array of the Retirement Buffer.</p>
+<h4 id="dynamic-stall-handshake">Dynamic Stall Handshake</h4>
+<p>PV-Crab implements a distributed <strong>ready-valid handshake (back-pressure)</strong> rather than a complex centralized hazard controller:</p>
+<ul>
+<li>If the Writeback stage cannot accept a result (e.g. because a structural hazard is present or the ROB is full), the Writeback Arbiter deasserts <code>ex_ready_o</code> to the respective execution module.</li>
+<li>The execution module stalls internally and deasserts its ready signal to the Dispatch stage.</li>
+<li>This back-pressure automatically propagates backward to Decode and Fetch, stalling the pipeline dynamically.</li>
+</ul>
+<h4 id="readout-arbitration">Readout Arbitration</h4>
+<p>Priority rules for execution units completing in the same cycle:
+<code>fDiv &gt; div &gt; fMulAdd &gt; mul &gt; fMisc &gt; alu &gt; lsamo</code></p>
+<hr />
+<h3 id="63-committing-fpu-flag-accumulation">6.3 Committing &amp; FPU Flag Accumulation</h3>
+<p>For standard instructions (<code>op_class == OP_CLASS_NORMAL</code> or <code>OP_CLASS_FPU</code> when <code>trap == 0</code>):</p>
+<ol>
+<li><strong>Register Writeback:</strong> Writeback asserts the GPR/FPR write enable <code>commit_rd_we_o</code> using the slot's <code>rd_we</code> and <code>rd_type</code>. The destination register address <code>commit_rd_addr_o</code> receives <code>rd_addr</code>, and the data is read from the slot's <code>result</code>.</li>
+<li><strong>FPU Flag Accumulation:</strong> If <code>op_class == OP_CLASS_FPU</code>:<ul>
+<li>Writeback asserts <code>commit_fpu_valid_o = 1</code> and routes <code>commit_fflags_o = meta.fp.fflags</code> (which was generated speculatively in Stage 8 by FMA/FDiv/FMisc units and stored in the ROB Result Array) to the CSR unit.</li>
+<li>The CSR unit merges these accrued exceptions into the architectural <code>fflags</code> CSR using a bitwise OR operation: <code>fflags &lt;= fflags | commit_fflags_i</code>.</li>
+<li>The CSR unit also updates the floating-point state status <code>mstatus.FS</code> to <code>2'b11</code> (Dirty) to indicate FPR/FPU CSR changes.</li>
+<li><em>Security Check:</em> If <code>mstatus.FS == 2'b00</code> (Off) when the FPU instruction was decoded, the instruction is tagged with an Illegal Instruction exception at Stage 6 and traps at retirement (Stage 9), skipping normal commit.</li>
+</ul>
+</li>
+<li><strong>Scoreboard Release:</strong> The scoreboard clears the busy bit corresponding to the retired tag, making it available for subsequent instructions.</li>
+</ol>
+<p>For Store/AMO instructions (<code>op_class == OP_CLASS_STORE</code>):</p>
+<ol>
+<li>Assert <code>stb_commit_valid_o = 1</code> and <code>stb_commit_tag_o = tag</code>.</li>
+<li>The Store Buffer (STB) receives the signal and commits the speculative store to the memory system.</li>
+</ol>
+<hr />
+<h3 id="64-csrpmp-execution-at-retirement-pc-redirection">6.4 CSR/PMP Execution-at-Retirement &amp; PC Redirection</h3>
+<p>When a CSR instruction (<code>op_class == OP_CLASS_CSR</code> and <code>trap == 0</code>) reaches the head of the Retirement FIFO:</p>
+<ol>
+<li>The Writeback stage halts GPR writes and outputs:<ul>
+<li><code>commit_csr_valid_o = 1</code></li>
+<li><code>commit_csr_addr_o = meta.csr.addr</code></li>
+<li><code>commit_csr_op_o = meta.csr.op</code></li>
+<li><code>commit_wdata_o = result</code> (containing the operand from <code>rs1</code> or <code>zimm</code>)</li>
+</ul>
+</li>
+<li>The CSR unit processes the read-modify-write operation and returns:<ul>
+<li><code>commit_rdata_i</code> (the old value of the CSR register)</li>
+<li><code>commit_illegal_i</code> (if a security violation is caught at retirement)</li>
+<li><code>commit_flush_req_i</code> (if a system-critical register like <code>satp</code> or PMP <code>pmpcfg*</code>/<code>pmpaddr*</code> was updated)</li>
+</ul>
+</li>
+<li>If <code>commit_illegal_i == 1</code>, the instruction traps (see Section 6.5).</li>
+<li>Otherwise, the old value from <code>commit_rdata_i</code> is written to GPR under <code>rd_addr</code> (if <code>rd_we == 1</code>).</li>
+<li>
+<p><strong>System-Critical / PMP Security Redirect:</strong> If <code>commit_flush_req_i == 1</code>, a global pipeline flush is requested (<code>flush_req_o = 1</code>). This is critical when changing page tables (<code>satp</code>) or security configuration registers (<code>pmpcfg*</code>, <code>pmpaddr*</code>) to clear all speculative instructions from the pipeline.</p>
+<ul>
+<li>
+<p>The next PC target is calculated locally:
+  Redirection target = <code>pc + (is_rvc ? 2 : 4)</code>.</p>
+</li>
+<li>
+<p>This target PC is sent back to Stage 1. Since CSR and PMP instructions are strictly 32-bit (4-byte), <code>is_rvc</code> is <code>0</code> and the offset is <code>+4</code>.</p>
+</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h3 id="65-trap-handling">6.5 Trap handling</h3>
+<p>When an instruction reaches the head of the Retirement FIFO with the <code>trap</code> bit set to <code>1</code>:</p>
+<ol>
+<li>Normal commit processing for this and all subsequent instructions is halted.</li>
+<li>The Writeback stage routes the trap parameters to the CSR unit:<ul>
+<li><code>trap_valid_o = 1</code></li>
+<li><code>trap_cause_o = meta.trap.cause</code></li>
+<li><code>trap_is_interrupt_o = meta.trap.is_interrupt</code></li>
+<li><code>trap_badaddr_o = result</code> (the bad memory address/instruction code causing the exception)</li>
+<li><code>trap_pc_o = pc</code> (LSB masked to <code>0</code> before writing to <code>mepc</code>/<code>sepc</code>)</li>
+</ul>
+</li>
+<li>The CSR unit updates the architectural exception status registers and outputs <code>trap_vector_i</code>.</li>
+<li>Writeback asserts <code>flush_req_o = 1</code> to clear stages 1-8 and the Retirement Buffer, and updates Stage 1 to fetch from <code>trap_vector_i</code>.</li>
+</ol>
+<hr />
+<h3 id="66-global-flush-clock-gating-late-writeback-hazard-prevention">6.6 Global Flush, Clock-gating &amp; Late Writeback Hazard Prevention</h3>
+<h4 id="pipeline-flush-clock-gating">Pipeline Flush &amp; Clock-gating</h4>
+<p>A flush signal is global but only invalidates instructions in stages <em>prior</em> to the issuing stage. It clears the <code>valid</code> bits of the pipeline registers. This invalidation state (<code>valid == 0</code>) is directly used to perform <strong>clock-gating</strong> on the pipeline registers of the invalidated stages, disabling clocking to save dynamic switching power.</p>
+<h4 id="late-writeback-hazard-prevention">Late Writeback Hazard Prevention</h4>
+<p>When the tail pointer of the ROB is rolled back during a flush, tags are freed and can be reassigned to new instructions at Dispatch. To prevent a long-latency execution unit (e.g., Divider or FPU) from writing back a late result to a tag that has already been reassigned:</p>
+<ul>
+<li>All multi-cycle execution units (Divider, FPU, D-Cache controller) receive the global <code>flush</code> signal.</li>
+<li>Upon detecting a flush, they immediately abort their current operations and reset their pipelines.</li>
+<li>Consequently, they will never assert <code>valid</code> or attempt to write back for the flushed tags, making tag reassignment 100% hazard-free.</li>
+</ul>
+<hr />
+<h2 id="7-timing-and-performance">7. Timing and Performance</h2>
+<p>The stage should have its critical path ready for 100MHz minimum. If needed, it can be divided into two sub-stages.</p>
+<hr />
+<h2 id="8-verification">8. Verification</h2>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; <year> AGH Logic Unit
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"../../..","features":["navigation.expand","navigation.sections","navigation.path"],"search":"../../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.69c251d7.min.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

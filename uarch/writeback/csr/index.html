@@ -1,0 +1,2270 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Pulsar-V Crab Core specification for RISC-V RV64GC">
+      
+      
+        <meta name="author" content="AGH Logic Unit">
+      
+      
+      
+        <link rel="prev" href="../../execute/mul/">
+      
+      
+        <link rel="next" href="../writeback/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.53">
+    
+    
+      
+        <title>Control and Status Registers (CSR) - Crab Docs</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../../assets/stylesheets/modern/main.20815dad.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="deep-orange" data-md-color-accent="orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#control-and-status-registers-csr-module" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Crab Docs" class="md-header__button md-logo" aria-label="Crab Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Crab Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Control and Status Registers (CSR)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="deep-orange" data-md-color-accent="orange"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Crab Docs" class="md-nav__button md-logo" aria-label="Crab Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    Crab Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Index
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  About
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Repository Standards
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Uarch
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Uarch
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  L1 Data Cache Design Specs
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Parameters
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Types
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Execute
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Execute
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/alu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Arithmetic Logic Unit
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/div/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Integer Divider
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/fDiv/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Floating-Point Divider & Square Root
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/fMisc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Floating-Point Miscellaneous
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/fMulAdd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Floating-Point FMA, Multiplier & Adder
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/lso_amo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Load-Store & Atomic Memory Operations
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/mul/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Integer Multiplier
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Writeback
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Writeback
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Control and Status Registers (CSR)
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Control and Status Registers (CSR)
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-changelog" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Changelog
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Overview
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-architectural-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Architectural Requirements
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-parameterization" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Parameterization
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Interfaces
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Interfaces">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-writeback-csr-unit-port-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.1 Writeback &lt;-&gt; CSR Unit Port List
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-functional-description" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Functional Description
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Functional Description">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-local-alu" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.1 Local ALU
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.1 Local ALU">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#special-case-rs1-x0-zimm-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Special Case <code>rs1 == x0</code> / <code>zimm == 0</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-registers-and-addressing" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.2 Registers and Addressing
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#63-privilege-modes-and-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.3 Privilege Modes and Control
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.3 Privilege Modes and Control">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fpu-state-management-mstatusfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        FPU State Management (<code>mstatus.FS</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#physical-memory-protection-pmp" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Physical Memory Protection (PMP)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#64-trap-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.4 Trap Handling
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.4 Trap Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#65-instruction-length-redirection-pc-calculation-dedicated-is_rvc" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.5 Instruction Length &amp; Redirection PC Calculation (Dedicated is_rvc)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-timing-and-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Timing and Performance
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Timing and Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-critical-paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7.1 Critical Paths
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-verification-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Verification Plan
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../writeback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Writeback Module
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../writeback_bypass/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Writeback & Register Bypass Specs
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-changelog" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Changelog
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Overview
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-architectural-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Architectural Requirements
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-parameterization" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Parameterization
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Interfaces
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Interfaces">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-writeback-csr-unit-port-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.1 Writeback &lt;-&gt; CSR Unit Port List
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-functional-description" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Functional Description
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Functional Description">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-local-alu" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.1 Local ALU
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.1 Local ALU">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#special-case-rs1-x0-zimm-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Special Case <code>rs1 == x0</code> / <code>zimm == 0</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-registers-and-addressing" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.2 Registers and Addressing
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#63-privilege-modes-and-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.3 Privilege Modes and Control
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.3 Privilege Modes and Control">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fpu-state-management-mstatusfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        FPU State Management (<code>mstatus.FS</code>)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#physical-memory-protection-pmp" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Physical Memory Protection (PMP)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#64-trap-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.4 Trap Handling
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.4 Trap Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#65-instruction-length-redirection-pc-calculation-dedicated-is_rvc" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.5 Instruction Length &amp; Redirection PC Calculation (Dedicated is_rvc)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-timing-and-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Timing and Performance
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Timing and Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-critical-paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7.1 Critical Paths
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-verification-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Verification Plan
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../.." class="md-path__link">
+        
+  
+  <span class="md-ellipsis">
+    Index
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="../../cache/" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Uarch
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="././" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Writeback
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<h1 id="control-and-status-registers-csr-module">Control and Status Registers (CSR) Module</h1>
+<div class="admonition abstract">
+<p class="admonition-title">Module Card</p>
+<ul>
+<li><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m.12 13.5 3.74 3.74 1.42-1.41-2.33-2.33 2.33-2.33-1.42-1.41zm11.16 0-3.74-3.74-1.42 1.41 2.33 2.33-2.33 2.33 1.42 1.41z"/></svg></span> <strong>RTL file:</strong> <code>N/A</code></li>
+<li><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 2.03v2.02c4.39.54 7.5 4.53 6.96 8.92-.46 3.64-3.32 6.53-6.96 6.96v2c5.5-.55 9.5-5.43 8.95-10.93-.45-4.75-4.22-8.5-8.95-8.97m-2 .03c-1.95.19-3.81.94-5.33 2.2L7.1 5.74c1.12-.9 2.47-1.48 3.9-1.68zM4.26 5.67A9.9 9.9 0 0 0 2.05 11h2c.19-1.42.75-2.77 1.64-3.9zM2.06 13c.2 1.96.97 3.81 2.21 5.33l1.42-1.43A8 8 0 0 1 4.06 13zm5.04 5.37-1.43 1.37A10 10 0 0 0 11 22v-2a8 8 0 0 1-3.9-1.63m9.72-3.18-4.11-4.11c.41-1.04.18-2.26-.68-3.11-.9-.91-2.25-1.09-3.34-.59l1.94 1.94-1.35 1.36-1.99-1.95c-.54 1.09-.29 2.44.59 3.35.86.86 2.08 1.08 3.12.68l4.11 4.1c.18.19.45.19.63 0l1.04-1.03c.22-.18.22-.5.04-.64"/></svg></span> <strong>Status:</strong> <code>Draft</code></li>
+<li>:material-cpu: <strong>Architecture:</strong> RV64GC S/U</li>
+</ul>
+</div>
+<h2 id="1-changelog">1. Changelog</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Date</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">2026-08-05</td>
+<td style="text-align: center;">v0.2</td>
+<td style="text-align: left;">Added parameterization section, detailed PMP entry registers/configs, and aligned trap vector calculations</td>
+</tr>
+<tr>
+<td style="text-align: left;">2026-07-31</td>
+<td style="text-align: center;">v0.1</td>
+<td style="text-align: left;">Initial uarch draft specifications</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-overview">2. Overview</h2>
+<p>The Control and Status Registers (CSR) module is responsible for managing the processor's internal state, configuration of privilege levels, trap handling, virtual memory configurations (<code>satp</code> register), physical memory protection (PMP), performance counters, and floating-point control/status (<code>fcsr</code>).</p>
+<p>To maximize core performance and simplify the Dispatch unit, the PV-Crab core uses an optimized <strong>Execute-at-Retire with No-Stall Dispatch</strong> strategy. CSR instructions flow through the pipeline without stalling the Dispatch stage. Both the read of the old value and the write of the new value are deferred to <strong>Stage 9 (Retire &amp; Writeback)</strong>.</p>
+<hr />
+<h2 id="3-architectural-requirements">3. Architectural Requirements</h2>
+<p>Under the <strong>RISC-V RV64GC</strong> specifications, the system must support:</p>
+<ol>
+<li><strong>CSR Instructions:</strong><ul>
+<li><code>CSRRW</code> / <code>CSRRWI</code> (Atomic Read/Write CSR)</li>
+<li><code>CSRRS</code> / <code>CSRRSI</code> (Atomic Read and Set Bits)</li>
+<li><code>CSRRC</code> / <code>CSRRCI</code> (Atomic Read and Clear Bits)</li>
+</ul>
+</li>
+<li><strong>Three Privilege Levels:</strong><ul>
+<li><strong>Machine Mode (M-mode):</strong> Highest privilege (required).</li>
+<li><strong>Supervisor Mode (S-mode):</strong> OS level privilege (required for virtual memory Sv39 and Linux support).</li>
+<li><strong>User Mode (U-mode):</strong> Application level privilege.</li>
+</ul>
+</li>
+<li><strong>Required CSR Register Set:</strong><ul>
+<li><strong>M-mode:</strong> <code>mstatus</code>, <code>misa</code>, <code>medeleg</code>, <code>mideleg</code>, <code>mie</code>, <code>mtvec</code>, <code>mscratch</code>, <code>mepc</code>, <code>mcause</code>, <code>mtval</code>, <code>mip</code>, <code>mcycle</code>, <code>minstret</code>, <code>mhartid</code>, <code>mvendorid</code>, <code>marchid</code>, <code>mimpid</code>.</li>
+<li><strong>S-mode:</strong> <code>sstatus</code>, <code>sie</code>, <code>stvec</code>, <code>sscratch</code>, <code>sepc</code>, <code>scause</code>, <code>stval</code>, <code>sip</code>, <code>satp</code>.</li>
+<li><strong>U-mode (FP extension):</strong> <code>fcsr</code> (consisting of <code>frm</code> and <code>fflags</code>).</li>
+<li><strong>Counters:</strong> <code>cycle</code>, <code>time</code>, <code>instret</code>.</li>
+</ul>
+</li>
+<li><strong>Trap Handling:</strong> Atomic privilege escalation/de-escalation, vector addressing (Vectored/Direct modes), exception delegation to S-mode via <code>medeleg</code>/<code>mideleg</code>.</li>
+</ol>
+<hr />
+<h2 id="4-parameterization">4. Parameterization</h2>
+<p>To support multi-core scaling and allow hardware customization, the machine information CSRs (<code>mvendorid</code>, <code>marchid</code>, <code>mimpid</code>, <code>mhartid</code>) are parameterized at instantiation. These parameters are hardwired as read-only values in M-mode:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">Default Value</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>HART_ID</code></td>
+<td style="text-align: center;"><code>logic [63:0]</code></td>
+<td style="text-align: center;"><code>64'h0</code></td>
+<td style="text-align: left;">Hardware Thread ID (<code>mhartid</code> value)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>VENDOR_ID</code></td>
+<td style="text-align: center;"><code>logic [63:0]</code></td>
+<td style="text-align: center;"><code>64'h0</code></td>
+<td style="text-align: left;">JEDEC Manufacturer ID (<code>mvendorid</code> value)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ARCH_ID</code></td>
+<td style="text-align: center;"><code>logic [63:0]</code></td>
+<td style="text-align: center;"><code>64'h0</code></td>
+<td style="text-align: left;">Open-source Architecture ID (<code>marchid</code> value)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>IMP_ID</code></td>
+<td style="text-align: center;"><code>logic [63:0]</code></td>
+<td style="text-align: center;"><code>64'h01</code></td>
+<td style="text-align: left;">Implementation version code (<code>mimpid</code> value)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-interfaces">5. Interfaces</h2>
+<h3 id="31-writeback-csr-unit-port-list">3.1 Writeback &lt;-&gt; CSR Unit Port List</h3>
+<p>The ports defined below reflect the optimized interface where CSR metadata and operands are retrieved from the Retirement Buffer slots at the Commit point (Stage 9).</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Signal</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">Width</th>
+<th style="text-align: center;">Direction</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Global Signals</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>clk_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">System clock</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rst_ni</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Asynchronous active-low reset</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Global State Outputs</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>priv_mode_o</code></td>
+<td style="text-align: center;"><code>priv_mode_t</code></td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Active CPU privilege level (sent to Decode for security checks)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Stage 9 Commit Interface</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>commit_valid_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">High when the instruction at the head of the Retirement FIFO is committing</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>commit_csr_valid_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Asserted if the committing instruction is a CSR instruction (<code>op_class == OP_CLASS_CSR</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>commit_csr_addr_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Target CSR address (from <code>meta.csr.addr</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>commit_csr_op_i</code></td>
+<td style="text-align: center;"><code>csr_op_t</code></td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">CSR operation type (from <code>meta.csr.op</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>commit_wdata_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">CSR write data operand (from <code>result</code> field of the slot)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>commit_rdata_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Old CSR value to be written back to GPR file (<code>rd</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>commit_illegal_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Asserted if privilege/RO checks on the CSR fail at retirement</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>commit_flush_req_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Request pipeline flush (asserted for system-critical writes e.g. <code>satp</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>FPU Commit Interface</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>commit_fpu_valid_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Asserted when committing an FPU instruction (<code>op_class == OP_CLASS_FPU</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>commit_fflags_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Accrued exception flags to be merged into <code>fflags</code> (from <code>meta.fp.fflags</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Trap Interface (at Commit)</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>trap_valid_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Asserted when the committing instruction has a trap flag (<code>trap == 1</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>trap_cause_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Trap exception cause code (from <code>meta.trap.cause</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>trap_is_interrupt_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Asserted if the trap is an asynchronous interrupt</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>trap_badaddr_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Memory address or instruction value causing the exception (from <code>result</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>trap_pc_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">PC of the faulting instruction (from <code>pc</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>trap_vector_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Target PC address of the trap handler (calculated via <code>mtvec</code>/<code>stvec</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>System Status Outputs</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>satp_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Address translation register (sent to TLB/MMU)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>mstatus_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Machine status register (sent to Interrupt Controller/Control logic)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>mie_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Machine interrupt enables (sent to Interrupt Controller)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>mip_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Machine interrupt pending flags (sent to Interrupt Controller)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>frm_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Floating-point dynamic rounding mode (sent directly to FPU in Stage 8)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pmpcfg_o</code></td>
+<td style="text-align: center;"><code>logic [15][7:0]</code></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Exported PMP entry configurations (16 entries * 8 bits, sent to I/D Memory Access Filters)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pmpaddr_o</code></td>
+<td style="text-align: center;"><code>logic [15][53:0]</code></td>
+<td style="text-align: center;">864</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Exported PMP physical address bounds (16 entries * 54 bits, holding address bits [55:2], sent to Filters)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Hardware Counter Interface</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>inst_retired_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Pulse indicating an instruction has successfully retired (for <code>minstret</code>)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-functional-description">6. Functional Description</h2>
+<h3 id="61-local-alu">6.1 Local ALU</h3>
+<p>The CSR ALU performs atomic read-modify-write bit operations on the active register state. In the equations below, <code>csr_val</code> is the old value read from the register file, and <code>op_val</code> is the operand provided by <code>commit_wdata_i</code> (representing the GPR value <code>rs1</code> or zero-extended immediate <code>zimm</code>):</p>
+<ul>
+<li><strong><code>CSRRW(I)</code> (Read/Write):</strong><ul>
+<li><code>new_val = op_val</code></li>
+<li><code>rd = csr_val</code></li>
+</ul>
+</li>
+<li><strong><code>CSRRS(I)</code> (Bitwise Set):</strong><ul>
+<li><code>new_val = csr_val | op_val</code></li>
+<li><code>rd = csr_val</code></li>
+</ul>
+</li>
+<li><strong><code>CSRRC(I)</code> (Bitwise Clear):</strong><ul>
+<li><code>new_val = csr_val &amp; ~op_val</code></li>
+<li><code>rd = csr_val</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="special-case-rs1-x0-zimm-0">Special Case <code>rs1 == x0</code> / <code>zimm == 0</code></h4>
+<p>If the source register index <code>rs1</code> is <code>0</code> (or <code>zimm</code> immediate is <code>0</code>) for <code>CSRRS</code> and <code>CSRRC</code> instructions, no write side-effects are triggered. The register file is not updated, allowing read-only access to read-only CSR registers (such as performance counters) without triggering privilege violations on writes.</p>
+<hr />
+<h3 id="62-registers-and-addressing">6.2 Registers and Addressing</h3>
+<p>The CSR unit implements a 12-bit address space. The table below lists the essential registers and their specifications:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">CSR Address</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: center;">Privilege</th>
+<th style="text-align: center;">Access Type</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>M-Mode (Info)</strong></td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0xF11</code></td>
+<td style="text-align: left;"><code>mvendorid</code></td>
+<td style="text-align: center;">M</td>
+<td style="text-align: center;">RO</td>
+<td style="text-align: left;">Machine Vendor ID</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0xF12</code></td>
+<td style="text-align: left;"><code>marchid</code></td>
+<td style="text-align: center;">M</td>
+<td style="text-align: center;">RO</td>
+<td style="text-align: left;">Machine Architecture ID</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0xF13</code></td>
+<td style="text-align: left;"><code>mimpid</code></td>
+<td style="text-align: center;">M</td>
+<td style="text-align: center;">RO</td>
+<td style="text-align: left;">Machine Implementation ID</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0xF14</code></td>
+<td style="text-align: left;"><code>mhartid</code></td>
+<td style="text-align: center;">M</td>
+<td style="text-align: center;">RO</td>
+<td style="text-align: left;">Hardware Thread ID</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>M-Mode (Control)</strong></td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x300</code></td>
+<td style="text-align: left;"><code>mstatus</code></td>
+<td style="text-align: center;">M</td>
+<td style="text-align: center;">RW</td>
+<td style="text-align: left;">Machine Status</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x301</code></td>
+<td style="text-align: left;"><code>misa</code></td>
+<td style="text-align: center;">M</td>
+<td style="text-align: center;">RW</td>
+<td style="text-align: left;">Machine ISA Extensions</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x302</code></td>
+<td style="text-align: left;"><code>medeleg</code></td>
+<td style="text-align: center;">M</td>
+<td style="text-align: center;">RW</td>
+<td style="text-align: left;">Machine Exception Delegation</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x303</code></td>
+<td style="text-align: left;"><code>mideleg</code></td>
+<td style="text-align: center;">M</td>
+<td style="text-align: center;">RW</td>
+<td style="text-align: left;">Machine Interrupt Delegation</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x304</code></td>
+<td style="text-align: left;"><code>mie</code></td>
+<td style="text-align: center;">M</td>
+<td style="text-align: center;">RW</td>
+<td style="text-align: left;">Machine Interrupt Enable</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x305</code></td>
+<td style="text-align: left;"><code>mtvec</code></td>
+<td style="text-align: center;">M</td>
+<td style="text-align: center;">RW</td>
+<td style="text-align: left;">Machine Trap Vector</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x340</code></td>
+<td style="text-align: left;"><code>mscratch</code></td>
+<td style="text-align: center;">M</td>
+<td style="text-align: center;">RW</td>
+<td style="text-align: left;">Machine Scratch</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x341</code></td>
+<td style="text-align: left;"><code>mepc</code></td>
+<td style="text-align: center;">M</td>
+<td style="text-align: center;">RW</td>
+<td style="text-align: left;">Machine Exception PC</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x342</code></td>
+<td style="text-align: left;"><code>mcause</code></td>
+<td style="text-align: center;">M</td>
+<td style="text-align: center;">RW</td>
+<td style="text-align: left;">Machine Exception Cause</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x343</code></td>
+<td style="text-align: left;"><code>mtval</code></td>
+<td style="text-align: center;">M</td>
+<td style="text-align: center;">RW</td>
+<td style="text-align: left;">Machine Trap Value</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x344</code></td>
+<td style="text-align: left;"><code>mip</code></td>
+<td style="text-align: center;">M</td>
+<td style="text-align: center;">RW</td>
+<td style="text-align: left;">Machine Interrupt Pending</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>S-Mode</strong></td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x100</code></td>
+<td style="text-align: left;"><code>sstatus</code></td>
+<td style="text-align: center;">S</td>
+<td style="text-align: center;">RW</td>
+<td style="text-align: left;">Supervisor Status (shadow of <code>mstatus</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x104</code></td>
+<td style="text-align: left;"><code>sie</code></td>
+<td style="text-align: center;">S</td>
+<td style="text-align: center;">RW</td>
+<td style="text-align: left;">Supervisor Interrupt Enable</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x105</code></td>
+<td style="text-align: left;"><code>stvec</code></td>
+<td style="text-align: center;">S</td>
+<td style="text-align: center;">RW</td>
+<td style="text-align: left;">Supervisor Trap Vector</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x140</code></td>
+<td style="text-align: left;"><code>sscratch</code></td>
+<td style="text-align: center;">S</td>
+<td style="text-align: center;">RW</td>
+<td style="text-align: left;">Supervisor Scratch</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x141</code></td>
+<td style="text-align: left;"><code>sepc</code></td>
+<td style="text-align: center;">S</td>
+<td style="text-align: center;">RW</td>
+<td style="text-align: left;">Supervisor Exception PC</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x142</code></td>
+<td style="text-align: left;"><code>scause</code></td>
+<td style="text-align: center;">S</td>
+<td style="text-align: center;">RW</td>
+<td style="text-align: left;">Supervisor Exception Cause</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x143</code></td>
+<td style="text-align: left;"><code>stval</code></td>
+<td style="text-align: center;">S</td>
+<td style="text-align: center;">RW</td>
+<td style="text-align: left;">Supervisor Trap Value</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x144</code></td>
+<td style="text-align: left;"><code>sip</code></td>
+<td style="text-align: center;">S</td>
+<td style="text-align: center;">RW</td>
+<td style="text-align: left;">Supervisor Interrupt Pending</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x180</code></td>
+<td style="text-align: left;"><code>satp</code></td>
+<td style="text-align: center;">S</td>
+<td style="text-align: center;">RW</td>
+<td style="text-align: left;">Supervisor Address Translation &amp; Protection (Sv39)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>U-Mode (FP)</strong></td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x001</code></td>
+<td style="text-align: left;"><code>fflags</code></td>
+<td style="text-align: center;">U</td>
+<td style="text-align: center;">RW</td>
+<td style="text-align: left;">Floating-Point Accrued Exceptions</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x002</code></td>
+<td style="text-align: left;"><code>frm</code></td>
+<td style="text-align: center;">U</td>
+<td style="text-align: center;">RW</td>
+<td style="text-align: left;">Floating-Point Rounding Mode</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x003</code></td>
+<td style="text-align: left;"><code>fcsr</code></td>
+<td style="text-align: center;">U</td>
+<td style="text-align: center;">RW</td>
+<td style="text-align: left;">Floating-Point Control &amp; Status (<code>frm</code> + <code>fflags</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Counters</strong></td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0xC00</code></td>
+<td style="text-align: left;"><code>cycle</code></td>
+<td style="text-align: center;">U</td>
+<td style="text-align: center;">RO</td>
+<td style="text-align: left;">Cycle Counter</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0xC01</code></td>
+<td style="text-align: left;"><code>time</code></td>
+<td style="text-align: center;">U</td>
+<td style="text-align: center;">RO</td>
+<td style="text-align: left;">Wall-clock Timer</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0xC02</code></td>
+<td style="text-align: left;"><code>instret</code></td>
+<td style="text-align: center;">U</td>
+<td style="text-align: center;">RO</td>
+<td style="text-align: left;">Instructions Retired Counter</td>
+</tr>
+</tbody>
+</table>
+<p>Any access to an unimplemented or unsupported CSR address triggers an <strong>Illegal Instruction Exception</strong> (<code>commit_illegal_o</code> = 1).</p>
+<hr />
+<h2 id="63-privilege-modes-and-control">6.3 Privilege Modes and Control</h2>
+<p>Security checks are performed in <strong>Stage 6 (Decode)</strong> based on <code>priv_mode_o</code> output by the CSR unit:</p>
+<ol>
+<li><strong>Privilege Violations:</strong> The current privilege level of the core (<code>curr_priv</code>) must be greater than or equal to the privilege level required by the CSR (encoded in bits <code>[9:8]</code> of the CSR address).</li>
+<li><strong>Write Violations:</strong> An instruction must not attempt a write to a read-only CSR (bits <code>[11:10] == 2'b11</code>).</li>
+</ol>
+<p>If a violation is detected during Decode, the instruction is tagged with a trap flag (<code>trap = 1</code>, <code>meta.trap.cause = 2</code> - Illegal Instruction) and flows down the pipeline as a bubble. If the violation occurs at retirement, the CSR unit asserts <code>commit_illegal_o</code> which triggers the trap logic.</p>
+<h4 id="fpu-state-management-mstatusfs">FPU State Management (<code>mstatus.FS</code>)</h4>
+<p>The floating-point state is monitored using the <code>FS</code> field in <code>mstatus</code> (bits <code>[14:13]</code>):</p>
+<ul>
+<li><code>2'b00</code> (Off): Any attempt to execute an FPU instruction or access <code>fcsr</code>/<code>frm</code>/<code>fflags</code> triggers an <strong>Illegal Instruction Exception</strong>.</li>
+<li><code>2'b01</code> (Initial) / <code>2'b10</code> (Clean): Permission granted.</li>
+<li><code>2'b11</code> (Dirty): Must be set automatically by the CSR unit whenever FPU registers or FPU CSRs are updated.</li>
+</ul>
+<h4 id="physical-memory-protection-pmp">Physical Memory Protection (PMP)</h4>
+<p>The core implements a RISC-V Physical Memory Protection (PMP) unit supporting 16 entries to enforce access permissions on physical addresses:</p>
+<ul>
+<li><strong>Architectural Registers:</strong><ul>
+<li><code>pmpcfg0</code> and <code>pmpcfg2</code> (in RV64, <code>pmpcfg0</code> configures entries 0–7, and <code>pmpcfg2</code> configures entries 8–15).</li>
+<li><code>pmpaddr0</code> to <code>pmpaddr15</code> (16 address registers).</li>
+</ul>
+</li>
+<li><strong>PMP Entry Configuration Format (8 bits per entry):</strong><ul>
+<li><code>R</code> (bit 0): Read permission.</li>
+<li><code>W</code> (bit 1): Write permission.</li>
+<li><code>X</code> (bit 2): Execute (instruction fetch) permission.</li>
+<li><code>A</code> (bits 4:3): Address matching mode (00 = OFF, 01 = TOR (Top of Range), 10 = NA4 (Naturally Aligned 4-byte), 11 = NAPOT (Naturally Aligned Power-of-Two, <span class="arithmatex">\(\ge\)</span> 8 bytes)).</li>
+<li><code>L</code> (bit 7): Lock bit (enforces restrictions on M-mode and locks configuration until reset).</li>
+</ul>
+</li>
+<li><strong>Hardware Signal Export:</strong><ul>
+<li>The CSR unit continuously exports all 16 configuration fields as a packed array on <code>pmpcfg_o</code> (<code>16 * 8 = 128</code> bits).</li>
+<li>It exports all 16 address registers (holding physical address bits <code>[55:2]</code>) on <code>pmpaddr_o</code> (<code>16 * 54 = 864</code> bits).</li>
+<li>These exported signals are routed directly to the Stage 1 Fetch security filter and the Stage 8 LSO-AMO memory access filter.</li>
+</ul>
+</li>
+<li><strong>PMP Writes and Security Pipeline Flushes:</strong><ul>
+<li>Any write to a <code>pmpcfg*</code> or <code>pmpaddr*</code> register changes the system's memory security policy.</li>
+<li>To prevent instructions fetched or executing under stale permissions from executing, a write to any PMP register causes the CSR unit to assert <code>commit_flush_req_o = 1</code>.</li>
+<li>The Writeback stage registers this request, invalidates all in-flight speculative instructions, and redirects the Fetch stage to the sequential next instruction (<code>PC + 4</code>) to execute it under the newly established security permissions.</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="64-trap-handling">6.4 Trap Handling</h2>
+<p>When the Writeback stage detects <code>trap == 1</code> at the head of the Retirement Buffer, it asserts <code>trap_valid_i = 1</code>. The CSR module resolves the trap as follows:</p>
+<ol>
+<li><strong>PC Preservation:</strong> The faulting instruction's PC (<code>trap_pc_i</code>) is written to <code>mepc</code> (or <code>sepc</code> if delegated). The LSB is masked to <code>0</code> during write: <code>mepc &lt;= {trap_pc_i[63:1], 1'b0}</code>.</li>
+<li><strong>Trap Context:</strong> The exception code (<code>trap_cause_i</code>) is written to <code>mcause</code> (<code>scause</code>), and any bad address (<code>trap_badaddr_i</code>) is written to <code>mtval</code> (<code>stval</code>).</li>
+<li>
+<p><strong>Privilege Delegation:</strong> The CSR unit checks exception delegation registers (<code>medeleg</code> for exceptions, <code>mideleg</code> for interrupts). If S-mode is active and the bit corresponding to the trap is set in the delegation register, the trap is routed to S-mode:</p>
+<ul>
+<li>Privilege level transitions to Supervisor (<code>curr_priv = PRIV_SUPERVISOR</code>).</li>
+<li><code>sstatus.SPP</code> is set to <code>curr_priv</code>.</li>
+<li><code>sstatus.SPIE</code> is set to <code>sstatus.SIE</code>, and <code>sstatus.SIE</code> is cleared to <code>0</code>.</li>
+<li>
+<p>Target PC is read from <code>stvec</code>.
+Otherwise, the trap goes to Machine Mode:</p>
+</li>
+<li>
+<p>Privilege level transitions to Machine (<code>curr_priv = PRIV_MACHINE</code>).</p>
+</li>
+<li><code>mstatus.MPP</code> is set to <code>curr_priv</code>.</li>
+<li><code>mstatus.MPIE</code> is set to <code>mstatus.MIE</code>, and <code>mstatus.MIE</code> is cleared to <code>0</code>.</li>
+<li>Target PC is read from <code>mtvec</code>.</li>
+<li><strong>Zero-Adder Vector Address Calculation:</strong></li>
+<li>Under the RISC-V Privileged Specification, when Vectored Mode is enabled, the base address of the trap vector (<code>BASE</code> in <code>mtvec</code>/<code>stvec</code>) <strong>must be aligned to a 256-byte boundary</strong>. Therefore, the lower 8 bits of <code>BASE</code> are always <code>8'b00000000</code>.</li>
+<li>Because the interrupt cause code is at most 6 bits, the offset <code>4 * cause</code> fits entirely within 8 bits (maximum offset of <code>252</code> or <code>8'b11111100</code>).</li>
+<li>Rather than using a full 64-bit adder, the CSR unit calculates the target trap vector address using <strong>bitwise concatenation</strong> (zero hardware adders):
+  <div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kt">logic</span><span class="w"> </span><span class="p">[</span><span class="mi">63</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="n">base_address</span><span class="p">;</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">assign</span><span class="w"> </span><span class="n">base_address</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">tvec_val</span><span class="p">[</span><span class="mi">63</span><span class="o">:</span><span class="mi">2</span><span class="p">],</span><span class="w"> </span><span class="mb">2&#39;b00</span><span class="p">};</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">assign</span><span class="w"> </span><span class="n">trap_vector_o</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">tvec_val</span><span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mb">2&#39;b01</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">trap_is_interrupt_i</span><span class="p">)</span><span class="w"> </span><span class="o">?</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">                       </span><span class="p">{</span><span class="n">tvec_val</span><span class="p">[</span><span class="mi">63</span><span class="o">:</span><span class="mi">8</span><span class="p">],</span><span class="w"> </span><span class="n">trap_cause_i</span><span class="p">[</span><span class="mi">5</span><span class="o">:</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="mb">2&#39;b00</span><span class="p">}</span><span class="w"> </span><span class="o">:</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">                       </span><span class="n">base_address</span><span class="p">;</span>
+</span></code></pre></div></li>
+<li>The calculated address is output on <code>trap_vector_o</code> to redirect the Fetch stage.</li>
+</ul>
+</li>
+</ol>
+<h3 id="65-instruction-length-redirection-pc-calculation-dedicated-is_rvc">6.5 Instruction Length &amp; Redirection PC Calculation (Dedicated is_rvc)</h3>
+<p>Upon a pipeline redirect (e.g. system-critical write flush or exception/branch flush), the target PC must be calculated. The PV-Crab core uses a dedicated <code>is_rvc</code> signal alongside the PC to represent instruction length:</p>
+<ul>
+<li>The actual address bit <code>PC[0]</code> is always <code>0</code> throughout the pipeline to guarantee architectural correctness and prevent errors in instructions like <code>AUIPC</code>, <code>JAL</code>, and <code>JALR</code>.</li>
+<li>The <code>is_rvc</code> flag is carried in the pipeline stages and stored in the Retirement Buffer (ROB) Metadata Array.</li>
+<li>Any stage requiring redirect PC calculation (e.g. Writeback for system flush, Execute for branches) calculates the next PC locally:
+  <div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kt">logic</span><span class="w"> </span><span class="p">[</span><span class="mi">2</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w">  </span><span class="n">instr_len</span><span class="p">;</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kt">logic</span><span class="w"> </span><span class="p">[</span><span class="mi">63</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="n">next_pc</span><span class="p">;</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">assign</span><span class="w"> </span><span class="n">instr_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">is_rvc</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">3&#39;d2</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">3&#39;d4</span><span class="p">;</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">assign</span><span class="w"> </span><span class="n">next_pc</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">stage_pc</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">instr_len</span><span class="p">;</span>
+</span></code></pre></div></li>
+<li>When writing the PC to CSRs (such as <code>mepc</code>/<code>sepc</code>), the value is written directly without LSB masking because <code>PC[0]</code> is naturally <code>0</code>.</li>
+</ul>
+<hr />
+<h2 id="7-timing-and-performance">7. Timing and Performance</h2>
+<h3 id="71-critical-paths">7.1 Critical Paths</h3>
+<p>Due to the Execute-at-Retire design, the CSR module operates entirely within a single cycle. The critical path involves:</p>
+<ol>
+<li>Reading the target CSR register value.</li>
+<li>Routing this value to <code>commit_rdata_o</code> for writeback to the GPR file.</li>
+<li>Performing the ALU operation and updating the register file.</li>
+</ol>
+<p>To maintain a target minimum frequency of <strong>100MHz</strong>, the logic must be highly optimized. If timing closure becomes critical, the Retirement/Writeback stage can be split into two sub-stages:</p>
+<ul>
+<li><strong>Stage 9a (Read &amp; Verify):</strong> Fetch the CSR register value, perform privilege checks, and route <code>commit_rdata_o</code> to the GPR file write ports.</li>
+<li><strong>Stage 9b (Execute &amp; Commit):</strong> Perform the CSR ALU modify operation and write the new value back to the CSR register.</li>
+</ul>
+<hr />
+<h2 id="8-verification-plan">8. Verification Plan</h2>
+<p>The CSR unit must undergo rigorous block-level and system-level verification:</p>
+<ol>
+<li><strong>Access Control Tests:</strong> Attempt to write to read-only CSRs, and access M-mode registers from S-mode/U-mode to verify illegal instruction traps.</li>
+<li><strong>FPU State Checks:</strong> Verify that FPU instructions trap when <code>mstatus.FS = 0</code>, and that the dirty bit is set correctly (<code>mstatus.FS = 2'b11</code>) upon register updates.</li>
+<li><strong>Trap Routing Tests:</strong> Verify correct exception delegation to <code>sepc</code>/<code>scause</code> using different configurations of <code>medeleg</code>/<code>mideleg</code>.</li>
+<li><strong>Counter Accuracy:</strong> Verify that the <code>cycle</code> and <code>instret</code> registers increment accurately under heavy pipeline stall scenarios.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; <year> AGH Logic Unit
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"../../..","features":["navigation.expand","navigation.sections","navigation.path"],"search":"../../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.69c251d7.min.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

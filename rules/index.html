@@ -13,7 +13,7 @@
       
       
       
-        <link rel="prev" href="./..">
+        <link rel="prev" href="../about/">
       
       
         <link rel="next" href="../uarch/cache/">
@@ -27,7 +27,7 @@
     
     
       
-        <title>Repository standards - Crab Docs</title>
+        <title>Repository Standards - Crab Docs</title>
       
     
     
@@ -119,7 +119,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Repository standards
+              Repository Standards
             
           </span>
         </div>
@@ -209,7 +209,33 @@
   <span class="md-ellipsis">
     
   
-  Crab Core
+  Index
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  About
 
     
   </span>
@@ -244,7 +270,7 @@
   <span class="md-ellipsis">
     
   
-  Repository standards
+  Repository Standards
 
     
   </span>
@@ -261,7 +287,7 @@
   <span class="md-ellipsis">
     
   
-  Repository standards
+  Repository Standards
 
     
   </span>
@@ -287,44 +313,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-development-environment-workspace-setup" class="md-nav__link">
+  <a href="#1-quick-start-setup" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        1. Development Environment (Workspace Setup)
+        1. Quick Start &amp; Setup
       </span>
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="1. Development Environment (Workspace Setup)">
+    <nav class="md-nav" aria-label="1. Quick Start &amp; Setup">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#starting-the-environment" class="md-nav__link">
+  <a href="#getting-started" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Starting the Environment
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#container-specifications-devcontainerdockerfile" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Container Specifications (<code>.devcontainer/Dockerfile</code>)
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#vs-code-integration-devcontainerdevcontainerjson" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        VS Code Integration (<code>.devcontainer/devcontainer.json</code>)
+        Getting Started
       </span>
     </span>
   </a>
@@ -337,22 +341,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-code-quality-and-pre-commit-hooks" class="md-nav__link">
+  <a href="#2-coding-commit-standards" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        2. Code Quality and Pre-commit Hooks
+        2. Coding &amp; Commit Standards
       </span>
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="2. Code Quality and Pre-commit Hooks">
+    <nav class="md-nav" aria-label="2. Coding &amp; Commit Standards">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#general-quality-hooks" class="md-nav__link">
+  <a href="#systemverilog-style-and-linting" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        General Quality Hooks:
+        SystemVerilog Style and Linting
       </span>
     </span>
   </a>
@@ -363,18 +367,7 @@
   <a href="#commit-guidelines-conventional-commits" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Commit Guidelines (Conventional Commits):
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#systemverilog-tooling-verible" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        SystemVerilog Tooling (Verible):
+        Commit Guidelines (Conventional Commits)
       </span>
     </span>
   </a>
@@ -387,22 +380,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-style-and-linting-rules-systemverilog" class="md-nav__link">
+  <a href="#3-contribution-workflow" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        3. Style and Linting Rules (SystemVerilog)
+        3. Contribution Workflow
       </span>
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="3. Style and Linting Rules (SystemVerilog)">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-verification-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Verification Framework
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Verification Framework">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#formatting-rulesverible_format" class="md-nav__link">
+  <a href="#common-test-commands" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Formatting (<code>.rules.verible_format</code>)
+        Common Test Commands
       </span>
     </span>
   </a>
@@ -410,10 +414,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#linting-rules-rulesverible_lint" class="md-nav__link">
+  <a href="#build-caching-results" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Linting Rules (<code>.rules.verible_lint</code>)
+        Build Caching &amp; Results
       </span>
     </span>
   </a>
@@ -426,22 +430,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-repository-structure-contribution-workflow" class="md-nav__link">
+  <a href="#5-repository-tooling-map" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        4. Repository Structure &amp; Contribution Workflow
+        5. Repository &amp; Tooling Map
       </span>
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4. Repository Structure &amp; Contribution Workflow">
+    <nav class="md-nav" aria-label="5. Repository &amp; Tooling Map">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#repository-map" class="md-nav__link">
+  <a href="#directory-structure" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Repository Map
+        Directory Structure
       </span>
     </span>
   </a>
@@ -449,160 +453,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#contribution-flow" class="md-nav__link">
+  <a href="#automated-cicd-github-actions" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Contribution Flow
-      </span>
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Contribution Flow">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#a-adding-or-modifying-rtl" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        A. Adding or Modifying RTL
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#b-implementing-tests" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        B. Implementing Tests
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#c-documenting-specifications" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        C. Documenting Specifications
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#d-submitting-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        D. Submitting Changes
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-verification-framework-regression" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        5. Verification Framework &amp; Regression
-      </span>
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="5. Verification Framework &amp; Regression">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#generating-the-filelist" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Generating the Filelist
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#yaml-testlists" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        YAML Testlists
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#running-tests" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Running Tests
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#optimization-results" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Optimization &amp; Results
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#6-cicd-workflows-github-actions" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        6. CI/CD Workflows (GitHub Actions)
-      </span>
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#7-project-documentation-zensical" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        7. Project Documentation (Zensical)
-      </span>
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="7. Project Documentation (Zensical)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#markdown-extensions-layout" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Markdown Extensions &amp; Layout
+        Automated CI/CD (GitHub Actions)
       </span>
     </span>
   </a>
@@ -644,10 +498,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
@@ -664,8 +518,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -689,6 +543,33 @@
     
   
   L1 Data Cache Design Specs
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../uarch/parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Parameters
 
     
   </span>
@@ -747,10 +628,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
         
           
-          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
             
   
   
@@ -767,8 +648,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_3">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -993,10 +874,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_4" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_5" >
         
           
-          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
             
   
   
@@ -1013,8 +894,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_4">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1022,6 +903,60 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../uarch/writeback/csr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Control and Status Registers (CSR)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../uarch/writeback/writeback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Writeback Module
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1106,44 +1041,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-development-environment-workspace-setup" class="md-nav__link">
+  <a href="#1-quick-start-setup" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        1. Development Environment (Workspace Setup)
+        1. Quick Start &amp; Setup
       </span>
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="1. Development Environment (Workspace Setup)">
+    <nav class="md-nav" aria-label="1. Quick Start &amp; Setup">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#starting-the-environment" class="md-nav__link">
+  <a href="#getting-started" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Starting the Environment
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#container-specifications-devcontainerdockerfile" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Container Specifications (<code>.devcontainer/Dockerfile</code>)
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#vs-code-integration-devcontainerdevcontainerjson" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        VS Code Integration (<code>.devcontainer/devcontainer.json</code>)
+        Getting Started
       </span>
     </span>
   </a>
@@ -1156,22 +1069,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-code-quality-and-pre-commit-hooks" class="md-nav__link">
+  <a href="#2-coding-commit-standards" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        2. Code Quality and Pre-commit Hooks
+        2. Coding &amp; Commit Standards
       </span>
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="2. Code Quality and Pre-commit Hooks">
+    <nav class="md-nav" aria-label="2. Coding &amp; Commit Standards">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#general-quality-hooks" class="md-nav__link">
+  <a href="#systemverilog-style-and-linting" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        General Quality Hooks:
+        SystemVerilog Style and Linting
       </span>
     </span>
   </a>
@@ -1182,18 +1095,7 @@
   <a href="#commit-guidelines-conventional-commits" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Commit Guidelines (Conventional Commits):
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#systemverilog-tooling-verible" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        SystemVerilog Tooling (Verible):
+        Commit Guidelines (Conventional Commits)
       </span>
     </span>
   </a>
@@ -1206,22 +1108,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-style-and-linting-rules-systemverilog" class="md-nav__link">
+  <a href="#3-contribution-workflow" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        3. Style and Linting Rules (SystemVerilog)
+        3. Contribution Workflow
       </span>
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="3. Style and Linting Rules (SystemVerilog)">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-verification-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Verification Framework
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Verification Framework">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#formatting-rulesverible_format" class="md-nav__link">
+  <a href="#common-test-commands" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Formatting (<code>.rules.verible_format</code>)
+        Common Test Commands
       </span>
     </span>
   </a>
@@ -1229,10 +1142,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#linting-rules-rulesverible_lint" class="md-nav__link">
+  <a href="#build-caching-results" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Linting Rules (<code>.rules.verible_lint</code>)
+        Build Caching &amp; Results
       </span>
     </span>
   </a>
@@ -1245,22 +1158,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-repository-structure-contribution-workflow" class="md-nav__link">
+  <a href="#5-repository-tooling-map" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        4. Repository Structure &amp; Contribution Workflow
+        5. Repository &amp; Tooling Map
       </span>
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4. Repository Structure &amp; Contribution Workflow">
+    <nav class="md-nav" aria-label="5. Repository &amp; Tooling Map">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#repository-map" class="md-nav__link">
+  <a href="#directory-structure" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Repository Map
+        Directory Structure
       </span>
     </span>
   </a>
@@ -1268,160 +1181,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#contribution-flow" class="md-nav__link">
+  <a href="#automated-cicd-github-actions" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Contribution Flow
-      </span>
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Contribution Flow">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#a-adding-or-modifying-rtl" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        A. Adding or Modifying RTL
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#b-implementing-tests" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        B. Implementing Tests
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#c-documenting-specifications" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        C. Documenting Specifications
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#d-submitting-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        D. Submitting Changes
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-verification-framework-regression" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        5. Verification Framework &amp; Regression
-      </span>
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="5. Verification Framework &amp; Regression">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#generating-the-filelist" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Generating the Filelist
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#yaml-testlists" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        YAML Testlists
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#running-tests" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Running Tests
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#optimization-results" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Optimization &amp; Results
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#6-cicd-workflows-github-actions" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        6. CI/CD Workflows (GitHub Actions)
-      </span>
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#7-project-documentation-zensical" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        7. Project Documentation (Zensical)
-      </span>
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="7. Project Documentation (Zensical)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#markdown-extensions-layout" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Markdown Extensions &amp; Layout
+        Automated CI/CD (GitHub Actions)
       </span>
     </span>
   </a>
@@ -1457,218 +1220,170 @@
                   
 
 <h1 id="repository-standards-and-guidelines">Repository Standards and Guidelines</h1>
-<p>This document describes the coding standards, developer tools, verification processes, and CI/CD workflows established in the <strong>Pulsar-V Crab Core</strong> repository. All contributors must follow these guidelines to ensure codebase consistency, high quality, and smooth collaboration.</p>
+<p>This document describes the development environment setup, coding standards, contribution workflows, and verification processes for the <strong>Pulsar-V Crab Core</strong> repository.</p>
 <hr />
-<h2 id="1-development-environment-workspace-setup">1. Development Environment (Workspace Setup)</h2>
-<p>To guarantee an identical environment for every developer and eliminate "works on my machine" issues, the project fully supports and recommends using the predefined <strong>Devcontainer</strong>.</p>
-<h3 id="starting-the-environment">Starting the Environment</h3>
-<p>You can launch the development container using <a href="https://devpod.sh/">DevPod</a> or the VS Code <a href="https://code.visualstudio.com/docs/devcontainers/containers">Dev Containers</a> extension:
+<h2 id="1-quick-start-setup">1. Quick Start &amp; Setup</h2>
+<p>To ensure consistent development environments, the project uses a predefined <strong>Devcontainer</strong> (built on Debian 12 Slim with Verilator, RISC-V toolchains, Verible, Python, and cocotb).</p>
+<h3 id="getting-started">Getting Started</h3>
+<ol>
+<li>
+<p><strong>Launch the Environment:</strong></p>
+<p>Open the repository using the VS Code <strong>Dev Containers</strong> extension or run:
 <div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>devpod<span class="w"> </span>up<span class="w"> </span>.
 </span></code></pre></div></p>
-<h3 id="container-specifications-devcontainerdockerfile">Container Specifications (<code>.devcontainer/Dockerfile</code>)</h3>
-<p>The development container image is built on <strong>Debian 12 Slim</strong> and includes all critical dependencies for HDL design and verification:</p>
-<ul>
-<li><strong>Compilation &amp; Build Tools:</strong> <code>git</code>, <code>make</code>, <code>autoconf</code>, <code>g++</code>, <code>ccache</code>, <code>yosys</code>.</li>
-<li><strong>RISC-V Toolchain:</strong> <code>gcc-riscv64-unknown-elf</code>, <code>picolibc-riscv64-unknown-elf</code> (required to compile software targeted for the core).</li>
-<li><strong>Simulator:</strong> <a href="https://verilator.org/">Verilator</a> version <code>5.046</code> (compiled from source).</li>
-<li><strong>HDL Linter &amp; Formatter:</strong> <a href="https://github.com/chipsalliance/verible">Verible</a> (version <code>v0.0-4080-ga0a8d8eb</code>).</li>
-<li><strong>Python Toolchain:</strong> A dedicated virtual environment at <code>/home/vscode/venv</code> pre-installed with <a href="https://www.cocotb.org/">cocotb</a>, <a href="https://docs.pytest.org/">pytest</a>, <a href="https://github.com/the-cocotb-foundation/cocotb-test">cocotb-test</a>, <a href="https://github.com/cocotb/cocotb-coverage">cocotb-coverage</a>, <a href="https://github.com/Z3Prover/z3">z3-solver</a>, <a href="https://astral.sh/ruff">Ruff</a>, <a href="https://zensical.org/">Zensical</a>, and helper libraries.</li>
-</ul>
-<h3 id="vs-code-integration-devcontainerdevcontainerjson">VS Code Integration (<code>.devcontainer/devcontainer.json</code>)</h3>
-<p>When using VS Code inside the container, the editor is pre-configured with:</p>
-<ul>
-<li><strong>Extensions:</strong> <code>mshr-h.veriloghdl</code> (HDL support), <code>surfer-project.surfer</code> (fast waveform viewer), <code>ms-python.python</code> (Python test running), <code>tamasfe.even-better-toml</code> (TOML formatting), and <code>eamodio.gitlens</code> (Git utility).</li>
-<li><strong>Auto-formatting:</strong> Enabled on save (<code>editor.formatOnSave: true</code>) utilizing <code>verible-verilog-format</code> (2-space indent, 120-column limit).</li>
-<li><strong>Linting:</strong> Background linting using <code>verible-verilog-lint</code> guided by <code>.rules.verible_lint</code>.</li>
-</ul>
-<hr />
-<h2 id="2-code-quality-and-pre-commit-hooks">2. Code Quality and Pre-commit Hooks</h2>
-<p>The repository uses <a href="https://pre-commit.com/">pre-commit</a> hooks to automatically validate and format files before changes are committed to Git. The hooks are set up automatically when the devcontainer is created:
-<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># To manually install or update hooks:</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pre-commit<span class="w"> </span>install<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pre-commit<span class="w"> </span>install<span class="w"> </span>--hook-type<span class="w"> </span>commit-msg
+</li>
+<li>
+<p><strong>Generate the Filelist:</strong></p>
+<p>Generate a list of SystemVerilog source files for simulation and IDE language servers:
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python<span class="w"> </span>scripts/gen_filelist.py<span class="w"> </span>-o<span class="w"> </span>verible.filelist
 </span></code></pre></div></p>
-<p>All hook behaviors are defined in <code>.pre-commit-config.yaml</code>:</p>
-<h3 id="general-quality-hooks">General Quality Hooks:</h3>
-<ul>
-<li><code>trailing-whitespace</code> – Trims trailing whitespace from all lines.</li>
-<li><code>end-of-file-fixer</code> – Ensures files end with a newline.</li>
-<li><code>check-yaml</code> – Validates YAML syntax.</li>
-<li><code>check-added-large-files</code> – Blocks accidental staging of large binary files.</li>
-</ul>
-<h3 id="commit-guidelines-conventional-commits">Commit Guidelines (Conventional Commits):</h3>
-<p>The <a href="https://github.com/compilerla/conventional-pre-commit">conventional-pre-commit</a> hook validates commit messages during the <code>commit-msg</code> stage. Commit messages must follow the <a href="https://www.conventionalcommits.org/">Conventional Commits</a> format:
-<code>&lt;type&gt;(&lt;scope&gt;): &lt;description&gt;</code> (e.g., <code>feat(alu): add 64-bit addition support</code>).</p>
-<ul>
-<li><strong>Allowed Scopes:</strong> <code>alu</code>, <code>lsu</code>, <code>fpu</code>, <code>mul</code>, <code>div</code>, <code>core</code>.</li>
-<li><strong>Strict Mode:</strong> Enforces compliance strictly.</li>
-</ul>
-<h3 id="systemverilog-tooling-verible">SystemVerilog Tooling (Verible):</h3>
-<p>Whenever <code>.v</code> or <code>.sv</code> files are modified, pre-commit runs the following local tools:</p>
-<ol>
-<li><strong>Formatter:</strong> <code>verible-verilog-format</code> using settings from <code>.rules.verible_format</code> (overwrites the files inline via <code>--inline</code>).</li>
-<li><strong>Linter:</strong> <code>verible-verilog-lint</code> matching rules in <code>.rules.verible_lint</code>.</li>
+</li>
+<li>
+<p><strong>Install Git Hooks:</strong></p>
+<p>Enforce commit rules and style formatting locally:
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pre-commit<span class="w"> </span>install<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pre-commit<span class="w"> </span>install<span class="w"> </span>--hook-type<span class="w"> </span>commit-msg
+</span></code></pre></div></p>
+</li>
 </ol>
 <hr />
-<h2 id="3-style-and-linting-rules-systemverilog">3. Style and Linting Rules (SystemVerilog)</h2>
-<h3 id="formatting-rulesverible_format">Formatting (<code>.rules.verible_format</code>)</h3>
+<h2 id="2-coding-commit-standards">2. Coding &amp; Commit Standards</h2>
+<h3 id="systemverilog-style-and-linting">SystemVerilog Style and Linting</h3>
+<p>Formatting and coding checks are automated via <strong>Verible</strong>. Custom configurations are located in <code>.rules.verible_format</code> and <code>.rules.verible_lint</code>. Key rules include:</p>
 <ul>
-<li><strong>Indentation:</strong> 2 spaces (no tabs allowed).</li>
-<li><strong>Line Limit:</strong> 120 characters (<code>--column_limit=120</code>).</li>
-<li><strong>Alignment:</strong> Auto-aligns assignment statements, module port lists, net/variable declarations, struct/union members, case items, and parameters.</li>
-<li><strong>Port &amp; Parameter Indentation:</strong> Indented relative to the module declaration (<code>indent</code>).</li>
+<li>
+<p><strong>Indentation &amp; Limits:</strong> 2 spaces (no tabs), 120-character line limit.</p>
+</li>
+<li>
+<p><strong>RTL Quality:</strong> Modern SystemVerilog constructs only (e.g., <code>always_ff</code> with <code>&lt;=</code>, <code>always_comb</code> with <code>=</code>).</p>
+</li>
+<li>
+<p><strong>Naming Conventions:</strong> Standardized port suffixes (<code>_i</code> for inputs, <code>_o</code> for outputs) and type suffixes (<code>_t</code> for typedefs).</p>
+</li>
+<li>
+<p><strong>Auto-Formatting:</strong> Apply the formatter to your changes automatically before committing:
+    <div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
+</span></code></pre></div></p>
+</li>
 </ul>
-<h3 id="linting-rules-rulesverible_lint">Linting Rules (<code>.rules.verible_lint</code>)</h3>
+<h3 id="commit-guidelines-conventional-commits">Commit Guidelines (Conventional Commits)</h3>
+<p>Commit messages are linted during the <code>commit-msg</code> hook and must follow the Conventional Commits specification:
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>&lt;type&gt;(&lt;scope&gt;): &lt;description&gt;
+</span></code></pre></div></p>
 <ul>
-<li><strong>Critical RTL Quality Rules:</strong><ul>
-<li><code>+always-ff-non-blocking</code> – Requires non-blocking assignments (<code>&lt;=</code>) inside sequential (<code>always_ff</code>) blocks.</li>
-<li><code>+always-comb</code> – Mandates modern <code>always_comb</code> blocks over legacy <code>always @(*)</code>.</li>
-<li><code>+always-comb-blocking</code> – Enforces blocking assignments (<code>=</code>) inside combinational <code>always_comb</code> blocks.</li>
-<li><code>+no-tabs</code> – Prohibits tabs in source files.</li>
-</ul>
-</li>
-<li><strong>Style and Naming Rules:</strong><ul>
-<li><code>+typedef-enums</code> – Requires defining enum types using <code>typedef</code>.</li>
-<li><code>+enum-name-style</code> – Enforces a consistent style for enum names.</li>
-<li><code>+module-filename</code> / <code>+package-filename</code> – Requires the module/package name to match its physical filename.</li>
-<li><code>+port-name-suffix</code> – Standardizes port suffixes (e.g., <code>_i</code> for inputs, <code>_o</code> for outputs).</li>
-<li><code>+parameter-name-style</code> / <code>+signal-name-style</code> / <code>+interface-name-style</code> – Enforces uniform naming styles across signals, parameters, and interfaces.</li>
-<li><code>+explicit-parameter-storage-type</code> – Parameters must have an explicitly specified storage type.</li>
-<li><code>+generate-label</code> / <code>+mismatched-labels</code> – Requires generate blocks to be labeled and verifies label matching.</li>
-</ul>
-</li>
-<li><strong>Disabled Rules:</strong><ul>
-<li><code>-line-length</code> – No hard limit enforced by the linter parser (formatting rules still target 120 characters).</li>
-</ul>
-</li>
+<li><strong>Example:</strong> <code>feat(alu): add double-precision FMA unit</code></li>
 </ul>
 <hr />
-<h2 id="4-repository-structure-contribution-workflow">4. Repository Structure &amp; Contribution Workflow</h2>
-<p>To maintain a clean and modular design, the codebase is strictly organized by concerns. Contributors should locate their changes and construct additions within the corresponding directories.</p>
-<h3 id="repository-map">Repository Map</h3>
-<ul>
-<li><code>rtl/</code> – Core hardware design files. Each design unit (such as <code>addsub</code> or execution stages) occupies its own subfolder.</li>
-<li><code>verif/</code> – Verification testbenches, reference models, and testlist definitions matching the structure of <code>rtl/</code>.</li>
-<li><code>docs/</code> – Markdown documentation files. Detailed design specifications of microarchitecture stages reside in subfolders (e.g., <code>docs/uarch/execute/</code>).</li>
-<li><code>scripts/</code> – Repository helper and toolchain scripts (e.g., test runners, filelist generators).</li>
-<li><code>regression/</code> – Holds output results, waveforms, and coverage data generated by test runner executions.</li>
-<li><code>site/</code> – Compiled production documentation HTML generated by Zensical.</li>
-</ul>
-<h3 id="contribution-flow">Contribution Flow</h3>
-<p>When adding or modifying components, please adhere to the following sequence:</p>
-<h4 id="a-adding-or-modifying-rtl">A. Adding or Modifying RTL</h4>
-<ol>
-<li>Place new SystemVerilog files inside a dedicated subdirectory in <code>rtl/</code> (e.g., <code>rtl/my_module/my_module.sv</code>).</li>
-<li>Module names must match their corresponding filename (e.g., <code>module my_module</code> inside <code>my_module.sv</code>).</li>
-<li>Re-generate the global filelist to register the new files:
-   <div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>python<span class="w"> </span>scripts/gen_filelist.py<span class="w"> </span>-o<span class="w"> </span>verible.filelist
-</span></code></pre></div></li>
-</ol>
-<h4 id="b-implementing-tests">B. Implementing Tests</h4>
-<ol>
-<li>Test directories should mirror the RTL structure under <code>verif/</code> (e.g., <code>verif/my_module/</code>).</li>
-<li>Create Python cocotb test benches (<code>tb_my_module.py</code>) and write validation scenarios.</li>
-<li>Define or append a YAML testlist (e.g., <code>verif/my_module/my_module_l0.yaml</code>) listing the top-level modules, Python test files, and target settings.</li>
-<li>Execute testlists locally to confirm validation:
-   <div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>scripts/test.py<span class="w"> </span>--testlist<span class="w"> </span>verif/my_module/my_module_l0.yaml<span class="w"> </span>--waves
-</span></code></pre></div></li>
-</ol>
-<h4 id="c-documenting-specifications">C. Documenting Specifications</h4>
-<ol>
-<li>Create or update design specification Markdown files inside <code>docs/uarch/</code> matching the subcomponent's category.</li>
-<li>Link the new specifications within the documentation index in <code>docs/index.md</code>.</li>
-<li>Validate document compilation locally using Zensical:
-   <div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>zensical<span class="w"> </span>build<span class="w"> </span>--clean
-</span></code></pre></div></li>
-</ol>
-<h4 id="d-submitting-changes">D. Submitting Changes</h4>
-<ol>
-<li>Run pre-commit checks locally before staging to resolve styling/lint errors automatically:
-   <div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
-</span></code></pre></div></li>
-<li>Commit your changes using a Conventional Commit style message scoped to the component (e.g., <code>feat(alu): add double-precision float support</code>).</li>
-</ol>
-<hr />
-<h2 id="5-verification-framework-regression">5. Verification Framework &amp; Regression</h2>
-<p>Hardware verification is powered by <a href="https://docs.pytest.org/">pytest</a> combined with <a href="https://www.cocotb.org/">cocotb</a> (via the <a href="https://github.com/the-cocotb-foundation/cocotb-test">cocotb-test</a> package).</p>
-<h3 id="generating-the-filelist">Generating the Filelist</h3>
-<p>Before running simulations or starting the Verible Language Server, you must generate a filelist of the SystemVerilog sources:
-<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>scripts/gen_filelist.py<span class="w"> </span>-o<span class="w"> </span>verible.filelist
+<h2 id="3-contribution-workflow">3. Contribution Workflow</h2>
+<p>When implementing new hardware or modifying existing units, follow this standard sequence:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>[Write RTL Code] -&gt; [Run Filelist Generator] -&gt; [Write cocotb Tests &amp; YAML] -&gt; [Run Verification] -&gt; [Update Docs] -&gt; [Pre-commit &amp; Commit]
 </span></code></pre></div>
-This script recursively scans <code>rtl/</code> and <code>verif/</code> for source files (<code>.v</code>, <code>.sv</code>) and header files (<code>.vh</code>, <code>.svh</code>). It places packages (files with <code>pkg</code> in their name) at the top of the compilation order to avoid compilation errors.</p>
-<h3 id="yaml-testlists">YAML Testlists</h3>
-<p>Test configurations are structured in YAML files within the verification folders (e.g., <code>verif/addsub/addsub_l0.yaml</code> in the <code>examples</code> branch). A typical testlist structure:
-<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">config</span><span class="p">:</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;addsub_sanity&quot;</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nt">simulator</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;verilator&quot;</span><span class="w">  </span><span class="c1"># Default simulator</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="nt">coverage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nt">tests</span><span class="p">:</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;simple&quot;</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tb_addsub</span><span class="w">     </span><span class="c1"># Name of the Python test bench module (without .py)</span>
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="nt">toplevel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">addsub</span><span class="w">      </span><span class="c1"># Name of the SystemVerilog top-level module</span>
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">    </span><span class="nt">filelist</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">verible.filelist</span>
-</span></code></pre></div></p>
-<h3 id="running-tests">Running Tests</h3>
-<p>All tests are executed via <code>pytest</code> using the runner entry script <code>scripts/test.py</code>:
-<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Run a specific testlist</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>scripts/test.py<span class="w"> </span>--testlist<span class="w"> </span>verif/addsub/addsub_l0.yaml
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Run tests with a specified filelist</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>scripts/test.py<span class="w"> </span>--testlist<span class="w"> </span>verif/addsub/addsub_l0.yaml<span class="w"> </span>--filelist<span class="w"> </span>verible.filelist
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Force a specific randomization seed</span>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>scripts/test.py<span class="w"> </span>--testlist<span class="w"> </span>verif/addsub/addsub_l0.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">12345</span>
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Enable waveform dumping (VCD/FST dumps)</span>
-</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>scripts/test.py<span class="w"> </span>--testlist<span class="w"> </span>verif/addsub/addsub_l0.yaml<span class="w"> </span>--waves
-</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
-</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Enable functional/code coverage collection</span>
-</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>scripts/test.py<span class="w"> </span>--testlist<span class="w"> </span>verif/addsub/addsub_l0.yaml<span class="w"> </span>--coverage
-</span></code></pre></div></p>
-<h3 id="optimization-results">Optimization &amp; Results</h3>
-<ul>
-<li><strong>Shared Build Directory (<code>output/sim_build</code>)</strong>: Simulations share a build directory to cache and reuse Verilator compile objects, drastically reducing incremental compile times.</li>
-<li><strong>Results Archiving (<code>regression/results</code>)</strong>: Upon simulation completion, results (JUnit reports <code>results.xml</code>, waveforms <code>.vcd</code>/<code>.fst</code>, and coverage databases <code>coverage.dat</code>/<code>coverage.xml</code>) are copied to a designated folder:
-    <code>regression/results/&lt;testlist_name&gt;/&lt;test_name&gt;/</code>
-    Temporary waveforms and build residues in <code>sim_build</code> are cleaned up automatically to conserve disk space.</li>
-</ul>
-<hr />
-<h2 id="6-cicd-workflows-github-actions">6. CI/CD Workflows (GitHub Actions)</h2>
-<p>The repository runs 3 automated GitHub workflows:</p>
 <ol>
-<li><strong>Verible Verification (<code>verible-check.yaml</code>)</strong><ul>
-<li><strong>Trigger:</strong> On every Pull Request targeted at the <code>main</code> branch.</li>
-<li><strong>Actions:</strong><ul>
-<li>Runs <code>chipsalliance/verible-linter-action</code> using <code>.rules.verible_lint</code> config on modified <code>.v</code>, <code>.sv</code>, <code>.vh</code>, and <code>.svh</code> files.</li>
-<li>Verifies style formatting using <code>verible-verilog-format --verify --flagfile=.rules.verible_format</code> against the PR base branch.</li>
-</ul>
+<li>
+<p><strong>Hardware RTL:</strong></p>
+<p>Place SystemVerilog source files under a dedicated subdirectory in <code>rtl/</code> (e.g., <code>rtl/my_module/</code>).</p>
+<p>Regenerate the filelist:
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>scripts/gen_filelist.py<span class="w"> </span>-o<span class="w"> </span>verible.filelist
+</span></code></pre></div></p>
 </li>
-</ul>
+<li>
+<p><strong>Verification:</strong></p>
+<p>Add Python cocotb testbenches under <code>verif/my_module/</code> and define them in a YAML testlist (e.g., <code>my_module_l0.yaml</code>).</p>
+<p>Run the tests locally:
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>scripts/test.py<span class="w"> </span>--testlist<span class="w"> </span>verif/my_module/my_module_l0.yaml<span class="w"> </span>--waves
+</span></code></pre></div></p>
 </li>
-<li><strong>Devcontainer Deployment (<code>build-devcontainer.yaml</code>)</strong><ul>
-<li><strong>Trigger:</strong> On pushes to <code>main</code> involving <code>.devcontainer/Dockerfile</code> or the workflow itself.</li>
-<li><strong>Actions:</strong> Builds the Docker image and publishes it to GitHub Container Registry at <code>ghcr.io/agh-logic-unit/pv-crab-core:main</code>. Employs GHA caches to speed up docker layer generation.</li>
-</ul>
+<li>
+<p><strong>Documentation:</strong></p>
+<p>Add/update specifications in Markdown under <code>docs/uarch/</code> and link them in <code>docs/index.md</code>.</p>
+<p>Verify documentation builds locally:
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>zensical<span class="w"> </span>build
+</span></code></pre></div></p>
 </li>
-<li><strong>Documentation Publishing (<code>docs.yaml</code>)</strong><ul>
-<li><strong>Trigger:</strong> On pushes to <code>main</code> modifying files under <code>docs/**</code>, the configuration <code>zensical.toml</code>, or the workflow file.</li>
-<li><strong>Actions:</strong> Installs <strong>Zensical</strong>, compiles the markdown document source using <code>zensical build --clean</code>, and deploys the contents of <code>./site</code> to the <code>gh-pages</code> branch.</li>
-</ul>
+<li>
+<p><strong>Submission:</strong></p>
+<p>Run style/lint checks:
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
+</span></code></pre></div></p>
+<p>Commit changes using a scoped message:
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(alu): add double-precision float support&quot;</span>
+</span></code></pre></div></p>
 </li>
 </ol>
 <hr />
-<h2 id="7-project-documentation-zensical">7. Project Documentation (Zensical)</h2>
-<p>Static documentation is generated using <a href="https://zensical.org/">Zensical</a> (configured in <code>zensical.toml</code>).</p>
-<h3 id="markdown-extensions-layout">Markdown Extensions &amp; Layout</h3>
-<p>The setup supports rich Markdown extensions suitable for hardware specification:</p>
+<h2 id="4-verification-framework">4. Verification Framework</h2>
+<p>Verification is powered by <strong>cocotb</strong> and <strong>pytest</strong>, orchestrated by <code>scripts/test.py</code>.</p>
+<h3 id="common-test-commands">Common Test Commands</h3>
 <ul>
-<li><strong>Mermaid</strong> – Embeds sequence, state, and block diagrams directly in documents using markdown fences.</li>
-<li><strong>MathJax</strong> – Evaluates LaTeX formatting for equations (via the <code>arithmatex</code> extension).</li>
-<li><strong>Admonitions</strong> – Provides notice blocks (e.g., <code>!!! note "Title"</code> or <code>!!! warning</code>).</li>
-<li><strong>Task lists</strong> – Interoperable todo lists.</li>
-<li><strong>Code Highlighting</strong> – Styled syntax formatting with line numbering anchors (<code>anchor_linenums: true</code>).</li>
+<li>
+<p><strong>Run a specific testlist:</strong>
+    <div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>scripts/test.py<span class="w"> </span>--testlist<span class="w"> </span>verif/addsub/addsub_l0.yaml
+</span></code></pre></div></p>
+</li>
+<li>
+<p><strong>Run with a custom filelist:</strong>
+    <div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>scripts/test.py<span class="w"> </span>--testlist<span class="w"> </span>verif/addsub/addsub_l0.yaml<span class="w"> </span>--filelist<span class="w"> </span>verible.filelist
+</span></code></pre></div></p>
+</li>
+<li>
+<p><strong>Dump waveforms (VCD/FST):</strong>
+    <div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>scripts/test.py<span class="w"> </span>--testlist<span class="w"> </span>verif/addsub/addsub_l0.yaml<span class="w"> </span>--waves
+</span></code></pre></div></p>
+</li>
+<li>
+<p><strong>Collect coverage:</strong>
+    <div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>scripts/test.py<span class="w"> </span>--testlist<span class="w"> </span>verif/addsub/addsub_l0.yaml<span class="w"> </span>--coverage
+</span></code></pre></div></p>
+</li>
+<li>
+<p><strong>Force a specific randomization seed:</strong>
+    <div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>scripts/test.py<span class="w"> </span>--testlist<span class="w"> </span>verif/addsub/addsub_l0.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">12345</span>
+</span></code></pre></div></p>
+</li>
 </ul>
-<p>The documentation sources reside in <code>docs/</code> (as Markdown), with the landing page at <code>docs/index.md</code>. The production HTML output goes to the <code>site/</code> folder.</p>
+<h3 id="build-caching-results">Build Caching &amp; Results</h3>
+<ul>
+<li>
+<p><strong>Shared Compile Cache:</strong> Verilator build outputs are cached in <code>output/sim_build/</code> to reduce compilation time.</p>
+</li>
+<li>
+<p><strong>Simulation Artifacts:</strong> Output files (waveforms, coverage databases, and JUnit reports) are moved to <code>regression/results/&lt;testlist&gt;/&lt;test&gt;/</code> upon completion.</p>
+</li>
+</ul>
+<hr />
+<h2 id="5-repository-tooling-map">5. Repository &amp; Tooling Map</h2>
+<h3 id="directory-structure">Directory Structure</h3>
+<ul>
+<li>
+<p><code>rtl/</code> – Core hardware design files.</p>
+</li>
+<li>
+<p><code>verif/</code> – Verification testbenches, reference models, and testlist configurations.</p>
+</li>
+<li>
+<p><code>docs/</code> – Markdown documentation and microarchitectural specifications.</p>
+</li>
+<li>
+<p><code>scripts/</code> – Tooling scripts (e.g., test runners, filelist generators).</p>
+</li>
+<li>
+<p><code>regression/</code> – Test results, waveforms, and coverage outputs.</p>
+</li>
+<li>
+<p><code>site/</code> – Generated HTML documentation site (output of Zensical).</p>
+</li>
+</ul>
+<h3 id="automated-cicd-github-actions">Automated CI/CD (GitHub Actions)</h3>
+<ul>
+<li>
+<p><code>pull-req-checks.yaml</code> – Validates Verible syntax, formatting, and linting on every PR.</p>
+</li>
+<li>
+<p><code>build-devcontainer.yaml</code> – Rebuilds and publishes the development Docker container image to GHCR when changes are made.</p>
+</li>
+<li>
+<p><code>docs.yaml</code> – Compiles documentation and deploys the HTML site to GitHub Pages on every push to <code>main</code>.</p>
+</li>
+</ul>
 
 
 

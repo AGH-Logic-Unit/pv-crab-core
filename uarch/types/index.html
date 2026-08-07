@@ -13,7 +13,7 @@
       
       
       
-        <link rel="prev" href="../cache/">
+        <link rel="prev" href="../parameters/">
       
       
         <link rel="next" href="../execute/alu/">
@@ -83,7 +83,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#execute-stage" class="md-skip">
+        <a href="#1-changelog" class="md-skip">
           Skip to content
         </a>
       
@@ -209,7 +209,33 @@
   <span class="md-ellipsis">
     
   
-  Crab Core
+  Index
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  About
 
     
   </span>
@@ -235,7 +261,7 @@
   <span class="md-ellipsis">
     
   
-  Repository standards
+  Repository Standards
 
     
   </span>
@@ -269,10 +295,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
@@ -289,8 +315,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -314,6 +340,33 @@
     
   
   L1 Data Cache Design Specs
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Parameters
 
     
   </span>
@@ -388,22 +441,77 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#execute-stage" class="md-nav__link">
+  <a href="#1-changelog" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Execute stage
+        1. Changelog
       </span>
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Execute stage">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-global-pipeline-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Global Pipeline Types
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Global Pipeline Types">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#t__exe_headers" class="md-nav__link">
+  <a href="#21-exe_headers_t-execution-pipeline-tracking-header" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        <code>t__exe_headers</code>
+        2.1 <code>exe_headers_t</code> (Execution Pipeline Tracking Header)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-priv_mode_t-privilege-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.2 <code>priv_mode_t</code> (Privilege Levels)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-csr_op_t-csr-operation-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.3 <code>csr_op_t</code> (CSR Operation Type)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-op_class_t-instruction-execution-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.4 <code>op_class_t</code> (Instruction Execution Class)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-rb_meta_t-packed-metadata-union" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.5 <code>rb_meta_t</code> (Packed Metadata Union)
       </span>
     </span>
   </a>
@@ -416,15 +524,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#future-scalability-superscalar-upgrades" class="md-nav__link">
+  <a href="#3-future-scalability-superscalar-upgrades" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Future Scalability (Superscalar Upgrades)
+        3. Future Scalability (Superscalar Upgrades)
       </span>
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Future Scalability (Superscalar Upgrades)">
+    <nav class="md-nav" aria-label="3. Future Scalability (Superscalar Upgrades)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -471,10 +579,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
         
           
-          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
             
   
   
@@ -491,8 +599,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_3">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -717,10 +825,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_4" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_5" >
         
           
-          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
             
   
   
@@ -737,8 +845,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_4">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -746,6 +854,60 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../writeback/csr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Control and Status Registers (CSR)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../writeback/writeback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Writeback Module
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -826,22 +988,77 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#execute-stage" class="md-nav__link">
+  <a href="#1-changelog" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Execute stage
+        1. Changelog
       </span>
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Execute stage">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-global-pipeline-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Global Pipeline Types
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Global Pipeline Types">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#t__exe_headers" class="md-nav__link">
+  <a href="#21-exe_headers_t-execution-pipeline-tracking-header" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        <code>t__exe_headers</code>
+        2.1 <code>exe_headers_t</code> (Execution Pipeline Tracking Header)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-priv_mode_t-privilege-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.2 <code>priv_mode_t</code> (Privilege Levels)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-csr_op_t-csr-operation-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.3 <code>csr_op_t</code> (CSR Operation Type)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-op_class_t-instruction-execution-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.4 <code>op_class_t</code> (Instruction Execution Class)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-rb_meta_t-packed-metadata-union" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.5 <code>rb_meta_t</code> (Packed Metadata Union)
       </span>
     </span>
   </a>
@@ -854,15 +1071,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#future-scalability-superscalar-upgrades" class="md-nav__link">
+  <a href="#3-future-scalability-superscalar-upgrades" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Future Scalability (Superscalar Upgrades)
+        3. Future Scalability (Superscalar Upgrades)
       </span>
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Future Scalability (Superscalar Upgrades)">
+    <nav class="md-nav" aria-label="3. Future Scalability (Superscalar Upgrades)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -910,7 +1127,7 @@
         
   
   <span class="md-ellipsis">
-    Crab Core
+    Index
   </span>
 
       </a>
@@ -951,51 +1168,223 @@
 
   <h1 id="__skip">Types</h1>
 
-<h2 id="execute-stage">Execute stage</h2>
-<h3 id="t__exe_headers"><code>t__exe_headers</code></h3>
+<h2 id="1-changelog">1. Changelog</h2>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Signal</th>
-<th style="text-align: left;">Type</th>
-<th style="text-align: center;">Width</th>
+<th style="text-align: left;">Date</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">2026-08-05</td>
+<td style="text-align: center;">v0.2</td>
+<td style="text-align: left;">Standardized type names to use the _t suffix, cleaned up and moved private Writeback ROB types to their respective files, and added priv_mode_t.</td>
+</tr>
+<tr>
+<td style="text-align: left;">2026-04-26</td>
+<td style="text-align: center;">v0.1</td>
+<td style="text-align: left;">Initial draft</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-global-pipeline-types">2. Global Pipeline Types</h2>
+<p>This section defines the standardized, global SystemVerilog types used to interface between the different stages of the Pulsar-V / Crab core. In accordance with project coding standards, all user-defined types use the <code>_t</code> suffix to differentiate them from variables and signals.</p>
+<h3 id="21-exe_headers_t-execution-pipeline-tracking-header">2.1 <code>exe_headers_t</code> (Execution Pipeline Tracking Header)</h3>
+<p>Following the Split-Array ROB optimization, static instruction metadata (such as destination register addresses, write enables, and operation classes) is written directly to the ROB's Metadata Array at Dispatch. Consequently, the execution unit pipeline registers do not carry this static metadata. The <code>exe_headers_t</code> struct is used globally to carry only the tracking tag:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Field Name</th>
+<th style="text-align: center;">Type / Width</th>
 <th style="text-align: left;">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;"><code>tag</code></td>
-<td style="text-align: left;"><code>logic</code></td>
-<td style="text-align: center;">4</td>
-<td style="text-align: left;">Instruction ID tag for scoreboard tracking</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>rd_addr</code></td>
-<td style="text-align: left;"><code>logic</code></td>
-<td style="text-align: center;">5</td>
-<td style="text-align: left;">Destination register address (RD)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>rd_we</code></td>
-<td style="text-align: left;"><code>logic</code></td>
-<td style="text-align: center;">1</td>
-<td style="text-align: left;">Register write enable (1 = Write to RD, 0 = No write)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>exc_valid</code></td>
-<td style="text-align: left;"><code>logic</code></td>
-<td style="text-align: center;">1</td>
-<td style="text-align: left;">Exception validity flag (1 = Exception occurred, 0 = No exception)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>exc_code</code></td>
-<td style="text-align: left;"><code>logic</code></td>
-<td style="text-align: center;">4</td>
-<td style="text-align: left;">RISC-V exception cause code (valid when <code>exc_valid</code> is 1)</td>
+<td style="text-align: center;"><code>logic [TAG_WIDTH-1:0]</code></td>
+<td style="text-align: left;">Instruction ID tag for tracking and ROB addressing.</td>
 </tr>
 </tbody>
 </table>
-<h2 id="future-scalability-superscalar-upgrades">Future Scalability (Superscalar Upgrades)</h2>
+<h3 id="22-priv_mode_t-privilege-levels">2.2 <code>priv_mode_t</code> (Privilege Levels)</h3>
+<p>Used to track and enforce the current privilege level of the core:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Element Name</th>
+<th style="text-align: center;">Encoding</th>
+<th style="text-align: center;">Privilege Mode</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>PRIV_USER</code></td>
+<td style="text-align: center;"><code>2'b00</code></td>
+<td style="text-align: center;">User (U-mode)</td>
+<td style="text-align: left;">Lowest privilege level for user applications.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>PRIV_SUPERVISOR</code></td>
+<td style="text-align: center;"><code>2'b01</code></td>
+<td style="text-align: center;">Supervisor (S-mode)</td>
+<td style="text-align: left;">Operating system level privilege (required for virtual memory Sv39).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>PRIV_MACHINE</code></td>
+<td style="text-align: center;"><code>2'b11</code></td>
+<td style="text-align: center;">Machine (M-mode)</td>
+<td style="text-align: left;">Highest privilege level (required, raw hardware access).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="23-csr_op_t-csr-operation-type">2.3 <code>csr_op_t</code> (CSR Operation Type)</h3>
+<p>Used by the Decode, Dispatch, and Retire stages to specify the atomic operation to perform on the CSR register:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Element Name</th>
+<th style="text-align: center;">Encoding</th>
+<th style="text-align: left;">Description</th>
+<th style="text-align: left;">RISC-V Instructions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>CSR_OP_NONE</code></td>
+<td style="text-align: center;"><code>2'b00</code></td>
+<td style="text-align: left;">Read only (no write side-effects)</td>
+<td style="text-align: left;">Performance counter reads (<code>cycle</code>, <code>time</code>, etc.)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CSR_OP_WRITE</code></td>
+<td style="text-align: center;"><code>2'b01</code></td>
+<td style="text-align: left;">Atomic Read/Write</td>
+<td style="text-align: left;"><code>CSRRW</code>, <code>CSRRWI</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CSR_OP_SET</code></td>
+<td style="text-align: center;"><code>2'b10</code></td>
+<td style="text-align: left;">Atomic Read and Set Bits</td>
+<td style="text-align: left;"><code>CSRRS</code>, <code>CSRRSI</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CSR_OP_CLEAR</code></td>
+<td style="text-align: center;"><code>2'b11</code></td>
+<td style="text-align: left;">Atomic Read and Clear Bits</td>
+<td style="text-align: left;"><code>CSRRC</code>, <code>CSRRCI</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="24-op_class_t-instruction-execution-class">2.4 <code>op_class_t</code> (Instruction Execution Class)</h3>
+<p>Set during Decode and used at Dispatch/Retire to route instructions and execute their commit-phase side effects:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Element Name</th>
+<th style="text-align: center;">Encoding</th>
+<th style="text-align: left;">Description / Action at Commit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>OP_CLASS_NORMAL</code></td>
+<td style="text-align: center;"><code>3'b000</code></td>
+<td style="text-align: left;">Standard ALU/Load (GPR/FPR register writeback, no other side-effects).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>OP_CLASS_CSR</code></td>
+<td style="text-align: center;"><code>3'b001</code></td>
+<td style="text-align: left;">CSR instruction (halts normal commits, executes RMW in CSR unit, GPR writeback).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>OP_CLASS_FPU</code></td>
+<td style="text-align: center;"><code>3'b010</code></td>
+<td style="text-align: left;">FPU instruction (updates dynamic <code>fflags</code> in CSR unit).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>OP_CLASS_STORE</code></td>
+<td style="text-align: center;"><code>3'b011</code></td>
+<td style="text-align: left;">Store / AMO instruction (requires Store Buffer / STB commit).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>OP_CLASS_SYSTEM</code></td>
+<td style="text-align: center;"><code>3'b100</code></td>
+<td style="text-align: left;">System instruction (privilege returns like <code>MRET</code>/<code>SRET</code>, wait-states like <code>WFI</code>, or TLB flushes like <code>SFENCE.VMA</code>).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="25-rb_meta_t-packed-metadata-union">2.5 <code>rb_meta_t</code> (Packed Metadata Union)</h3>
+<p>A 14-bit packed union constructed at Decode/Dispatch and stored in the ROB. It overlays mutually exclusive instruction-specific metadata:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Field Group</th>
+<th style="text-align: left;">Sub-Field Name</th>
+<th style="text-align: center;">Width</th>
+<th style="text-align: center;">Bit Range</th>
+<th style="text-align: left;">Description / Conditions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>FPU (fp)</strong></td>
+<td style="text-align: left;"><code>fflags</code></td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;"><code>[4:0]</code></td>
+<td style="text-align: left;">Speculative FPU exception flags generated in Stage 8.</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><em>unused</em></td>
+<td style="text-align: center;">9</td>
+<td style="text-align: center;"><code>[13:5]</code></td>
+<td style="text-align: left;">Zero padding.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Trap (trap)</strong></td>
+<td style="text-align: left;"><code>cause</code></td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;"><code>[5:0]</code></td>
+<td style="text-align: left;">Trap exception cause code (valid when <code>trap == 1</code> at retirement).</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><code>is_interrupt</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><code>[6]</code></td>
+<td style="text-align: left;">Asynchronous interrupt indicator.</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><em>unused</em></td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;"><code>[13:7]</code></td>
+<td style="text-align: left;">Zero padding.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>CSR (csr)</strong></td>
+<td style="text-align: left;"><code>addr</code></td>
+<td style="text-align: center;">12</td>
+<td style="text-align: center;"><code>[11:0]</code></td>
+<td style="text-align: left;">Target CSR address.</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><code>op</code></td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><code>[13:12]</code></td>
+<td style="text-align: left;">CSR operation type (<code>csr_op_t</code>).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-future-scalability-superscalar-upgrades">3. Future Scalability (Superscalar Upgrades)</h2>
 <p>To facilitate future migration to a superscalar (dual-issue or multi-issue) hart, the following architectural guidelines should be followed:</p>
 <h3 id="register-file-scoreboard">Register File &amp; Scoreboard</h3>
 <ul>
