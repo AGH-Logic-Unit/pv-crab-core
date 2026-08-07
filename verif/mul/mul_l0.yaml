@@ -1,0 +1,7 @@
+config:
+  name: "mul_sanity"
+
+tests:
+  - name: "full_coverage"
+    module: tb_mul
+    toplevel: mul
