@@ -11,14 +11,14 @@ devpod up .
 
 #### Generate filelist
 ```bash
-python scripts/gen_filelist.py -o verible.filelist
+python scripts/gen_filelist.py -d prim/generic -o verible.filelist
 ```
 
 ## Running test
 
 #### Generate filelist
 ```bash
-python scripts/gen_filelist.py -o output/run.filelist
+python scripts/gen_filelist.py -d prim/<target> -o output/run.filelist
 ```
 You can use global filelist or predefined one
 
