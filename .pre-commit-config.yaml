@@ -23,6 +23,13 @@ repos:
 
   - repo: local
     hooks:
+    - id: check-license
+      name: Check license headers
+      entry: python scripts/check_license.py
+      language: python
+      files: \.(sv|v|svh|vh|py)$
+      exclude: ^vendor/
+
     - id: verible-format
       name: Verible verilog format
       entry: verible-verilog-format
