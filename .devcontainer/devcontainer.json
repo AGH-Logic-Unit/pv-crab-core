@@ -11,7 +11,7 @@
                     "*.v": "verilog",
                     "*.vh": "verilog"
                 },
-                "python.defaultInterpreterPath": "/usr/bin/python3",
+                "python.defaultInterpreterPath": "/home/vscode/venv/bin/python3",
                 "editor.formatOnSave": true,
                 "editor.detectIndentation": false,
                 "verilog.linting.linter": "verible-verilog-lint",
@@ -20,8 +20,10 @@
                 "verilog.formatting.verilogHDL.formatter": "verible-verilog-format",
                 "verilog.formatting.veribleVerilogFormatter.path": "/usr/local/bin/verible-verilog-format",
                 "verilog.formatting.veribleVerilogFormatter.arguments": "--flagfile=.rules.verible_format",
-                "verilog.languageServer.name": "verible-verilog-ls",
-                "verilog.languageServer.veribleVerilogLs.path": "/usr/local/bin/verible-verilog-ls",
+                "verilog.languageServer.name": "svlangserver",
+                "verilog.languageServer.svlangserver.path": "/usr/local/bin/svlangserver",
+                "svlangserver.settings.includeIndexing": ["**/*.sv", "**/*.svh", "**/*.v", "**/*.vh"],
+                "svlangserver.settings.excludeIndexing": ["output/**", "regression/**", ".cache/**", "site/**", "docs/**", "scripts/**"],
                 "[verilog]": {
                     "editor.defaultFormatter": "mshr-h.veriloghdl",
                     "editor.formatOnSave": true,
@@ -48,7 +50,5 @@
         "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,readonly,consistency=cached"
     ],
     "postCreateCommand": "pre-commit install && pre-commit install --hook-type commit-msg",
-    "features": {
-        "ghcr.io/devcontainers/features/docker-in-docker:2": {}
-    }
+    "postAttachCommand": "bash .devcontainer/check.sh &"
 }
