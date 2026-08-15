@@ -6,7 +6,10 @@ USER root
 
 ARG TARGETARCH
 
-# 1. Install minimum dependencies
+# =============================================================================
+# Layer 1: System packages + user creation
+# Rarely changes — invalidates all downstream layers only on apt list changes
+# =============================================================================
 RUN apt update && apt install -y --no-install-recommends \
     git make autoconf g++ flex bison ccache \
     libfl2 libfl-dev zlib1g zlib1g-dev \
@@ -17,22 +20,22 @@ RUN apt update && apt install -y --no-install-recommends \
     sudo openssh-client \
     z3 libz3-dev libsystemc-dev \
     lcov ripgrep device-tree-compiler \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && useradd -m -s /bin/bash vscode \
+    && echo "vscode ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/vscode \
+    && chmod 0440 /etc/sudoers.d/vscode
 
-
-# 2. Create standard user
-RUN useradd -m -s /bin/bash vscode && \
-    echo "vscode ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/vscode && \
-    chmod 0440 /etc/sudoers.d/vscode
-
-
-# 3. Compile Verilator (Minimal, no documentation)
+# =============================================================================
+# Layer 2: Verilator (~20 min compile — versioned, rarely changes)
+# Changing VERILATOR_VERSION or VERILATOR_SHA256 invalidates only this layer
+# and downstream; Layer 1 (apt) remains cached.
+# =============================================================================
 ENV VERILATOR_VERSION=5.050
 ENV VERILATOR_SHA256="ec6723f30c1798b1fbbbed97364f09c431fb4875577c314f37240e99b60a4a04"
 RUN wget https://github.com/verilator/verilator/archive/refs/tags/v${VERILATOR_VERSION}.tar.gz -O /tmp/verilator.tar.gz && \
     echo "${VERILATOR_SHA256}  /tmp/verilator.tar.gz" | sha256sum -c - && \
     tar -xzf /tmp/verilator.tar.gz -C /tmp && \
-    if [ "$TARGETARCH" = "arm64" ] && grep -q -i "Intel\|AMD" /proc/cpuinfo; then \
+    if [ "$TARGETARCH" = "arm64" ]; then \
         MAKE_JOBS=1 && MAKE_FLAGS="VL_NOOPT=1"; \
     else \
         MAKE_JOBS=$(nproc) && MAKE_FLAGS=""; \
@@ -46,7 +49,7 @@ RUN wget https://github.com/verilator/verilator/archive/refs/tags/v${VERILATOR_V
     cp bin/verilator_bin bin/verilator_bin_dbg && \
     cp bin/verilator_bin bin/verilator_coverage_bin_dbg && \
     make install-all && \
-    rm -rf /tmp/verilator*/tmp/verilator.tar.gz && \
+    rm -rf /tmp/verilator* && \
     # Remove documentation bloat
     rm -rf /usr/local/share/man /usr/local/share/doc/verilator && \
     rm -rf /usr/local/share/verilator/examples && \
@@ -54,9 +57,17 @@ RUN wget https://github.com/verilator/verilator/archive/refs/tags/v${VERILATOR_V
     apt autoremove -y && \
     apt clean
 
-# 4. Install Verible
+# =============================================================================
+# Layer 3: Pre-built tools — Verible, Spike, RISC-V tests, SymbiYosys
+# Each tool is downloaded/built and cleaned up in the same RUN to minimise
+# intermediate layer size.  Changing any version here only skips Layer 1 & 2.
+# =============================================================================
 ENV VERIBLE_VERSION=v0.0-4135-g7807ee1a
-RUN if [ "$TARGETARCH" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then \
+ENV RISCV_TESTS=/opt/riscv-tests
+
+RUN \
+    # --- Verible ---
+    if [ "$TARGETARCH" = "arm64" ]; then \
         VERIBLE_ARCH="arm64" && \
         VERIBLE_SHA256="54c0c1bb2e6b106de1d8ee1a5c87d826af6f1a44b405f9f6aac2c8e52ec6be1d"; \
     else \
@@ -67,42 +78,43 @@ RUN if [ "$TARGETARCH" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then \
     echo "${VERIBLE_SHA256}  /tmp/verible.tar.gz" | sha256sum -c - && \
     tar -xzf /tmp/verible.tar.gz -C /tmp && \
     cp /tmp/verible-*/bin/* /usr/local/bin/ && \
-    rm -rf /tmp/verible*
-
-
-# 5. Spike
-RUN git clone --depth=1 --branch v1.1.0 \
+    rm -rf /tmp/verible* && \
+    # --- Spike (RISC-V ISA simulator) ---
+    git clone --depth=1 --branch v1.1.0 \
         https://github.com/riscv-software-src/riscv-isa-sim /tmp/riscv-isa-sim && \
     cd /tmp/riscv-isa-sim && \
     mkdir build && cd build && \
     ../configure --prefix=/usr/local && \
     make -j$(nproc) && \
     make install && \
-    rm -rf /tmp/riscv-isa-sim
-
-# 6. RISC-V Architectural Tests
-ENV RISCV_TESTS=/opt/riscv-tests
-RUN git clone --depth=1 --recurse-submodules \
+    rm -rf /tmp/riscv-isa-sim && \
+    # --- RISC-V Architectural Tests ---
+    git clone --depth=1 --recurse-submodules \
         https://github.com/riscv/riscv-tests ${RISCV_TESTS} && \
     cd ${RISCV_TESTS} && \
     autoconf && \
     ./configure --prefix=${RISCV_TESTS}/install && \
-    # p-env only (m-mode): \
+    # p-env only (m-mode):
     make -k -j$(nproc) isa 2>/dev/null || true && \
-    # p-env + v-env (future with MMU): \
+    # p-env + v-env (future with MMU):
     # PICOLIBC_INC=$(find /usr/lib/picolibc -name "stdint.h" -printf "%h\n" | head -1) && \
     # make -j$(nproc) isa CFLAGS="-isystem ${PICOLIBC_INC}" && \
-    chmod -R a+rX ${RISCV_TESTS}
-
-# 7. SymbiYosys (sby)
-RUN git clone --depth=1 https://github.com/YosysHQ/sby /tmp/sby && \
+    chmod -R a+rX ${RISCV_TESTS} && \
+    # --- SymbiYosys (sby) ---
+    git clone --depth=1 https://github.com/YosysHQ/sby /tmp/sby && \
     make -C /tmp/sby install PREFIX=/usr/local && \
     rm -rf /tmp/sby
 
-# 8. svlangserver
+# =============================================================================
+# Layer 4: JavaScript dependencies (npm)
+# Separated so Python/pip changes don't retrigger npm install and vice-versa.
+# =============================================================================
 RUN npm install -g @imc-trading/svlangserver
 
-# 9. Python tools
+# =============================================================================
+# Layer 5: Python venv + pip packages
+# Most frequently changing layer — requirements.txt edits only rebuild this.
+# =============================================================================
 USER vscode
 ENV PATH="/home/vscode/venv/bin:$PATH"
 COPY --chown=vscode:vscode requirements.txt /tmp/requirements.txt
