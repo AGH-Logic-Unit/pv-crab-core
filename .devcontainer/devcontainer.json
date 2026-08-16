@@ -1,6 +1,8 @@
 {
     "name": "Pulsar-V Crab Core",
     "image": "ghcr.io/agh-logic-unit/pv-crab-core:main",
+    "imagePullPolicy": "always",
+    "initializeCommand": "docker pull ghcr.io/agh-logic-unit/pv-crab-core:main || true",
     "remoteUser": "vscode",
     "customizations": {
         "vscode": {
@@ -50,5 +52,5 @@
         "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,readonly,consistency=cached"
     ],
     "postCreateCommand": "pre-commit install && pre-commit install --hook-type commit-msg",
-    "postAttachCommand": "bash .devcontainer/check.sh &"
+    "postAttachCommand": "bash .devcontainer/check.sh"
 }
