@@ -70,7 +70,7 @@ RUN if [ "$TARGETARCH" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then \
     cp /tmp/verible-*/bin/* /usr/local/bin/ && \
     rm -rf /tmp/verible* && \
 # 5. Spike (RISC-V ISA Simulator)
-    git clone --depth=1 \
+    git clone --depth=1 --branch v1.1.0 \
         https://github.com/riscv-software-src/riscv-isa-sim /tmp/riscv-isa-sim && \
     cd /tmp/riscv-isa-sim && \
     mkdir build && cd build && \
