@@ -1,31 +1,27 @@
-FROM debian:12-slim
-
-ENV DEBIAN_FRONTEND=noninteractive
+FROM ubuntu:26.04
 
 USER root
 
 ARG TARGETARCH
 
+# Layer 1. System packages, user, and environment setup
+ENV DEBIAN_FRONTEND=noninteractive
+
 # 1. Install minimum dependencies
-RUN apt update && apt install -y --no-install-recommends \
-    git make autoconf g++ flex bison ccache \
-    libfl2 libfl-dev zlib1g zlib1g-dev \
-    python3 python3-pip python3-dev python3-venv \
-    curl wget tar ca-certificates \
-    yosys nodejs npm \
-    gcc-riscv64-unknown-elf picolibc-riscv64-unknown-elf \
-    sudo openssh-client \
-    z3 libz3-dev libsystemc-dev \
-    lcov ripgrep device-tree-compiler \
+# 2. Create standard user
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    autoconf g++ gcc-riscv64-unknown-elf git make \
+    bison device-tree-compiler flex \
+    libfl-dev libfl2 libsystemc-dev libz3-dev zlib1g zlib1g-dev \
+    ca-certificates curl openssh-client sudo tar wget \
+    lcov python3 python3-dev python3-pip python3-venv ripgrep \
+    nodejs npm picolibc-riscv64-unknown-elf yosys z3 \
+    && useradd -m -s /bin/bash vscode \
+    && echo "vscode ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/vscode \
+    && chmod 0440 /etc/sudoers.d/vscode \
     && rm -rf /var/lib/apt/lists/*
 
-
-# 2. Create standard user
-RUN useradd -m -s /bin/bash vscode && \
-    echo "vscode ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/vscode && \
-    chmod 0440 /etc/sudoers.d/vscode
-
-
+# Layer 2. Verilator
 # 3. Compile Verilator (Minimal, no documentation)
 ENV VERILATOR_VERSION=5.050
 ENV VERILATOR_SHA256="ec6723f30c1798b1fbbbed97364f09c431fb4875577c314f37240e99b60a4a04"
@@ -46,16 +42,21 @@ RUN wget https://github.com/verilator/verilator/archive/refs/tags/v${VERILATOR_V
     cp bin/verilator_bin bin/verilator_bin_dbg && \
     cp bin/verilator_bin bin/verilator_coverage_bin_dbg && \
     make install-all && \
-    rm -rf /tmp/verilator*/tmp/verilator.tar.gz && \
+    rm -rf /tmp/verilator-${VERILATOR_VERSION} /tmp/verilator.tar.gz && \
     # Remove documentation bloat
     rm -rf /usr/local/share/man /usr/local/share/doc/verilator && \
     rm -rf /usr/local/share/verilator/examples && \
-    apt remove -y flex bison && \
-    apt autoremove -y && \
-    apt clean
+    apt-get purge -y --auto-remove flex bison && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
+# Layer 3. Pre-built tools
 # 4. Install Verible
+# 5. Spike
+# 6. RISC-V Architectural Tests
+# 7. SymbiYosys (sby)
 ENV VERIBLE_VERSION=v0.0-4135-g7807ee1a
+ENV RISCV_TESTS=/opt/riscv-tests
 RUN if [ "$TARGETARCH" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then \
         VERIBLE_ARCH="arm64" && \
         VERIBLE_SHA256="54c0c1bb2e6b106de1d8ee1a5c87d826af6f1a44b405f9f6aac2c8e52ec6be1d"; \
@@ -67,23 +68,15 @@ RUN if [ "$TARGETARCH" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then \
     echo "${VERIBLE_SHA256}  /tmp/verible.tar.gz" | sha256sum -c - && \
     tar -xzf /tmp/verible.tar.gz -C /tmp && \
     cp /tmp/verible-*/bin/* /usr/local/bin/ && \
-    rm -rf /tmp/verible*
-
-
-# 5. Spike
-RUN git clone --depth=1 --branch v1.1.0 \
-        https://github.com/riscv-software-src/riscv-isa-sim /tmp/riscv-isa-sim && \
+    rm -rf /tmp/verible* && \
+    git clone --depth=1 --branch v1.1.0 https://github.com/riscv-software-src/riscv-isa-sim /tmp/riscv-isa-sim && \
     cd /tmp/riscv-isa-sim && \
     mkdir build && cd build && \
     ../configure --prefix=/usr/local && \
     make -j$(nproc) && \
     make install && \
-    rm -rf /tmp/riscv-isa-sim
-
-# 6. RISC-V Architectural Tests
-ENV RISCV_TESTS=/opt/riscv-tests
-RUN git clone --depth=1 --recurse-submodules \
-        https://github.com/riscv/riscv-tests ${RISCV_TESTS} && \
+    rm -rf /tmp/riscv-isa-sim && \
+    git clone --depth=1 --recurse-submodules https://github.com/riscv/riscv-tests ${RISCV_TESTS} && \
     cd ${RISCV_TESTS} && \
     autoconf && \
     ./configure --prefix=${RISCV_TESTS}/install && \
@@ -92,19 +85,20 @@ RUN git clone --depth=1 --recurse-submodules \
     # p-env + v-env (future with MMU): \
     # PICOLIBC_INC=$(find /usr/lib/picolibc -name "stdint.h" -printf "%h\n" | head -1) && \
     # make -j$(nproc) isa CFLAGS="-isystem ${PICOLIBC_INC}" && \
-    chmod -R a+rX ${RISCV_TESTS}
-
-# 7. SymbiYosys (sby)
-RUN git clone --depth=1 https://github.com/YosysHQ/sby /tmp/sby && \
+    chmod -R a+rX ${RISCV_TESTS} && \
+    git clone --depth=1 https://github.com/YosysHQ/sby /tmp/sby && \
     make -C /tmp/sby install PREFIX=/usr/local && \
     rm -rf /tmp/sby
 
+# Layer 4. JavaScript dependencies
 # 8. svlangserver
 RUN npm install -g @imc-trading/svlangserver
 
+# Layer 5. Python venv + pip packages
 # 9. Python tools
 USER vscode
 ENV PATH="/home/vscode/venv/bin:$PATH"
 COPY --chown=vscode:vscode requirements.txt /tmp/requirements.txt
 RUN python3 -m venv /home/vscode/venv && \
-    /home/vscode/venv/bin/pip install --no-cache-dir -r /tmp/requirements.txt
+    /home/vscode/venv/bin/pip install --no-cache-dir -r /tmp/requirements.txt && \
+    rm -f /tmp/requirements.txt
