@@ -7,13 +7,6 @@ on:
       - 'docs/**'
       - 'zensical.toml'
       - '.github/workflows/**'
-  pull_request:
-    branches:
-      - main
-    paths:
-      - 'docs/**'
-      - 'zensical.toml'
-      - '.github/workflows/**'
 
 permissions:
   contents: write
