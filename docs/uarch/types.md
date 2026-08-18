@@ -9,7 +9,6 @@ title: Types
 | 2026-08-05 | v0.2 | Standardized type names to use the _t suffix, cleaned up and moved private Writeback ROB types to their respective files, and added priv_mode_t. |
 | 2026-04-26 | v0.1 | Initial draft |
 
----
 
 ## 2. Global Pipeline Types
 
@@ -70,7 +69,17 @@ A 14-bit packed union constructed at Decode/Dispatch and stored in the ROB. It o
 | **CSR (csr)** | `addr` | 12 | `[11:0]` | Target CSR address. |
 | | `op` | 2 | `[13:12]` | CSR operation type (`csr_op_t`). |
 
----
+### 2.6 `pma_amo_level_t` (PMA Atomic Capability Levels)
+
+Used by the MMU, D-TLB, and LSU to enforce physical memory attribute atomic operation capabilities:
+
+| Element Name | Encoding | Capability Level | Description |
+| :--- | :---: | :--- | :--- |
+| `PMA_AMO_NONE` | `2'b00` | None | No atomic operations supported (standard MMIO peripherals, ROM). |
+| `PMA_AMO_SWAP` | `2'b01` | Swap Only | Supports `AMOSWAP` only (simple synchronization registers). |
+| `PMA_AMO_LOGICAL` | `2'b10` | Logical | Supports `AMOSWAP`, `AMOAND`, `AMOOR`, `AMOXOR` (bitmask controllers). |
+| `PMA_AMO_ARITHMETIC` | `2'b11` | Arithmetic & Full | Supports all AMOs (`AMOADD`, `AMOMIN`, `AMOMAX`, etc.) and `LR/SC`. |
+
 
 ## 3. Future Scalability (Superscalar Upgrades)
 
