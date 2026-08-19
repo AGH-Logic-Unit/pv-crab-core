@@ -139,3 +139,22 @@ While `is_bare == 1` entries are exempt from `SFENCE.VMA`, they cache pre-evalua
     * `PMP CSR Writes` invalidate all BARE mode mappings across both TLBs.
     * `satp` writes trigger a full pipeline flush and flush all non-global Sv39 entries.
     * Entries with Global flag `G == 1` or `is_bare == 1` are **exempt** from standard `SFENCE.VMA` flushes and remain valid across context switches.
+
+## 6. Verification
+
+The TLB arrays and Tree-PLRU replacement logic are verified through formal assertion checking (SVA) and functional simulations:
+
+### Formal SVA Assertion Table
+
+| Assertion ID | Property / Condition | Severity | Checkpoint | Description |
+| :--- | :--- | :---: | :---: | :--- |
+| `SVA_TLB_01` | `$onehot0(hit_vector)` | `FATAL` | **CHK-MMU-03** | CAM lookup must never yield multiple conflicting entry hits for a single VA |
+| `SVA_TLB_02` | `(sfence_vma_valid_i && (is_bare || pte_flags.G)) |=> (entry_valid)` | `ERROR` | **CHK-MMU-05** | SFENCE.VMA must strictly preserve BARE mode and Global ($G=1$) mappings |
+| `SVA_TLB_03` | `pmp_write_valid_i |=> (!entry_valid || !is_bare)` | `FATAL` | **CHK-MMU-05** | Any PMP CSR write MUST invalidate all cached BARE TLB entries |
+| `SVA_TLB_04` | `(sfence_vma_valid_i && (sfence_asid != 0) && (entry.asid != sfence_asid)) |=> (entry_valid)` | `ERROR` | **CHK-MMU-05** | SFENCE.VMA with non-zero ASID must not invalidate entries with distinct ASIDs |
+| `SVA_TLB_05` | `(refill_valid && has_invalid_entry) |-> (victim_idx == first_invalid_idx)` | `ERROR` | **CHK-MMU-06** | TLB replacement must always prioritize invalid entries over PLRU eviction |
+
+### Coverage Strategy
+* **CAM Hit Matrix:** 100% coverage of single hits across all 16/32 entry indices.
+* **SFENCE Permutations:** Testing full invalidate (`rs1=0, rs2=0`), address-only (`rs1!=0, rs2=0`), ASID-only (`rs1=0, rs2!=0`), and address+ASID (`rs1!=0, rs2!=0`).
+* **PLRU Eviction Distribution:** Uniform distribution verification across replacement cycles without hot-spot starvation.

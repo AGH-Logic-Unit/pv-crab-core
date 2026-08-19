@@ -142,7 +142,7 @@ The CSR unit implements a 12-bit address space. The table below lists the essent
 | `0xF14` | `mhartid` | M | RO | Hardware Thread ID |
 | **M-Mode (Control)** | | | | |
 | `0x300` | `mstatus` | M | RW | Machine Status |
-| `0x301` | `misa` | M | RW | Machine ISA Extensions |
+| `0x301` | `misa` | M | RO | Machine ISA Extensions |
 | `0x302` | `medeleg` | M | RW | Machine Exception Delegation |
 | `0x303` | `mideleg` | M | RW | Machine Interrupt Delegation |
 | `0x304` | `mie` | M | RW | Machine Interrupt Enable |
