@@ -39,7 +39,8 @@ The module is required to implement the following RISC-V Unprivileged ISA specif
 
 | Parameter Name | Type | Default Value | Description |
 | :--- | :---: | :---: | :--- |
-| `STB_DEPTH` | `int` | `4` | Depth of the Store Buffer. Must be a power of 2. |
+| `STB_DEPTH` | `int` | `4` | Depth of the Store Buffer. Must be a power of 2 ($\le 4$). |
+| `TAG_WIDTH` | `int` | `4` | ROB instruction tracking tag width. |
 
 ## 5. Interfaces
 
@@ -61,7 +62,7 @@ The module is required to implement the following RISC-V Unprivileged ISA specif
 | `imm_i` | `logic` | 64 | IN | Immediate offset value for address generation |
 | `operator_i` | `logic` | 6 | IN | Operation code |
 
-### 5.2 Writeback (Stage 7)
+### 5.2 Writeback (Stage 7) & Commit Interface
 
 | Signal | Type | Width | Direction | Description |
 | :--- | :---: | :---: | :---: | :--- |
@@ -71,6 +72,14 @@ The module is required to implement the following RISC-V Unprivileged ISA specif
 | `wb_trap_o` | `logic` | 1 | OUT | Exception indicator (asserted on address misaligned, PMP fault, or page fault) |
 | `wb_cause_o` | `logic` | 6 | OUT | Exception cause code (valid when `wb_trap_o` is 1) |
 | `wb_headers_o` | `exe_headers_t`| - | OUT | Output execution stage header metadata to Writeback Buffer |
+
+#### 5.2.1 Stage 7 Commit Queue Interface (ROB Head Control)
+
+| Signal | Type | Width | Direction | Description |
+| :--- | :---: | :---: | :---: | :--- |
+| `commit_head_valid_i` | `logic` | 1 | IN | Asserted when instruction at ROB head is ready to retire |
+| `commit_head_tag_i` | `logic` | `TAG_WIDTH` | IN | ROB tag of instruction currently at the commit head |
+| `is_rob_head_i` | `logic` | 1 | IN | Asserted when LSU's active serialized instruction matches ROB head |
 
 ### 5.3 D-Cache
 
@@ -99,6 +108,8 @@ The module is required to implement the following RISC-V Unprivileged ISA specif
 | `tlbpm_req_w_o` | `logic` | 1 | OUT | Write permission check request |
 | `tlbpm_err_r_i` | `logic` | 1 | IN | Asserted if Read permission is denied (`cause = 5` or `13`) |
 | `tlbpm_err_w_i` | `logic` | 1 | IN | Asserted if Write permission is denied (`cause = 7` or `15`) |
+| `tlbpm_cause_r_i` | `logic` | 6 | IN | Exact Read fault cause code (`5` = Load Access Fault, `13` = Load Page Fault) |
+| `tlbpm_cause_w_i` | `logic` | 6 | IN | Exact Write fault cause code (`7` = Store/AMO Access Fault, `15` = Store/AMO Page Fault) |
 | `tlbpm_rvalid_i` | `logic` | 1 | IN | Data response valid (`1` = TLB Hit / Ready, `0` = TLB Miss / Stalled) |
 | `tlbpm_addr_i` | `logic` | 56 | IN | Translated physical address (`PA[55:0]`) from D-TLB |
 | `tlbpm_cacheable_i` | `logic` | 1 | IN | Active high if physical address points to cacheable DRAM |
@@ -130,37 +141,43 @@ The module is required to implement the following RISC-V Unprivileged ISA specif
 #### Address Flow:
 $$\text{RS1} + \text{imm} \rightarrow \text{VA}[63:0] \xrightarrow{\text{tlbpm}} \text{D-TLB} \xrightarrow{\text{PA}[55:0] + \text{Flags}} \text{LSU} \xrightarrow{\text{dmem\_addr\_o}} \text{D-Cache}$$
 
-In BARE mode (or M-mode without translation), the D-TLB performs a 1:1 lookup on cached BARE entries to retrieve pre-evaluated PMP/PMA permissions in a single cycle.
+In BARE mode (or M-mode without translation), the D-TLB performs a 1:1 lookup on cached BARE entries (`is_bare == 1`) to retrieve pre-evaluated PMP/PMA permissions in a single cycle without runtime PMP comparators.
 
 ### 6.2 Load Lifecycle
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor PIPE@{"type": "control", "alias": "Pipeline"}
+    actor PIPE as Pipeline / Dispatch
     participant LSU as LSU FSM
-    participant STB as STB
+    participant STB as Store Buffer (STB)
     participant DTLB as D-TLB
-    participant CACHE as D-Cache
+    participant CACHE as L1 D-Cache
 
     Note over PIPE,LSU: STAGE 5 (Dispatch)
         PIPE->>LSU: uOp Dispatched
     Note over PIPE,LSU: STAGE 6 (Execute)
-        LSU->>DTLB: Lookup VA (tlbpm_addr_o)
+        LSU->>DTLB: Lookup VA (tlbpm_addr_o, req_r = 1)
         DTLB-->>LSU: Return PA[55:0] + Flags (tlbpm_rvalid_i == 1)
-        LSU->>LSU: Alignment & PMA Check
-        LSU<<->>STB: Store-to-Load<br/>Forwarding Lookup
-        alt STB Hit (full)
-            STB-->>LSU: Bypassed Data
-        else STB Hit (partial)
-            STB-->>LSU: Bypass Stall
-        else STB Miss
-            LSU->>CACHE: Read Request (dmem_addr_o = PA)
-            CACHE-->>LSU: Read Data
+        LSU->>LSU: 1. Alignment Check (VA[2:0])
+        LSU->>LSU: 2. PMP & Page Permission Check
+
+        alt Exception (Misaligned / Access Fault / Page Fault)
+            LSU-->>PIPE: Trap Request (wb_trap_o = 1, wb_cause_o = cause, badaddr = VA)
+        else Access Permitted
+            LSU<<->>STB: Store-to-Load Forwarding Lookup
+            alt STB Hit (full byte match)
+                STB-->>LSU: Bypassed Data (Youngest Store)
+            else STB Hit (partial overlap)
+                STB-->>LSU: Bypass Stall (Hold Stage 6)
+            else STB Miss (no overlap)
+                LSU->>CACHE: Read Request (dmem_addr_o = PA[55:0])
+                CACHE-->>LSU: Read Data
+            end
+            LSU-->>PIPE: Forward Result
         end
-        LSU-->>PIPE: Forward Result
     Note over PIPE,LSU: STAGE 7 (Retire)
-        PIPE->>PIPE: Commit
+        PIPE->>PIPE: Commit Instruction
 ```
 
 ### 6.3 Store Lifecycle
@@ -168,59 +185,65 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     autonumber
-    actor PIPE@{"type": "control", "alias": "Pipeline"}
+    actor PIPE as Pipeline / Dispatch
     participant LSU as LSU FSM
-    participant STB as STB
     participant DTLB as D-TLB
-    participant CACHE as D-Cache
+    participant STB as Store Buffer (STB)
+    participant CACHE as L1 D-Cache
 
     Note over PIPE,LSU: STAGE 5 (Dispatch)
-        PIPE->>LSU: uOp Dispatched
+        PIPE->>LSU: uOp Dispatched (Store / SC)
     Note over PIPE,LSU: STAGE 6 (Execute)
-        LSU->>DTLB: Lookup VA (tlbpm_addr_o)
-        DTLB-->>LSU: Return PA[55:0] + Flags
-        LSU->>LSU: Alignment & PMP Check
-        alt SC && reservation_valid == 0
-            LSU-->>PIPE: SC Failed (Result = 1)
-        else Store or SC success
-            LSU->>STB: Allocate Speculative Entry (PA, wdata, tag)
-            LSU-->>PIPE: Execution Done (Result = 0 for SC)
+        LSU->>DTLB: Lookup VA (tlbpm_addr_o, req_w = 1)
+        DTLB-->>LSU: Return PA[55:0] + Flags (tlbpm_rvalid_i == 1)
+        LSU->>LSU: 1. Alignment Check (VA[2:0])
+        LSU->>LSU: 2. PMP & Page Permission Check
+
+        alt Exception (Misaligned / Access Fault / Page Fault)
+            LSU-->>PIPE: Trap Request (wb_trap_o = 1, wb_cause_o, badaddr)
+            Note over LSU,STB: No STB Entry Allocated
+        else SC Failed (reservation_valid == 0 || mismatch)
+            LSU-->>PIPE: SC Result = 1 (Failure, no memory write)
+        else Valid Store / SC Success
+            LSU->>STB: Push Speculative Entry (PA, wdata, be, size, tag)
+            LSU-->>PIPE: Execution Done (SC Result = 0 / Store ACK)
         end
-    Note over PIPE,LSU: STAGE 7 (Retire)
+
+    Note over PIPE,CACHE: STAGE 7 (Retire / Commit)
         alt Pipeline Flush (Mispredict / Trap)
             PIPE->>STB: flush_i == 1
-            STB->>STB: Discard Speculative Entries (rollback write_ptr)
+            STB->>STB: Rollback write_ptr (Discard Speculative)
         else Commit
-            PIPE->>STB: Commit Tag Match
-            STB->>CACHE: STB Drain (dmem_we_o = 1, dmem_addr_o = PA)
-            PIPE->>PIPE: Commit
+            PIPE->>STB: Commit Strobe (stb_commit_tag_i)
+            STB->>STB: Mark Entry as Committed (speculative = 0)
+            STB->>CACHE: Drain to D-Cache (dmem_we_o = 1, dmem_addr_o = PA)
+            PIPE->>PIPE: Retire Instruction
         end
 ```
 
 ### 6.4 AMO Lifecycle
 
-
 ```mermaid
 sequenceDiagram
     autonumber
-    actor PIPE@{"type": "control", "alias": "Pipeline"}
-    participant LSO as LSU FSM
-    participant STB as STB
-    participant CACHE as D-Cache/MMU
+    actor PIPE as Pipeline / Dispatch
+    participant LSU as LSU FSM
+    participant STB as Store Buffer (STB)
+    participant CACHE as L1 D-Cache / MMU
 
-    Note over PIPE,LSO: STAGE 5 (Dispatch)
-        PIPE->>LSO: uOp Dispatched
-    Note over PIPE,LSO: STAGE 6 (Execute)
-        LSO->>LSO: PMP (R+W) & PMA & Alignment Check
-        LSO-->>PIPE: FSM Stall
+    Note over PIPE,LSU: STAGE 5 (Dispatch)
+        PIPE->>LSU: uOp Dispatched (AMO)
+    Note over PIPE,LSU: STAGE 6 (Execute)
+        LSU->>LSU: PMP (R+W) & PMA & Alignment Check
+        LSU-->>PIPE: FSM Stall (Execute-at-Retire)
 
-    Note over PIPE,LSO: STAGE 7 (Retire)
-        PIPE->>LSO: Commit Signal
-        LSO-->>LSO: Await STB Empty
-        STB->>LSO: STB Empty
-        LSO->>CACHE: Send amo_req (Cache-Side RMW)
-        CACHE-->>LSO: Return pre-AMO Data
-        LSO-->>PIPE: Forward Data
+    Note over PIPE,LSU: STAGE 7 (Retire)
+        PIPE->>LSU: Commit Signal (is_rob_head_i == 1)
+        LSU-->>LSU: Await STB Empty (stb_empty_i == 1)
+        STB->>LSU: STB Empty
+        LSU->>CACHE: Send amo_req (Cache-Side RMW)
+        CACHE-->>LSU: Return pre-AMO Data
+        LSU-->>PIPE: Forward Data
 ```
 
 ## 7. Policies and Rulesets
@@ -228,8 +251,9 @@ sequenceDiagram
 ### 7.1 Privilege Levels and Address Translation Mode
 
 1. **M-mode (Machine Mode) Bare Addressing:**
-    * When executing in M-mode (`curr_priv == PRIV_MACHINE`), address translation and TLB lookups are **bypassed** (`PA == VA`).
-    * Accesses operate directly on physical addresses and are verified against PMP (if locked `L=1`) and PMA region attributes.
+    * When executing in M-mode (`curr_priv == PRIV_MACHINE`) or when `satp.MODE == BARE`, Sv39 page table translation is **disabled** (`PA == VA`).
+    * Memory accesses still perform a 1-cycle lookup in the D-TLB against cached BARE entries (`is_bare == 1`) to retrieve pre-evaluated PMP (for locked `L=1` rules) and PMA region attributes without activating runtime PMP comparators.
+    * If a BARE miss occurs, the MMU installs a new 1:1 BARE TLB entry via the combined PMP/PMA evaluation block.
 
 2. **S-mode & U-mode Sv39 Translation:**
     * When `satp.MODE == Sv39` and executing in S-mode or U-mode, virtual addresses (`VA`) undergo TLB lookup and Page Table Walk translation to Physical Addresses (`PA`).
@@ -294,3 +318,21 @@ Port Arbiter priority:
 STB must be protected from starvation. If occupancy reaches $75\%$, STB drain priority raises to `High` to prevent deadlock.
 
 ## 8. Verification
+
+The LSU is verified through formal property verification (SVA), directed testing, and constrained random simulation against the following assertions:
+
+### Formal SVA Assertion Table
+
+| Assertion ID | Property / Condition | Severity | Checkpoint | Description |
+| :--- | :--- | :---: | :---: | :--- |
+| `SVA_LSU_01` | `(dmem_amo_req_o == 1) |-> (is_rob_head_i && !flush_i)` | `FATAL` | **CHK-LSU-04** | AMO requests must be issued ONLY when at ROB commit head and non-flushed |
+| `SVA_LSU_02` | `(ex_store_valid && flush_i) |=> (reservation_valid == $past(reservation_valid))` | `ERROR` | **CHK-LSU-01** | Speculative store flushed in Stage 6 must NOT destroy LR reservation |
+| `SVA_LSU_03` | `(disp_valid_i && is_sc_i && pmp_err) |-> ##1 (wb_trap_o && (wb_cause_o == 7))` | `FATAL` | **CHK-LSU-02** | SC PMP violation triggers Access Fault even if SC reservation is invalid |
+| `SVA_LSU_04` | `(disp_valid_i && misaligned) |-> ##1 (wb_trap_o && (wb_cause_o == 4 || 6))` | `ERROR` | **CHK-LSU-08** | Address misalignment on VA[2:0] immediately raises Alignment Exception |
+| `SVA_LSU_05` | `$bits(dmem_addr_o) == 56` | `FATAL` | **CHK-MMU-02** | Physical memory request address port width must strictly equal 56 bits |
+| `SVA_LSU_06` | `(load_bypass_hit_o && (valid_match_count > 1)) |-> (forwarded_tag == youngest_stb_tag)` | `ERROR` | **CHK-LSU-06** | Store-to-load forwarding must always select the youngest matching entry |
+
+### Verification Methodology
+1. **Constrained Random Tests:** Generates random mixtures of loads, stores, LR/SC, and AMOs across 4 KiB page boundaries and PMP sub-regions.
+2. **Directed Corner Cases:** Partial store overlaps (1B/2B/4B/8B permutations), misaligned traps, multiple matching STB entries, and pipeline flushes during wait states.
+3. **Reference Comparison:** Output data and exceptions are matched cycle-by-cycle against a Golden C++ Architectural Model.

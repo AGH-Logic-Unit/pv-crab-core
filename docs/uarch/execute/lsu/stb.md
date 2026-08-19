@@ -100,3 +100,21 @@ Concurrent loads in Stage 6 query the STB in parallel with the L1 Data Cache:
 2. **Full Match:** Load address & size fall entirely within byte enable (`be`) of a STB entry $\rightarrow$ bypass data from the youngest matching entry (`load_bypass_hit_o = 1`).
 3. **Partial Overlap:** Load overlaps a STB entry, but the entry does not cover all requested bytes $\rightarrow$ assert `load_bypass_stall_o = 1` to stall the load until conflicting stores drain to D-Cache.
 4. **No Overlap:** No matching STB bytes $\rightarrow$ read normally from L1 D-Cache.
+
+## 5. Verification
+
+The Store Buffer module is verified using formal assertions and random testing:
+
+### Formal SVA Assertion Table
+
+| Assertion ID | Property / Condition | Severity | Checkpoint | Description |
+| :--- | :--- | :---: | :---: | :--- |
+| `SVA_STB_01` | `(load_partial_overlap) |-> (load_bypass_stall_o == 1'b1)` | `FATAL` | **CHK-LSU-05** | Partial address overlap between load and STB store MUST force a bypass stall |
+| `SVA_STB_02` | `flush_i |=> (stb_speculative_count == '0)` | `ERROR` | **CHK-LSU-01** | Pipeline flush must clear all speculative entries without discarding committed |
+| `SVA_STB_03` | `(stb_entry_committed && !rst_ni_flush) |=> (stb_entry_valid)` | `FATAL` | **CHK-LSU-04** | Committed STB entries must persist until acknowledged by D-Cache drain ack |
+| `SVA_STB_04` | `(stb_full_o && stb_write_valid_i) |-> $error` | `FATAL` | **CHK-LSU-05** | Write into full STB without prior commit/drain is forbidden |
+| `SVA_STB_05` | `(load_bypass_hit_o && (matching_count > 1)) |-> (forwarded_entry == youngest_entry)` | `ERROR` | **CHK-LSU-06** | Bypassed load data must strictly originate from the youngest matching store |
+
+### Coverage Metrics
+* 100% functional coverage of forwarding hit permutations (8-bit byte mask combinations).
+* Verification of pointer wrap-around and rollback during branch mispredictions.

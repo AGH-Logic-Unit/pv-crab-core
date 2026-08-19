@@ -1,61 +1,64 @@
 ---
-title: MMU Overview
+title: MMU & Address Translation Overview
 ---
 
-# Memory Management Unit Overview
+# MMU & Address Translation Overview
 
 !!! abstract "Module Card"
     * :material-file-code: **RTL file:** `N/A`
     * :material-progress-wrench: **Status:** `Draft`
 
-## 1. Summary
+## 1. Overview
 
-The **Memory Management Unit (MMU)** is the central memory protection and address translation control subsystem in the Crab Core. It coordinates virtual-to-physical address translation for Supervisor (`S`) and User (`U`) modes under the RISC-V **Sv39** scheme, enforces Physical Memory Protection (**PMP**) and Physical Memory Attribute (**PMA**) security policies, and manages the shared **Hardware Page Table Walker (PTW)** for refilling distributed I-TLB and D-TLB instances. The MMU operates in the memory subsystem region, interfacing directly with the L1 D-Cache controller for PTE memory fetches and with distributed TLBs for translation refills. The MMU does not directly interface with the core execution pipelines, maintaining strict modular isolation.
+The **Memory Management Unit (MMU)** provides hardware-enforced virtual memory management and physical security mechanisms for the 64-bit Crab Core. It implements the standard **RISC-V Sv39** multi-level page translation scheme, Physical Memory Protection (PMP), Physical Memory Attributes (PMA), and hardware page-table walk acceleration.
+
+The MMU is partitioned into modular execution blocks located in **Stage 6 (Memory / Translation)**:
+
+* **Instruction TLB (I-TLB):** 16-entry fully associative CAM for zero-cycle/single-cycle instruction fetch translation.
+* **Data TLB (D-TLB):** 32-entry fully associative CAM for single-cycle data address translation and PMP/PMA access checks.
+* **Hardware Page Table Walker (PTW):** Centralized 3-level Sv39 state machine serving translation refill requests from both I-TLB and D-TLB with starvation prevention.
+* **PMP / PMA Checker:** Evaluates 16 PMP regions and hardwired PMA memory attributes at refill time.
 
 ## 2. Architectural Requirements
 
-The MMU implements the RISC-V Privileged Architecture Specification (v1.12) with the following features:
+The MMU complies with the following RISC-V Privileged Architecture specifications (v1.12):
 
-* **Sv39 Page-Based Virtual Memory:**
-    * 39-bit Virtual Address (`VA[38:0]`) translated to 56-bit Physical Address (`PA[55:0]`).
-    * 3-level page table hierarchy (Gigapages 1 GiB, Megapages 2 MiB, Base pages 4 KiB).
-* **`Svpbmts` Extension Support:**
-    * Page-Based Memory Types using bits `PTE[62:61]` (`PBMT`): `00` (PMA Default), `01` (Non-Cacheable Main Memory), `10` (Uncached Non-Idempotent I/O).
-* **Privilege & Bypass Control:**
-    * **M-mode (Machine Mode) Bare Addressing:** Bypasses translation (`PA == VA`) and page table walking when executing in Machine mode (`curr_priv == PRIV_MACHINE`), subject to locked PMP rules (`L=1`).
-    * **`satp.MODE == Bare` (0):** Disables virtual translation for all privilege modes.
-    * **`mstatus.MPRV` Override:** Allows M-mode memory data accesses to evaluate translation and protection using privilege level `mstatus.MPP` (does not affect instruction fetch).
-* **TLB Invalidation (`SFENCE.VMA`):**
-    * Broadcasts flush signals to distributed I-TLB and D-TLB modules by Address (`VA`) or Address Space Identifier (`ASID`).
-* **PMA AMO Capability Levels:**
-    * Classifies physical regions into 4 atomic levels: `PMA_AMO_NONE`, `PMA_AMO_SWAP`, `PMA_AMO_LOGICAL`, `PMA_AMO_ARITHMETIC`.
-* **Page Fault Exception Generation:**
-    * *Instruction Page Fault:* `cause = 12` (Stage 1 Fetch).
-    * *Load Page Fault:* `cause = 13` (Stage 6 Load).
-    * *Store/AMO Page Fault:* `cause = 15` (Stage 6 Store/AMO).
+* **Sv39 Virtual Memory:** 39-bit Virtual Address space ($VA[38:0]$) mapped to 56-bit Physical Address space ($PA[55:0]$).
+* **Page Granularities:** 4 KiB Base Pages, 2 MiB Megapages, and 1 GiB Gigapages.
+* **Privilege Levels:** User (`U-mode`), Supervisor (`S-mode`), and Machine (`M-mode`).
+* **Hardware Protection:**
+    * 16-Entry Physical Memory Protection (PMP) supporting `OFF`, `TOR`, `NA4`, `NAPOT` addressing modes.
+    * Physical Memory Attributes (PMA) defining Cacheability and 4-level Atomic (AMO) support.
+    * `Svpbmts` extension support for page-based memory type attributes (`PTE[62:61]`).
+* **Address Space ID (ASID):** 16-bit ASID filtering in TLB CAM tags with Global mapping (`G`) support.
 
-## 3. Memory System Architecture
+## 3. Subsystem Architecture
 
 ```
-        |   ^                                                                  |   ^
-        V   |                                                                  V   |
-+-------------------+       +----------------------------------+       +-------------------+
-| I-Cache Subsystem |       |         MMU CORE (Central)       |       | D-Cache Subsystem |
-|                   |       |                                  |       |                   |
-|  - I-TLB (16 CAM) |<----->|  - Shared Hardware PTW FSM       |<----->|  - D-TLB (32 CAM) |
-|  - I-Cache SRAM   |       |  - satp / mstatus Decode         |       |  - D-Cache SRAM   |
-|                   |       |  - Shadow PMP Registers (16)     |       |  - AMO ALU (RMW)  |
-|                   |       |  - PMA Decoder + Svpbmts         |       |                   |
-+-------------------+       +----------------------------------+       +-------------------+
-          ^                      ^                                               ^
-          |                      |                                               |
-          V                     csr                                              V
-+-------------------+                                                  +-------------------+
-|   Stage 1 Fetch   |                                                  |    Stage 6 LSU    |
-+-------------------+                                                  +-------------------+
+                       +---------------------------------------+
+                       |              MMU Subsystem            |
+                       |                                       |
+                       |  +---------------+ +---------------+  |
+   Fetch VA ---------->|  |  I-TLB (16)   | |  D-TLB (32)   |  |<---------- LSU VA (Stage 6)
+                       |  +-------+-------+ +-------+-------+  |
+                       |          |                 |          |
+                       |          v                 v          |
+                       |  +---------------------------------+  |
+                       |  |    Hardware Page Table Walker   |  |
+                       |  |            (Sv39 PTW)           |  |
+                       |  +----------------+----------------+  |
+                       |                   |                   |
+                       |                   v                   |
+                       |  +---------------------------------+  |
+                       |  |      PMP & PMA Pre-Evaluator    |  |
+                       |  +---------------------------------+  |
+                       +-------------------|-------------------+
+                                           |
+                                           v (ptw_* ports)
+                                  [ L1 Data Cache ]
 ```
 
-## 4. Interfaces
+## 4. Subsystem Interfaces
 
 ### 4.1 Clock, Reset and CSR Control Interface
 
@@ -102,21 +105,10 @@ The MMU implements the RISC-V Privileged Architecture Specification (v1.12) with
 | `dtlb_lookup_pa_o` | `logic` | 56 | OUT | Translated 56-bit Physical Address (`PA[55:0]`) |
 | `dtlb_err_r_o` | `logic` | 1 | OUT | Denied read permission (`cause = 5` Access Fault or `13` Page Fault) |
 | `dtlb_err_w_o` | `logic` | 1 | OUT | Denied write permission (`cause = 7` Access Fault or `15` Page Fault) |
+| `dtlb_cause_r_o` | `logic` | 6 | OUT | Exact Read fault cause code (`5` = Load Access Fault, `13` = Load Page Fault) |
+| `dtlb_cause_w_o` | `logic` | 6 | OUT | Exact Write fault cause code (`7` = Store/AMO Access Fault, `15` = Store/AMO Page Fault) |
 | `dtlb_pma_cacheable_o` | `logic` | 1 | OUT | Pre-evaluated cacheability flag (`1` = DRAM, `0` = MMIO) |
 | `dtlb_pma_amo_level_o` | `pma_amo_level_t` | 2 | OUT | Pre-evaluated atomic capability level (`None`, `Swap`, `Logical`, `Arith`) |
-| `dtlb_miss_valid_i` | `logic` | 1 | IN | Internal miss signal routed to Hardware PTW |
-| `dtlb_miss_va_i` | `logic` | 64 | IN | Faulting virtual address for PTW page table walk |
-| `dtlb_miss_op_i` | `logic` | 2 | IN | Access intent: `00` = Read (Load), `01` = Write (Store), `10` = Atomic (AMO) |
-| `dtlb_refill_valid_o` | `logic` | 1 | OUT | 1-cycle strobe indicating valid translation refill payload from PTW |
-| `dtlb_refill_vpn_o` | `logic` | 27 | OUT | Virtual page number tag (`VA[38:12]`) |
-| `dtlb_refill_page_size_o`| `page_size_t` | 2 | OUT | Refilled page size (`PAGE_4K`, `PAGE_2M`, `PAGE_1G`) |
-| `dtlb_refill_ppn_o` | `logic` | 44 | OUT | Physical page number translation payload (`PA[55:12]`) |
-| `dtlb_refill_flags_o` | `pte_flags_t` | 8 | OUT | Page permission flags (`R`, `W`, `X`, `U`, `G`, `A`, `D`, `PBMT`) |
-| `dtlb_refill_pmp_fault_o`| `logic` | 1 | OUT | Pre-evaluated PMP permission fault flag cached in TLB entry |
-| `dtlb_refill_pma_cacheable_o`| `logic` | 1 | OUT | Pre-evaluated PMA cacheability attribute |
-| `dtlb_refill_pma_amo_level_o`| `pma_amo_level_t` | 2 | OUT | Pre-evaluated PMA atomic capability level |
-| `dtlb_page_fault_o` | `logic` | 1 | OUT | Strobe asserting load/store/AMO page fault exception |
-| `dtlb_page_fault_cause_o` | `logic` | 6 | OUT | Exception cause code (`cause = 13` Load, `cause = 15` Store/AMO) |
 
 #### Cross-Module Port Mapping: LSU (`docs/uarch/execute/lsu/overview.md` §5.4) $\leftrightarrow$ D-TLB:
 
@@ -128,11 +120,12 @@ The MMU implements the RISC-V Privileged Architecture Specification (v1.12) with
 | `tlbpm_req_w_o` | `dtlb_req_w_i` | OUT | 1 | Write intent flag |
 | `tlbpm_rvalid_i` | `dtlb_lookup_ready_o` | IN | 1 | TLB Hit / Ready acknowledgment |
 | `tlbpm_addr_i` | `dtlb_lookup_pa_o` | IN | 56 | Physical Address ($PA[55:0]$) |
-| `tlbpm_err_r_i` | `dtlb_err_r_o` | IN | 1 | Read permission fault |
-| `tlbpm_err_w_i` | `dtlb_err_w_o` | IN | 1 | Write permission fault |
+| `tlbpm_err_r_i` | `dtlb_err_r_o` | IN | 1 | Read permission fault flag |
+| `tlbpm_err_w_i` | `dtlb_err_w_o` | IN | 1 | Write permission fault flag |
+| `tlbpm_cause_r_i` | `dtlb_cause_r_o` | IN | 6 | Exact trap cause for read access (`5` vs `13`) |
+| `tlbpm_cause_w_i` | `dtlb_cause_w_o` | IN | 6 | Exact trap cause for write access (`7` vs `15`) |
 | `tlbpm_cacheable_i` | `dtlb_pma_cacheable_o` | IN | 1 | Cacheable DRAM indicator |
 | `tlbpm_pma_amo_level_i`| `dtlb_pma_amo_level_o` | IN | 2 | Supported AMO capability level |
-
 
 ### 4.4 PTW Memory Access Interface (to L1 D-Cache)
 
@@ -154,6 +147,24 @@ The MMU implements the RISC-V Privileged Architecture Specification (v1.12) with
 | `sfence_vma_addr_i` | `logic` | 64 | IN | Target virtual address filter for TLB invalidation (`0` = all VAs) |
 | `itlb_flush_o` | `logic` | 1 | OUT | Invalidation pulse routed to I-TLB array |
 | `dtlb_flush_o` | `logic` | 1 | OUT | Invalidation pulse routed to D-TLB array |
+
+### 4.6 Internal MMU Signals (D-TLB $\leftrightarrow$ Hardware PTW)
+
+| Signal | Type | Width | Source $\rightarrow$ Dest | Description |
+| :--- | :---: | :---: | :---: | :--- |
+| `dtlb_ptw_miss_valid` | `logic` | 1 | D-TLB $\rightarrow$ PTW | Request strobe initiating Page Table Walk upon D-TLB lookup miss |
+| `dtlb_ptw_miss_va` | `logic` | 64 | D-TLB $\rightarrow$ PTW | Faulting Virtual Address ($VA[63:0]$) |
+| `dtlb_ptw_miss_op` | `logic` | 2 | D-TLB $\rightarrow$ PTW | Memory intent: `00` = Read (Load), `01` = Write (Store), `10` = Atomic (AMO) |
+| `ptw_dtlb_refill_valid`| `logic` | 1 | PTW $\rightarrow$ D-TLB | 1-cycle write strobe pushing translated entry into D-TLB CAM |
+| `ptw_dtlb_refill_vpn` | `logic` | 27 | PTW $\rightarrow$ D-TLB | Virtual Page Number ($VA[38:12]$) |
+| `ptw_dtlb_refill_pa` | `logic` | 54 | PTW $\rightarrow$ D-TLB | Physical Page Tag ($PA[55:2]$) |
+| `ptw_dtlb_refill_mask` | `logic` | 37 | PTW $\rightarrow$ D-TLB | Effective comparison mask ($M_{\text{eff}}[36:0]$) |
+| `ptw_dtlb_refill_flags`| `pte_flags_t` | 8 | PTW $\rightarrow$ D-TLB | Leaf PTE permission flags (`R, W, X, U, G, A, D, PBMT`) |
+| `ptw_dtlb_pmp_fault` | `logic` | 1 | PTW $\rightarrow$ D-TLB | Pre-evaluated PMP permission fault bit |
+| `ptw_dtlb_cacheable` | `logic` | 1 | PTW $\rightarrow$ D-TLB | Pre-evaluated PMA cacheability attribute |
+| `ptw_dtlb_amo_level` | `pma_amo_level_t`| 2 | PTW $\rightarrow$ D-TLB | Pre-evaluated PMA atomic operation capability level |
+| `ptw_dtlb_page_fault` | `logic` | 1 | PTW $\rightarrow$ D-TLB | Translation abort due to invalid PTE, misaligned superpage, or permission fault |
+| `ptw_dtlb_fault_cause`| `logic` | 6 | PTW $\rightarrow$ D-TLB | Exact RISC-V cause code (`13` = Load, `15` = Store/AMO Page Fault) |
 
 ## 5. Functional Description
 
@@ -265,3 +276,23 @@ Because Atomic Memory Operations perform a Read-Modify-Write (RMW) cycle, the MM
     * Logical AMOs (`AMOAND`, `AMOOR`, `AMOXOR`) require `PMA_AMO_LOGICAL` or higher.
     * `AMOSWAP` requires `PMA_AMO_SWAP` or higher.
     * If the region has `PMA_AMO_NONE` (or insufficient capability), the core raises a **Store/AMO Access Fault (`cause = 7`)**.
+
+## 6. Verification
+
+The MMU subsystem is verified through formal property verification (SVA) and random SV39 test environments:
+
+### Formal SVA Assertion Table
+
+| Assertion ID | Property / Condition | Severity | Checkpoint | Description |
+| :--- | :--- | :---: | :---: | :--- |
+| `SVA_MMU_01` | `(flush_i && ptw_busy) |=> (!ptw_busy && !dtlb_refill_valid_o)` | `FATAL` | **CHK-MMU-07** | Pipeline flush aborts active PTW walk in 1 cycle and suppresses refill strobe |
+| `SVA_MMU_02` | `pmp_write_valid_i |=> (tlb_bare_valid_count == '0)` | `FATAL` | **CHK-MMU-05** | PMP CSR write must immediately invalidate all cached BARE TLB entries |
+| `SVA_MMU_03` | `(sfence_vma_valid_i && (is_bare || pte_flags.G)) |=> (entry_valid)` | `ERROR` | **CHK-MMU-05** | SFENCE.VMA must never invalidate Global or BARE mode TLB entries |
+| `SVA_MMU_04` | `(itlb_miss && dtlb_consecutive >= 4) |-> ##[1:2] (ptw_grant == TARGET_ITLB)` | `ERROR` | **CHK-MMU-08** | I-TLB starvation counter must enforce PTW grant after 4 consecutive D-TLB walks |
+| `SVA_MMU_05` | `(is_amo && (pma_amo_level < req_level)) |-> (dtlb_err_w_o && cause == 7)` | `FATAL` | **CHK-MMU-09** | AMO to unsupported PMA region must trigger Store/AMO Access Fault (`cause = 7`) |
+| `SVA_MMU_06` | `(ptw_pte_pmp_err) |-> (ptw_state == PTW_ACCESS_FAULT)` | `FATAL` | **CHK-MMU-10** | PTE read violating PMP must trigger an Access Fault during walk |
+
+### Coverage Strategy
+1. **Translation Coverage:** 100% functional coverage of 4 KiB Base Pages, 2 MiB Megapages, and 1 GiB Gigapages.
+2. **Permission Matrices:** Cross-coverage of `U`, `S`, `M` modes against `R/W/X`, `SUM`, `MXR`, and `MPRV` bits.
+3. **PMP Boundary Invariant:** Exhaustive testing of NAPOT, NA4, and TOR PMP rules against 4 KiB page boundaries.
