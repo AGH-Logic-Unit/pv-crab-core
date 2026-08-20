@@ -1,0 +1,2744 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Pulsar-V Crab Core specification for RISC-V RV64GC">
+      
+      
+        <meta name="author" content="AGH Logic Unit">
+      
+      
+      
+        <link rel="prev" href="../../execute/lsu/stb/">
+      
+      
+        <link rel="next" href="../pma/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.56">
+    
+    
+      
+        <title>MMU & Address Translation Overview - Crab Docs</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../../assets/stylesheets/modern/main.20815dad.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="deep-orange" data-md-color-accent="orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#mmu-address-translation-overview" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Crab Docs" class="md-header__button md-logo" aria-label="Crab Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Crab Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              MMU & Address Translation Overview
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="deep-orange" data-md-color-accent="orange"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/AGH-Logic-Unit/pv-crab-core" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Crab Docs" class="md-nav__button md-logo" aria-label="Crab Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    Crab Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/AGH-Logic-Unit/pv-crab-core" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Index
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  About
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Repository Standards
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Uarch
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Uarch
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  L1 Data Cache Design Specs
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Parameters
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Types
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Execute
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Execute
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/alu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Arithmetic Logic Unit
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/div/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Integer Divider
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/fDiv/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Floating-Point Divider & Square Root
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/fMisc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Floating-Point Miscellaneous
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/fMulAdd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Floating-Point FMA, Multiplier & Adder
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/mul/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Integer Multiplier
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/sync_instructions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Synchronization Instructions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_8" id="__nav_4_4_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lsu
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Lsu
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/lsu/lsu_arbiter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Port Arbiter & Subsystem Interface
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/lsu/lsu_fsm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Finite State Machine (FSM)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/lsu/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Overview
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/lsu/stb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Store Buffer (STB)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Mmu
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Mmu
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  MMU & Address Translation Overview
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  MMU & Address Translation Overview
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Overview
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-architectural-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Architectural Requirements
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-subsystem-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Subsystem Architecture
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-subsystem-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Subsystem Interfaces
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Subsystem Interfaces">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-clock-reset-and-csr-control-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.1 Clock, Reset and CSR Control Interface
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-i-tlb-subsystem-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.2 I-TLB Subsystem Interface
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-d-tlb-subsystem-interface-and-lsu-tlbpm_-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.3 D-TLB Subsystem Interface (and LSU <code>tlbpm_*</code> Mapping)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 D-TLB Subsystem Interface (and LSU tlbpm_* Mapping)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d-tlb-runtime-lookup-ptw-refill-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        D-TLB Runtime Lookup &amp; PTW Refill Ports:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cross-module-port-mapping-lsu-docsuarchexecutelsuoverviewmd-54-leftrightarrow-d-tlb" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cross-Module Port Mapping: LSU (<code>docs/uarch/execute/lsu/overview.md</code> §5.4) <span class="arithmatex">\(\leftrightarrow\)</span> D-TLB:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-ptw-memory-access-interface-to-l1-d-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.4 PTW Memory Access Interface (to L1 D-Cache)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-invalidation-and-synchronization-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.5 Invalidation and Synchronization Interface
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-internal-mmu-signals-d-tlb-leftrightarrow-hardware-ptw" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.6 Internal MMU Signals (D-TLB <span class="arithmatex">\(\leftrightarrow\)</span> Hardware PTW)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-functional-description" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Functional Description
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Functional Description">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-memory-access-pre-evaluated-protection-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.1 Memory Access &amp; Pre-Evaluated Protection Flow
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-translation-mode-enable-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.2 Translation Mode &amp; Enable Logic
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-page-table-walk-sequence-sv39-3-level-walk" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.3 Page Table Walk Sequence (Sv39 3-Level Walk)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-page-fault-exception-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.4 Page Fault Exception Handling
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-atomic-memory-operation-amo-verification-rules-in-mmu" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.5 Atomic Memory Operation (AMO) Verification Rules in MMU
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Verification
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Verification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#formal-sva-assertion-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Formal SVA Assertion Table
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coverage-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Coverage Strategy
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Physical Memory Attributes (PMA)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Physical Memory Protection (PMP)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ptw/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Hardware Page Table Walker (PTW)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tlb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Distributed Translation Lookaside Buffers (TLB)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Writeback
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Writeback
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../writeback/csr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Control and Status Registers (CSR)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../writeback/writeback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Writeback Module
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../writeback/writeback_bypass/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Writeback & Register Bypass Specs
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Overview
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-architectural-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Architectural Requirements
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-subsystem-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Subsystem Architecture
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-subsystem-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Subsystem Interfaces
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Subsystem Interfaces">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-clock-reset-and-csr-control-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.1 Clock, Reset and CSR Control Interface
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-i-tlb-subsystem-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.2 I-TLB Subsystem Interface
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-d-tlb-subsystem-interface-and-lsu-tlbpm_-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.3 D-TLB Subsystem Interface (and LSU <code>tlbpm_*</code> Mapping)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 D-TLB Subsystem Interface (and LSU tlbpm_* Mapping)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d-tlb-runtime-lookup-ptw-refill-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        D-TLB Runtime Lookup &amp; PTW Refill Ports:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cross-module-port-mapping-lsu-docsuarchexecutelsuoverviewmd-54-leftrightarrow-d-tlb" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cross-Module Port Mapping: LSU (<code>docs/uarch/execute/lsu/overview.md</code> §5.4) <span class="arithmatex">\(\leftrightarrow\)</span> D-TLB:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-ptw-memory-access-interface-to-l1-d-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.4 PTW Memory Access Interface (to L1 D-Cache)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-invalidation-and-synchronization-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.5 Invalidation and Synchronization Interface
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-internal-mmu-signals-d-tlb-leftrightarrow-hardware-ptw" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.6 Internal MMU Signals (D-TLB <span class="arithmatex">\(\leftrightarrow\)</span> Hardware PTW)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-functional-description" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Functional Description
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Functional Description">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-memory-access-pre-evaluated-protection-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.1 Memory Access &amp; Pre-Evaluated Protection Flow
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-translation-mode-enable-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.2 Translation Mode &amp; Enable Logic
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-page-table-walk-sequence-sv39-3-level-walk" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.3 Page Table Walk Sequence (Sv39 3-Level Walk)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-page-fault-exception-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.4 Page Fault Exception Handling
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-atomic-memory-operation-amo-verification-rules-in-mmu" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.5 Atomic Memory Operation (AMO) Verification Rules in MMU
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Verification
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Verification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#formal-sva-assertion-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Formal SVA Assertion Table
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coverage-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Coverage Strategy
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../.." class="md-path__link">
+        
+  
+  <span class="md-ellipsis">
+    Index
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="../../cache/" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Uarch
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="././" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Mmu
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+  
+
+
+<h1 id="mmu-address-translation-overview">MMU &amp; Address Translation Overview</h1>
+<div class="admonition abstract">
+<p class="admonition-title">Module Card</p>
+<ul>
+<li><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m.12 13.5 3.74 3.74 1.42-1.41-2.33-2.33 2.33-2.33-1.42-1.41zm11.16 0-3.74-3.74-1.42 1.41 2.33 2.33-2.33 2.33 1.42 1.41z"/></svg></span> <strong>RTL file:</strong> <code>N/A</code></li>
+<li><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 2.03v2.02c4.39.54 7.5 4.53 6.96 8.92-.46 3.64-3.32 6.53-6.96 6.96v2c5.5-.55 9.5-5.43 8.95-10.93-.45-4.75-4.22-8.5-8.95-8.97m-2 .03c-1.95.19-3.81.94-5.33 2.2L7.1 5.74c1.12-.9 2.47-1.48 3.9-1.68zM4.26 5.67A9.9 9.9 0 0 0 2.05 11h2c.19-1.42.75-2.77 1.64-3.9zM2.06 13c.2 1.96.97 3.81 2.21 5.33l1.42-1.43A8 8 0 0 1 4.06 13zm5.04 5.37-1.43 1.37A10 10 0 0 0 11 22v-2a8 8 0 0 1-3.9-1.63m9.72-3.18-4.11-4.11c.41-1.04.18-2.26-.68-3.11-.9-.91-2.25-1.09-3.34-.59l1.94 1.94-1.35 1.36-1.99-1.95c-.54 1.09-.29 2.44.59 3.35.86.86 2.08 1.08 3.12.68l4.11 4.1c.18.19.45.19.63 0l1.04-1.03c.22-.18.22-.5.04-.64"/></svg></span> <strong>Status:</strong> <code>Draft</code></li>
+</ul>
+</div>
+<h2 id="1-overview">1. Overview</h2>
+<p>The <strong>Memory Management Unit (MMU)</strong> provides hardware-enforced virtual memory management and physical security mechanisms for the 64-bit Crab Core. It implements the standard <strong>RISC-V Sv39</strong> multi-level page translation scheme, Physical Memory Protection (PMP), Physical Memory Attributes (PMA), and hardware page-table walk acceleration.</p>
+<p>The MMU is partitioned into modular execution blocks located in <strong>Stage 6 (Memory / Translation)</strong>:</p>
+<ul>
+<li><strong>Instruction TLB (I-TLB):</strong> 16-entry fully associative CAM for zero-cycle/single-cycle instruction fetch translation.</li>
+<li><strong>Data TLB (D-TLB):</strong> 32-entry fully associative CAM for single-cycle data address translation and PMP/PMA access checks.</li>
+<li><strong>Hardware Page Table Walker (PTW):</strong> Centralized 3-level Sv39 state machine serving translation refill requests from both I-TLB and D-TLB with starvation prevention.</li>
+<li><strong>PMP / PMA Checker:</strong> Evaluates 16 PMP regions and hardwired PMA memory attributes at refill time.</li>
+</ul>
+<h2 id="2-architectural-requirements">2. Architectural Requirements</h2>
+<p>The MMU complies with the following RISC-V Privileged Architecture specifications (v1.12):</p>
+<ul>
+<li><strong>Sv39 Virtual Memory:</strong> 39-bit Virtual Address space (<span class="arithmatex">\(VA[38:0]\)</span>) mapped to 56-bit Physical Address space (<span class="arithmatex">\(PA[55:0]\)</span>).</li>
+<li><strong>Page Granularities:</strong> 4 KiB Base Pages, 2 MiB Megapages, and 1 GiB Gigapages.</li>
+<li><strong>Privilege Levels:</strong> User (<code>U-mode</code>), Supervisor (<code>S-mode</code>), and Machine (<code>M-mode</code>).</li>
+<li><strong>Hardware Protection:</strong><ul>
+<li>16-Entry Physical Memory Protection (PMP) supporting <code>OFF</code>, <code>TOR</code>, <code>NA4</code>, <code>NAPOT</code> addressing modes.</li>
+<li>Physical Memory Attributes (PMA) defining Cacheability and 4-level Atomic (AMO) support.</li>
+<li><code>Svpbmts</code> extension support for page-based memory type attributes (<code>PTE[62:61]</code>).</li>
+</ul>
+</li>
+<li><strong>Address Space ID (ASID):</strong> 16-bit ASID filtering in TLB CAM tags with Global mapping (<code>G</code>) support.</li>
+</ul>
+<h2 id="3-subsystem-architecture">3. Subsystem Architecture</h2>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>                       +---------------------------------------+
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                       |              MMU Subsystem            |
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>                       |                                       |
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                       |  +---------------+ +---------------+  |
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>   Fetch VA ----------&gt;|  |  I-TLB (16)   | |  D-TLB (32)   |  |&lt;---------- LSU VA (Stage 6)
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>                       |  +-------+-------+ +-------+-------+  |
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                       |          |                 |          |
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>                       |          v                 v          |
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>                       |  +---------------------------------+  |
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>                       |  |    Hardware Page Table Walker   |  |
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>                       |  |            (Sv39 PTW)           |  |
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>                       |  +----------------+----------------+  |
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>                       |                   |                   |
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>                       |                   v                   |
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>                       |  +---------------------------------+  |
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>                       |  |      PMP &amp; PMA Pre-Evaluator    |  |
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>                       |  +---------------------------------+  |
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>                       +-------------------|-------------------+
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>                                           |
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>                                           v (ptw_* ports)
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>                                  [ L1 Data Cache ]
+</span></code></pre></div>
+<h2 id="4-subsystem-interfaces">4. Subsystem Interfaces</h2>
+<h3 id="41-clock-reset-and-csr-control-interface">4.1 Clock, Reset and CSR Control Interface</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Signal</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">Width</th>
+<th style="text-align: center;">Direction</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>clk_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Main core clock signal</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rst_ni</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Asynchronous active-low reset signal</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>flush_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Global pipeline flush (aborts active PTW walk in 1 cycle)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>curr_priv_i</code></td>
+<td style="text-align: center;"><code>priv_mode_t</code></td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Current processor privilege level (<code>M</code>, <code>S</code>, <code>U</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>satp_i</code></td>
+<td style="text-align: center;"><code>satp_reg_t</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Supervisor Address Translation and Protection register (<code>MODE</code>, <code>ASID</code>, <code>PPN</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>mstatus_i</code></td>
+<td style="text-align: center;"><code>mstatus_reg_t</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Machine Status register (<code>MPRV</code>, <code>MPP</code>, <code>SUM</code>, <code>MXR</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pmp_write_valid_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">70-bit broadcast bus: valid write pulse on PMP CSR commit</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pmp_write_idx_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">70-bit broadcast bus: target register index (<code>0..3</code> cfg, <code>0..15</code> addr)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pmp_write_data_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">70-bit broadcast bus: write payload data</td>
+</tr>
+</tbody>
+</table>
+<h3 id="42-i-tlb-subsystem-interface">4.2 I-TLB Subsystem Interface</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Signal</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">Width</th>
+<th style="text-align: center;">Direction</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>itlb_lookup_priv_mode_i</code></td>
+<td style="text-align: center;"><code>priv_mode_t</code></td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Current processor privilege level for fetch permission validation</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>itlb_miss_valid_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Asserted when I-TLB misses during instruction fetch</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>itlb_miss_va_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Faulting virtual address for instruction fetch</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>itlb_refill_valid_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">1-cycle strobe indicating valid translation refill payload</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>itlb_refill_vpn_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">27</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Virtual page number tag (<code>VA[38:12]</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>itlb_refill_page_size_o</code></td>
+<td style="text-align: center;"><code>page_size_t</code></td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Refilled page size (<code>PAGE_4K</code>, <code>PAGE_2M</code>, <code>PAGE_1G</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>itlb_refill_ppn_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">44</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Physical page number translation payload (<code>PA[55:12]</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>itlb_refill_flags_o</code></td>
+<td style="text-align: center;"><code>pte_flags_t</code></td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Page permission flags (<code>R</code>, <code>W</code>, <code>X</code>, <code>U</code>, <code>G</code>, <code>A</code>, <code>D</code>, <code>PBMT</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>itlb_refill_pmp_fault_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Pre-evaluated PMP permission fault flag cached in TLB entry</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>itlb_refill_pma_cacheable_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Pre-evaluated PMA cacheability attribute</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>itlb_page_fault_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Strobe asserting instruction page fault exception</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>itlb_page_fault_cause_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Exception cause code (<code>cause = 12</code>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="43-d-tlb-subsystem-interface-and-lsu-tlbpm_-mapping">4.3 D-TLB Subsystem Interface (and LSU <code>tlbpm_*</code> Mapping)</h3>
+<h4 id="d-tlb-runtime-lookup-ptw-refill-ports">D-TLB Runtime Lookup &amp; PTW Refill Ports:</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Signal</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">Width</th>
+<th style="text-align: center;">Direction</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>dtlb_lookup_valid_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Lookup request valid strobe from Stage 6 LSU</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>dtlb_lookup_va_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Target virtual address (<code>VA[63:0]</code>) to translate</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>dtlb_req_r_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Access requires Read permission (Load / AMO)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>dtlb_req_w_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Access requires Write permission (Store / AMO)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>dtlb_lookup_ready_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Response valid (<code>1</code> = TLB Hit / Ready, <code>0</code> = TLB Miss / Stalled)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>dtlb_lookup_pa_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">56</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Translated 56-bit Physical Address (<code>PA[55:0]</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>dtlb_err_r_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Denied read permission (<code>cause = 5</code> Access Fault or <code>13</code> Page Fault)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>dtlb_err_w_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Denied write permission (<code>cause = 7</code> Access Fault or <code>15</code> Page Fault)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>dtlb_cause_r_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Exact Read fault cause code (<code>5</code> = Load Access Fault, <code>13</code> = Load Page Fault)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>dtlb_cause_w_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Exact Write fault cause code (<code>7</code> = Store/AMO Access Fault, <code>15</code> = Store/AMO Page Fault)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>dtlb_pma_cacheable_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Pre-evaluated cacheability flag (<code>1</code> = DRAM, <code>0</code> = MMIO)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>dtlb_pma_amo_level_o</code></td>
+<td style="text-align: center;"><code>pma_amo_level_t</code></td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Pre-evaluated atomic capability level (<code>None</code>, <code>Swap</code>, <code>Logical</code>, <code>Arith</code>)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="cross-module-port-mapping-lsu-docsuarchexecutelsuoverviewmd-54-leftrightarrow-d-tlb">Cross-Module Port Mapping: LSU (<code>docs/uarch/execute/lsu/overview.md</code> §5.4) <span class="arithmatex">\(\leftrightarrow\)</span> D-TLB:</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">LSU Port Name</th>
+<th style="text-align: left;">D-TLB Port Name</th>
+<th style="text-align: center;">Direction (re. LSU)</th>
+<th style="text-align: center;">Width</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>tlbpm_valid_o</code></td>
+<td style="text-align: left;"><code>dtlb_lookup_valid_i</code></td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Translation lookup strobe</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tlbpm_addr_o</code></td>
+<td style="text-align: left;"><code>dtlb_lookup_va_i</code></td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: center;">64</td>
+<td style="text-align: left;">Virtual Address (<span class="arithmatex">\(VA[63:0]\)</span>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tlbpm_req_r_o</code></td>
+<td style="text-align: left;"><code>dtlb_req_r_i</code></td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Read intent flag</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tlbpm_req_w_o</code></td>
+<td style="text-align: left;"><code>dtlb_req_w_i</code></td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Write intent flag</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tlbpm_rvalid_i</code></td>
+<td style="text-align: left;"><code>dtlb_lookup_ready_o</code></td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">TLB Hit / Ready acknowledgment</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tlbpm_addr_i</code></td>
+<td style="text-align: left;"><code>dtlb_lookup_pa_o</code></td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: center;">56</td>
+<td style="text-align: left;">Physical Address (<span class="arithmatex">\(PA[55:0]\)</span>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tlbpm_err_r_i</code></td>
+<td style="text-align: left;"><code>dtlb_err_r_o</code></td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Read permission fault flag</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tlbpm_err_w_i</code></td>
+<td style="text-align: left;"><code>dtlb_err_w_o</code></td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Write permission fault flag</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tlbpm_cause_r_i</code></td>
+<td style="text-align: left;"><code>dtlb_cause_r_o</code></td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: left;">Exact trap cause for read access (<code>5</code> vs <code>13</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tlbpm_cause_w_i</code></td>
+<td style="text-align: left;"><code>dtlb_cause_w_o</code></td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: left;">Exact trap cause for write access (<code>7</code> vs <code>15</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tlbpm_cacheable_i</code></td>
+<td style="text-align: left;"><code>dtlb_pma_cacheable_o</code></td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Cacheable DRAM indicator</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tlbpm_pma_amo_level_i</code></td>
+<td style="text-align: left;"><code>dtlb_pma_amo_level_o</code></td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: left;">Supported AMO capability level</td>
+</tr>
+</tbody>
+</table>
+<h3 id="44-ptw-memory-access-interface-to-l1-d-cache">4.4 PTW Memory Access Interface (to L1 D-Cache)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Signal</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">Width</th>
+<th style="text-align: center;">Direction</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>ptw_req_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Memory read request for PTE fetch issued to L1 D-Cache</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ptw_gnt_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Grant from L1 D-Cache port arbiter accepting address phase</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ptw_addr_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">56</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Physical address of Page Table Entry (<code>PA[55:0]</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ptw_rvalid_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Data validation strobe indicating PTE data available</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ptw_rdata_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">64-bit raw Page Table Entry content from memory</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ptw_err_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Bus error or PMP violation response on PTE fetch</td>
+</tr>
+</tbody>
+</table>
+<h3 id="45-invalidation-and-synchronization-interface">4.5 Invalidation and Synchronization Interface</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Signal</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">Width</th>
+<th style="text-align: center;">Direction</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>sfence_vma_valid_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Broadcast strobe from Commit executing <code>SFENCE.VMA</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>sfence_vma_asid_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">16</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Target ASID filter for TLB invalidation (<code>0</code> = all ASIDs)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>sfence_vma_addr_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Target virtual address filter for TLB invalidation (<code>0</code> = all VAs)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>itlb_flush_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Invalidation pulse routed to I-TLB array</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>dtlb_flush_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Invalidation pulse routed to D-TLB array</td>
+</tr>
+</tbody>
+</table>
+<h3 id="46-internal-mmu-signals-d-tlb-leftrightarrow-hardware-ptw">4.6 Internal MMU Signals (D-TLB <span class="arithmatex">\(\leftrightarrow\)</span> Hardware PTW)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Signal</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">Width</th>
+<th style="text-align: center;">Source <span class="arithmatex">\(\rightarrow\)</span> Dest</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>dtlb_ptw_miss_valid</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">D-TLB <span class="arithmatex">\(\rightarrow\)</span> PTW</td>
+<td style="text-align: left;">Request strobe initiating Page Table Walk upon D-TLB lookup miss</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>dtlb_ptw_miss_va</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">D-TLB <span class="arithmatex">\(\rightarrow\)</span> PTW</td>
+<td style="text-align: left;">Faulting Virtual Address (<span class="arithmatex">\(VA[63:0]\)</span>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>dtlb_ptw_miss_op</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">D-TLB <span class="arithmatex">\(\rightarrow\)</span> PTW</td>
+<td style="text-align: left;">Memory intent: <code>00</code> = Read (Load), <code>01</code> = Write (Store), <code>10</code> = Atomic (AMO)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ptw_dtlb_refill_valid</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">PTW <span class="arithmatex">\(\rightarrow\)</span> D-TLB</td>
+<td style="text-align: left;">1-cycle write strobe pushing translated entry into D-TLB CAM</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ptw_dtlb_refill_vpn</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">27</td>
+<td style="text-align: center;">PTW <span class="arithmatex">\(\rightarrow\)</span> D-TLB</td>
+<td style="text-align: left;">Virtual Page Number (<span class="arithmatex">\(VA[38:12]\)</span>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ptw_dtlb_refill_pa</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">54</td>
+<td style="text-align: center;">PTW <span class="arithmatex">\(\rightarrow\)</span> D-TLB</td>
+<td style="text-align: left;">Physical Page Tag (<span class="arithmatex">\(PA[55:2]\)</span>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ptw_dtlb_refill_mask</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">37</td>
+<td style="text-align: center;">PTW <span class="arithmatex">\(\rightarrow\)</span> D-TLB</td>
+<td style="text-align: left;">Effective comparison mask (<span class="arithmatex">\(M_{\text{eff}}[36:0]\)</span>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ptw_dtlb_refill_flags</code></td>
+<td style="text-align: center;"><code>pte_flags_t</code></td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">PTW <span class="arithmatex">\(\rightarrow\)</span> D-TLB</td>
+<td style="text-align: left;">Leaf PTE permission flags (<code>R, W, X, U, G, A, D, PBMT</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ptw_dtlb_pmp_fault</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">PTW <span class="arithmatex">\(\rightarrow\)</span> D-TLB</td>
+<td style="text-align: left;">Pre-evaluated PMP permission fault bit</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ptw_dtlb_cacheable</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">PTW <span class="arithmatex">\(\rightarrow\)</span> D-TLB</td>
+<td style="text-align: left;">Pre-evaluated PMA cacheability attribute</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ptw_dtlb_amo_level</code></td>
+<td style="text-align: center;"><code>pma_amo_level_t</code></td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">PTW <span class="arithmatex">\(\rightarrow\)</span> D-TLB</td>
+<td style="text-align: left;">Pre-evaluated PMA atomic operation capability level</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ptw_dtlb_page_fault</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">PTW <span class="arithmatex">\(\rightarrow\)</span> D-TLB</td>
+<td style="text-align: left;">Translation abort due to invalid PTE, misaligned superpage, or permission fault</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ptw_dtlb_fault_cause</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">PTW <span class="arithmatex">\(\rightarrow\)</span> D-TLB</td>
+<td style="text-align: left;">Exact RISC-V cause code (<code>13</code> = Load, <code>15</code> = Store/AMO Page Fault)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-functional-description">5. Functional Description</h2>
+<h3 id="51-memory-access-pre-evaluated-protection-flow">5.1 Memory Access &amp; Pre-Evaluated Protection Flow</h3>
+<pre class="mermaid"><code>sequenceDiagram
+    autonumber
+    participant LSU as LSU (Stage 6)
+    participant DTLB as D-TLB (32 CAM)
+    participant MMU as MMU / PTW
+    participant DCACHE as L1 D-Cache
+
+    LSU-&gt;&gt;DTLB: Lookup VA[38:0]
+    alt TLB Hit (Single Cycle)
+        DTLB--&gt;&gt;LSU: Return PA[55:0] + Precomputed PMP Fault + PMA AMO Level
+        alt PMP Fault || Permission Error
+            LSU-&gt;&gt;LSU: Trigger Exception (Access Fault / Page Fault)
+        else Access Allowed
+            LSU-&gt;&gt;DCACHE: Send Memory Request (dmem_addr = PA[55:0])
+        end
+    else TLB Miss
+        DTLB-&gt;&gt;MMU: Assert dtlb_miss_valid_i (Faulting VA)
+        Note over MMU: PTW 3-Level Sv39 Walk + PMP/PMA Check on PTEs
+        MMU--&gt;&gt;DTLB: dtlb_refill_valid_o (PA + Pre-evaluated PMP/PMA Flags)
+        DTLB-&gt;&gt;DTLB: Allocate Entry via Tree-PLRU
+        DTLB--&gt;&gt;LSU: Replay Lookup -&gt; Return PA + Flags
+    end</code></pre>
+<div class="admonition note">
+<p class="admonition-title">Elimination of PMP from Critical Path</p>
+<p>Because Physical Memory Protection (PMP) rules are pre-evaluated at Page Table Walk refill time and cached inside the TLB entry (<code>pmp_fault</code> flag), runtime TLB lookups do not invoke the 16-entry PMP comparator bank. This design meets the 10 ns clock budget on the 130nm ASIC technology.</p>
+</div>
+<h3 id="52-translation-mode-enable-logic">5.2 Translation Mode &amp; Enable Logic</h3>
+<p>Address translation and TLB lookup enablement is governed by CPU privilege and <code>satp</code> configuration:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// Effective Privilege Level (accounting for mstatus.MPRV for data accesses)</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">assign</span><span class="w"> </span><span class="n">eff_priv_d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">mstatus_i</span><span class="p">.</span><span class="n">mprv</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">curr_priv_i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">PRIV_MACHINE</span><span class="p">))</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">mstatus_i</span><span class="p">.</span><span class="n">mpp</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">curr_priv_i</span><span class="p">;</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">// Translation Enable Flags</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">assign</span><span class="w"> </span><span class="n">itlb_trans_en_o</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">curr_priv_i</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">PRIV_MACHINE</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">satp_i</span><span class="p">.</span><span class="n">mode</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">4'd8</span><span class="p">);</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="k">assign</span><span class="w"> </span><span class="n">dtlb_trans_en_o</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">eff_priv_d</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">PRIV_MACHINE</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">satp_i</span><span class="p">.</span><span class="n">mode</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">4'd8</span><span class="p">);</span>
+</span></code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Translation Bypass (BARE Mode)</p>
+<p>When <code>itlb_trans_en_o == 0</code> or <code>dtlb_trans_en_o == 0</code>, address translation is bypassed (<code>PA == VA</code>). To maintain single-cycle PMP checks without multi-stage comparator logic, BARE mode accesses are cached in the TLB with <code>is_bare = 1</code>.</p>
+</div>
+<h3 id="53-page-table-walk-sequence-sv39-3-level-walk">5.3 Page Table Walk Sequence (Sv39 3-Level Walk)</h3>
+<p>When an I-TLB or D-TLB miss occurs, the central Hardware PTW FSM initiates a page table walk:</p>
+<pre class="mermaid"><code>sequenceDiagram
+    autonumber
+    participant TLB as TLB (I/D)
+    participant PTW as Central PTW FSM
+    participant RAM as L1 D-Cache / Memory
+
+    TLB-&gt;&gt;PTW: TLB Miss (Faulting VA)
+    Note over PTW: Level 2 Walk (Gigapage)
+    PTW-&gt;&gt;RAM: Read PTE at Root (satp.PPN + VPN[2]*8)
+    RAM--&gt;&gt;PTW: Return PTE2
+    alt PTE2 is Leaf (R=1 || X=1)
+        PTW-&gt;&gt;TLB: Refill 1GiB Gigapage Entry (PMP/PMA Pre-evaluated)
+    else PTE2 is Pointer (V=1, R=0, W=0, X=0)
+        Note over PTW: Level 1 Walk (Megapage)
+        PTW-&gt;&gt;RAM: Read PTE at (PTE2.PPN + VPN[1]*8)
+        RAM--&gt;&gt;PTW: Return PTE1
+        alt PTE1 is Leaf (R=1 || X=1)
+            PTW-&gt;&gt;TLB: Refill 2MiB Megapage Entry (PMP/PMA Pre-evaluated)
+        else PTE1 is Pointer
+            Note over PTW: Level 0 Walk (4KiB Base Page)
+            PTW-&gt;&gt;RAM: Read PTE at (PTE1.PPN + VPN[0]*8)
+            RAM--&gt;&gt;PTW: Return PTE0
+            PTW-&gt;&gt;TLB: Refill 4KiB Base Page Entry (PMP/PMA Pre-evaluated)
+        end
+    end</code></pre>
+<h3 id="54-page-fault-exception-handling">5.4 Page Fault Exception Handling</h3>
+<p>The MMU triggers a Page Fault exception to the committing stage when any of the following conditions occur during a page table walk:</p>
+<ol>
+<li><strong>Invalid Entry (<code>V == 0</code>):</strong> Any level PTE has valid bit cleared.</li>
+<li><strong>Write Without Read (<code>W == 1 &amp;&amp; R == 0</code>):</strong> Reserved bit combination in RISC-V specification.</li>
+<li><strong>Misaligned Superpage:</strong> A leaf PTE at Level 2 has <code>PPN[1:0] != 0</code> or at Level 1 has <code>PPN[0] != 0</code>.</li>
+<li><strong>Privilege Fault:</strong><ul>
+<li>User mode (<code>U</code>) accessing a Supervisor page (<code>U == 0</code>).</li>
+<li>Supervisor mode (<code>S</code>) accessing a User page (<code>U == 1</code>) when <code>mstatus.SUM == 0</code>.</li>
+</ul>
+</li>
+<li><strong>Access Permission Fault:</strong><ul>
+<li>Fetching an instruction from a non-executable page (<code>X == 0</code>).</li>
+<li>Loading data from a non-readable page (<code>R == 0</code> and <code>mstatus.MXR == 0</code>).</li>
+<li>Storing data to a non-writable page (<code>W == 0</code>).</li>
+</ul>
+</li>
+<li><strong>Accessed / Dirty Bit Fault:</strong><ul>
+<li>Reading a page with <code>A == 0</code> (hardware A/D update not enabled).</li>
+<li>Writing a page with <code>D == 0</code> (hardware A/D update not enabled).</li>
+</ul>
+</li>
+</ol>
+<h3 id="55-atomic-memory-operation-amo-verification-rules-in-mmu">5.5 Atomic Memory Operation (AMO) Verification Rules in MMU</h3>
+<p>Because Atomic Memory Operations perform a Read-Modify-Write (RMW) cycle, the MMU enforces strict combined permission and PMA capability rules:</p>
+<ol>
+<li><strong>PTE Page Permissions:</strong> The leaf Page Table Entry <strong>must have BOTH Read (<code>R == 1</code>) AND Write (<code>W == 1</code>) permissions</strong>. If either bit is <code>0</code>, the MMU raises a <strong>Store/AMO Page Fault (<code>cause = 15</code>)</strong>.</li>
+<li><strong>PTE A/D Bits:</strong> The leaf PTE <strong>must have BOTH Accessed (<code>A == 1</code>) AND Dirty (<code>D == 1</code>) bits set</strong>. If <code>A == 0</code> or <code>D == 0</code>, the MMU raises a <strong>Store/AMO Page Fault (<code>cause = 15</code>)</strong>.</li>
+<li><strong>PMP Permission Bounds:</strong> PMP evaluation for AMOs <strong>requires BOTH Read (<code>R</code>) AND Write (<code>W</code>) PMP permissions</strong>. If either permission is missing, the MMU raises a <strong>Store/AMO Access Fault (<code>cause = 7</code>)</strong>.</li>
+<li><strong>PMA Capability Verification:</strong> The physical address target must satisfy the required <code>pma_amo_level_t</code>:<ul>
+<li><code>LR/SC</code> and arithmetic AMOs (<code>AMOADD</code>, <code>AMOMIN</code>, etc.) require <code>PMA_AMO_ARITHMETIC</code>.</li>
+<li>Logical AMOs (<code>AMOAND</code>, <code>AMOOR</code>, <code>AMOXOR</code>) require <code>PMA_AMO_LOGICAL</code> or higher.</li>
+<li><code>AMOSWAP</code> requires <code>PMA_AMO_SWAP</code> or higher.</li>
+<li>If the region has <code>PMA_AMO_NONE</code> (or insufficient capability), the core raises a <strong>Store/AMO Access Fault (<code>cause = 7</code>)</strong>.</li>
+</ul>
+</li>
+</ol>
+<h2 id="6-verification">6. Verification</h2>
+<p>The MMU subsystem is verified through formal property verification (SVA) and random SV39 test environments:</p>
+<h3 id="formal-sva-assertion-table">Formal SVA Assertion Table</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Assertion ID</th>
+<th style="text-align: left;">Property / Condition</th>
+<th style="text-align: center;">Severity</th>
+<th style="text-align: center;">Checkpoint</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>SVA_MMU_01</code></td>
+<td style="text-align: left;"><code>(flush_i &amp;&amp; ptw_busy) |=&gt; (!ptw_busy &amp;&amp; !dtlb_refill_valid_o)</code></td>
+<td style="text-align: center;"><code>FATAL</code></td>
+<td style="text-align: center;"><strong>CHK-MMU-07</strong></td>
+<td style="text-align: left;">Pipeline flush aborts active PTW walk in 1 cycle and suppresses refill strobe</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SVA_MMU_02</code></td>
+<td style="text-align: left;"><code>pmp_write_valid_i |=&gt; (tlb_bare_valid_count == '0)</code></td>
+<td style="text-align: center;"><code>FATAL</code></td>
+<td style="text-align: center;"><strong>CHK-MMU-05</strong></td>
+<td style="text-align: left;">PMP CSR write must immediately invalidate all cached BARE TLB entries</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SVA_MMU_03</code></td>
+<td style="text-align: left;"><code>(sfence_vma_valid_i &amp;&amp; (is_bare || pte_flags.G)) |=&gt; (entry_valid)</code></td>
+<td style="text-align: center;"><code>ERROR</code></td>
+<td style="text-align: center;"><strong>CHK-MMU-05</strong></td>
+<td style="text-align: left;">SFENCE.VMA must never invalidate Global or BARE mode TLB entries</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SVA_MMU_04</code></td>
+<td style="text-align: left;"><code>(itlb_miss &amp;&amp; dtlb_consecutive &gt;= 4) |-&gt; ##[1:2] (ptw_grant == TARGET_ITLB)</code></td>
+<td style="text-align: center;"><code>ERROR</code></td>
+<td style="text-align: center;"><strong>CHK-MMU-08</strong></td>
+<td style="text-align: left;">I-TLB starvation counter must enforce PTW grant after 4 consecutive D-TLB walks</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SVA_MMU_05</code></td>
+<td style="text-align: left;"><code>(is_amo &amp;&amp; (pma_amo_level &lt; req_level)) |-&gt; (dtlb_err_w_o &amp;&amp; cause == 7)</code></td>
+<td style="text-align: center;"><code>FATAL</code></td>
+<td style="text-align: center;"><strong>CHK-MMU-09</strong></td>
+<td style="text-align: left;">AMO to unsupported PMA region must trigger Store/AMO Access Fault (<code>cause = 7</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SVA_MMU_06</code></td>
+<td style="text-align: left;"><code>(ptw_pte_pmp_err) |-&gt; (ptw_state == PTW_ACCESS_FAULT)</code></td>
+<td style="text-align: center;"><code>FATAL</code></td>
+<td style="text-align: center;"><strong>CHK-MMU-10</strong></td>
+<td style="text-align: left;">PTE read violating PMP must trigger an Access Fault during walk</td>
+</tr>
+</tbody>
+</table>
+<h3 id="coverage-strategy">Coverage Strategy</h3>
+<ol>
+<li><strong>Translation Coverage:</strong> 100% functional coverage of 4 KiB Base Pages, 2 MiB Megapages, and 1 GiB Gigapages.</li>
+<li><strong>Permission Matrices:</strong> Cross-coverage of <code>U</code>, <code>S</code>, <code>M</code> modes against <code>R/W/X</code>, <code>SUM</code>, <code>MXR</code>, and <code>MPRV</code> bits.</li>
+<li><strong>PMP Boundary Invariant:</strong> Exhaustive testing of NAPOT, NA4, and TOR PMP rules against 4 KiB page boundaries.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 AGH University of Kraków; Delivered by AGH Logic Unit
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"../../..","features":["navigation.expand","navigation.sections","navigation.path"],"search":"../../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.e886cdf1.min.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="zensical-0.0.55">
+      <meta name="generator" content="zensical-0.0.56">
     
     
       
@@ -495,6 +495,56 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#6-mmio-bypass-routing-non-cacheable-accesses" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. MMIO Bypass Routing (Non-Cacheable Accesses)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-cache-maintenance-operations-dma-coherence" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Cache Maintenance Operations (DMA Coherence)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Cache Maintenance Operations (DMA Coherence)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-interface-csr-registers" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7.1 Interface CSR Registers
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-operation-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7.2 Operation Flow
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -749,14 +799,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../execute/lso_amo/" class="md-nav__link">
+      <a href="../execute/mul/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-  Load-Store & Atomic Memory Operations
+  Integer Multiplier
 
     
   </span>
@@ -776,14 +826,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../execute/mul/" class="md-nav__link">
+      <a href="../execute/sync_instructions/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-  Integer Multiplier
+  Synchronization Instructions
 
     
   </span>
@@ -791,6 +841,171 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_8" id="__nav_4_4_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lsu
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Lsu
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../execute/lsu/lsu_arbiter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Port Arbiter & Subsystem Interface
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../execute/lsu/lsu_fsm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Finite State Machine (FSM)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../execute/lsu/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Overview
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../execute/lsu/stb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Store Buffer (STB)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -833,7 +1048,7 @@
   <span class="md-ellipsis">
     
   
-  Writeback
+  Mmu
 
     
   </span>
@@ -845,6 +1060,198 @@
         
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Mmu
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mmu/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  MMU & Address Translation Overview
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mmu/pma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Physical Memory Attributes (PMA)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mmu/pmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Physical Memory Protection (PMP)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mmu/ptw/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Hardware Page Table Walker (PTW)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mmu/tlb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Distributed Translation Lookaside Buffers (TLB)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Writeback
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1072,6 +1479,56 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#6-mmio-bypass-routing-non-cacheable-accesses" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. MMIO Bypass Routing (Non-Cacheable Accesses)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-cache-maintenance-operations-dma-coherence" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Cache Maintenance Operations (DMA Coherence)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Cache Maintenance Operations (DMA Coherence)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-interface-csr-registers" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7.1 Interface CSR Registers
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-operation-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7.2 Operation Flow
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1149,40 +1606,59 @@
 <hr />
 <h2 id="2-cache-policies">2. Cache Policies</h2>
 <h3 id="21-write-back-policy">2.1 Write-Back Policy</h3>
-<p>To prevent DRAM or system bus write latency from stalling the execution pipelines:</p>
-<ul>
-<li>The cache operates on a <strong>Write-Back</strong> policy. Standard stores and the writeback phase of atomic memory operations are recorded locally in the L1 D-Cache line.</li>
-<li>Cache lines are written to main memory only during dirty line eviction.</li>
-<li>A <strong>Write-Allocate</strong> fetch policy is used on store misses, bringing the target line into the cache before modifying it.</li>
-</ul>
+<p>To prevent DRAM or system bus write latency from stalling the execution pipelines:
+* The cache operates on a <strong>Write-Back</strong> policy. Standard stores and the writeback phase of atomic memory operations are recorded locally in the L1 D-Cache line.
+* Cache lines are written to main memory only during dirty line eviction.
+* A <strong>Write-Allocate</strong> fetch policy is used on store misses, bringing the target line into the cache before modifying it.</p>
 <h3 id="22-cache-line-locking">2.2 Cache Line Locking</h3>
 <ul>
 <li>The cache line is locked during local multi-cycle atomic sequences (like AMOs) to prevent external evictions or read/write snoop actions from breaking RMW atomicity.</li>
 </ul>
 <hr />
 <h2 id="3-atomic-operations-amo">3. Atomic Operations (AMO)</h2>
-<p>The system utilizes a <strong>Cache-Side RMW</strong> execution model to simplify the core execution stages and optimize bus transactions:</p>
-<ul>
-<li>The L1 D-Cache controller performs the atomic calculations and RMW sequence locally.</li>
-<li>The LSO-AMO module in the core sends the target physical address, operand data, and operation code (e.g., ADD, SWAP, XOR) to the L1 D-Cache.</li>
-<li>The L1 D-Cache controller reads the target word, sends the original (unmodified) data back to the core (to write back to the destination GPR/FPR), applies the arithmetic/logical operation, and writes the modified result back to the cache line in a single atomic sequence.</li>
-<li>If a cache miss occurs, the L1 Cache controller loads the targeted line first (using standard Write-Allocate fetch) before performing the atomic RMW sequence.</li>
-</ul>
+<p>The system utilizes a <strong>Cache-Side RMW</strong> execution model to simplify the core execution stages and optimize bus transactions:
+* The L1 D-Cache controller performs the atomic calculations and RMW sequence locally.
+* The LSO-AMO module in the core sends the target physical address, operand data, and operation code (<code>dmem_amo_op_o</code> carrying the 5-bit RISC-V <code>funct5</code> value) to the L1 D-Cache.
+* The L1 D-Cache controller reads the target word, sends the original (unmodified) data back to the core on <code>dmem_rdata_i</code> (to write back to the destination GPR/FPR), applies the arithmetic/logical operation, and writes the modified result back to the cache line in a single atomic sequence.
+* If a cache miss occurs, the L1 Cache controller loads the targeted line first (using standard Write-Allocate fetch) before performing the atomic RMW sequence.</p>
 <hr />
 <h2 id="4-load-reserved-store-conditional-lrsc-reservation">4. Load-Reserved / Store-Conditional (LR/SC) Reservation</h2>
-<p>To manage memory atomicity and prepare the core for multi-hart coherence:</p>
-<ul>
-<li><strong>Local Reservation Controller:</strong> In single-hart operation, reservations are registered and tracked inside the core's local logic.</li>
-<li><strong>Cache-Line Granularity:</strong> Reservations are tracked at the <strong>cache-line boundary</strong> (comparing only the upper address bits <code>[63:6]</code> for a 64-byte line) instead of exact byte matches.</li>
-<li><strong>Coherence Snoop Invalidation:</strong> When the core receives an external snoop invalidation indicating another controller has written to the cached address, the D-Cache controller asserts <code>disp_snoop_invalidate_valid_i</code> along with the address to invalidate the reservation.</li>
-<li><strong>Context Clear:</strong> The reservation is automatically cleared on interrupts, context switches (specifically any write to the <code>satp</code> address translation CSR), or any standard store instructions executed by the local hart.</li>
-</ul>
+<p>To manage memory atomicity and prepare the core for multi-hart coherence:
+* <strong>Local Reservation Controller:</strong> In single-hart operation, reservations are registered and tracked inside the core's local logic.
+* <strong>Cache-Line Granularity:</strong> Reservations are tracked at the <strong>cache-line boundary</strong> (comparing only the upper address bits <code>[63:6]</code> for a 64-byte line) instead of exact byte matches.
+* <strong>Coherence Snoop Invalidation:</strong> When the core receives an external snoop invalidation indicating another controller has written to the cached address, the D-Cache controller asserts <code>disp_snoop_invalidate_valid_i</code> along with the address to invalidate the reservation.
+* <strong>Context Clear:</strong> The reservation is automatically cleared on interrupts, context switches (specifically any write to the <code>satp</code> address translation CSR), or any standard store instructions executed by the local hart.</p>
 <hr />
 <h2 id="5-line-locking-protocol-deprecated">5. Line Locking Protocol (Deprecated)</h2>
-<p>With the transition to <strong>Cache-Side RMW</strong>, the physical <code>dmem_lock_o</code> signal at the core-to-cache interface is <strong>deprecated</strong>:</p>
+<p>With the transition to <strong>Cache-Side RMW</strong>, the physical <code>dmem_lock_o</code> signal at the core-to-cache interface is <strong>deprecated</strong>:
+* Atomicity is managed internally by the L1 D-Cache controller's state machine.
+* The L1 D-Cache controller locks the targeted cache line from external evictions or snoop invalidations during its internal hit/miss/modify cycles, guaranteeing that no other agent can modify the line until the local RMW is completed.</p>
+<hr />
+<h2 id="6-mmio-bypass-routing-non-cacheable-accesses">6. MMIO Bypass Routing (Non-Cacheable Accesses)</h2>
+<p>To support peripherals (UART, USB, SPI) and memory-mapped configuration registers, the L1 D-Cache controller implements a <strong>PMA-based Bypass Route</strong>:</p>
 <ul>
-<li>Atomicity is managed internally by the L1 D-Cache controller's state machine.</li>
-<li>The L1 D-Cache controller locks the targeted cache line from external evictions or snoop invalidations during its internal hit/miss/modify cycles, guaranteeing that no other agent can modify the line until the local RMW is completed.</li>
+<li><strong>PMA Check:</strong> Any access where the Physical Address is in the MMIO range (typically <code>PA &lt; 0x8000_0000</code>) is classified as non-cacheable.</li>
+<li><strong>Cache Array Isolation:</strong> For non-cacheable accesses, the cache controller does not read the tag arrays or allocate lines in the data SRAM.</li>
+<li><strong>Direct Bus Routing:</strong> The transaction is routed directly to the external system bus (Wishbone B4 Master) as a single-beat transfer with the size matching the original request (byte, halfword, word, or doubleword).</li>
+<li><strong>Synchronization:</strong> The cache controller waits for the external Wishbone bus acknowledgment (<code>ACK</code>) and forwards it directly to the core on <code>dmem_rvalid_i</code> along with the read data.</li>
+</ul>
+<hr />
+<h2 id="7-cache-maintenance-operations-dma-coherence">7. Cache Maintenance Operations (DMA Coherence)</h2>
+<p>Because the L1 D-Cache does not implement hardware bus snooping for DMA transfers in LiteX, the cache controller must provide a hardware interface for <strong>Software-Managed Coherence</strong>:</p>
+<h3 id="71-interface-csr-registers">7.1 Interface CSR Registers</h3>
+<p>The cache controller exposes three memory-mapped registers (or custom CSRs) to the CPU:
+1. <strong><code>DCACHE_CLEAN_ADDR</code>:</strong> Specifies the starting physical address of the range to be cleaned.
+2. <strong><code>DCACHE_INVALIDATE_ADDR</code>:</strong> Specifies the starting physical address of the range to be invalidated.
+3. <strong><code>DCACHE_MAINT_LEN</code>:</strong> Specifies the length of the range (in bytes) and triggers the operation when written.</p>
+<h3 id="72-operation-flow">7.2 Operation Flow</h3>
+<ul>
+<li><strong>Cache Clean (Flush):</strong></li>
+<li>When <code>DCACHE_MAINT_LEN</code> is written after setting <code>DCACHE_CLEAN_ADDR</code>, the cache controller steps through the target cache lines.</li>
+<li>If a line is <strong>hit</strong> and marked <strong>dirty</strong>, the controller schedules an eviction, writing the line back to main memory (DDR/HyperRAM) and clearing the dirty bit.</li>
+<li><strong>Cache Invalidate:</strong></li>
+<li>When <code>DCACHE_MAINT_LEN</code> is written after setting <code>DCACHE_INVALIDATE_ADDR</code>, the cache controller steps through the target cache lines.</li>
+<li>The controller clears the valid bit (<code>valid = 0</code>) of all matching cache lines in the specified address range, discarding their cached contents.</li>
+<li><strong>Stalling:</strong> During a Cache Maintenance operation, the cache controller deasserts <code>dmem_gnt_i</code> to the CPU core, stalling new memory requests until the operation completes.</li>
 </ul>
 
 

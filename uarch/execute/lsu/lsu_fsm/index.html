@@ -13,33 +13,33 @@
       
       
       
-        <link rel="prev" href="../fMulAdd/">
+        <link rel="prev" href="../lsu_arbiter/">
       
       
-        <link rel="next" href="../sync_instructions/">
+        <link rel="next" href="../overview/">
       
       
         
       
       
-      <link rel="icon" href="../../../assets/images/favicon.png">
+      <link rel="icon" href="../../../../assets/images/favicon.png">
       <meta name="generator" content="zensical-0.0.56">
     
     
       
-        <title>Integer Multiplier - Crab Docs</title>
+        <title>Finite State Machine (FSM) - Crab Docs</title>
       
     
     
       
         
       
-      <link rel="stylesheet" href="../../../assets/stylesheets/modern/main.20815dad.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/modern/main.20815dad.min.css">
       
         
           
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/modern/palette.dfe2e883.min.css">
+        <link rel="stylesheet" href="../../../../assets/stylesheets/modern/palette.dfe2e883.min.css">
       
       
 
@@ -58,7 +58,7 @@
       
     
     
-    <script>__md_scope=new URL("../../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    <script>__md_scope=new URL("../../../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
     
       
 
@@ -83,7 +83,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#integer-multiplier-module" class="md-skip">
+        <a href="#load-store-unit-finite-state-machine-lsu-fsm" class="md-skip">
           Skip to content
         </a>
       
@@ -99,7 +99,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="Crab Docs" class="md-header__button md-logo" aria-label="Crab Docs" data-md-component="logo">
+    <a href="../../../.." title="Crab Docs" class="md-header__button md-logo" aria-label="Crab Docs" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
@@ -119,7 +119,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Integer Multiplier
+              Finite State Machine (FSM)
             
           </span>
         </div>
@@ -194,7 +194,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="Crab Docs" class="md-nav__button md-logo" aria-label="Crab Docs" data-md-component="logo">
+    <a href="../../../.." title="Crab Docs" class="md-nav__button md-logo" aria-label="Crab Docs" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
@@ -224,7 +224,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href="../../../.." class="md-nav__link">
         
   
   
@@ -250,7 +250,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../about/" class="md-nav__link">
+      <a href="../../../../about/" class="md-nav__link">
         
   
   
@@ -276,7 +276,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../rules/" class="md-nav__link">
+      <a href="../../../../rules/" class="md-nav__link">
         
   
   
@@ -354,7 +354,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cache/" class="md-nav__link">
+      <a href="../../../cache/" class="md-nav__link">
         
   
   
@@ -381,7 +381,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../parameters/" class="md-nav__link">
+      <a href="../../../parameters/" class="md-nav__link">
         
   
   
@@ -408,7 +408,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../types/" class="md-nav__link">
+      <a href="../../../types/" class="md-nav__link">
         
   
   
@@ -484,7 +484,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../alu/" class="md-nav__link">
+      <a href="../../alu/" class="md-nav__link">
         
   
   
@@ -511,7 +511,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../div/" class="md-nav__link">
+      <a href="../../div/" class="md-nav__link">
         
   
   
@@ -538,7 +538,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../fDiv/" class="md-nav__link">
+      <a href="../../fDiv/" class="md-nav__link">
         
   
   
@@ -565,7 +565,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../fMisc/" class="md-nav__link">
+      <a href="../../fMisc/" class="md-nav__link">
         
   
   
@@ -592,7 +592,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../fMulAdd/" class="md-nav__link">
+      <a href="../../fMulAdd/" class="md-nav__link">
         
   
   
@@ -600,6 +600,136 @@
     
   
   Floating-Point FMA, Multiplier & Adder
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mul/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Integer Multiplier
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sync_instructions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Synchronization Instructions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_8" id="__nav_4_4_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lsu
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Lsu
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lsu_arbiter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Port Arbiter & Subsystem Interface
 
     
   </span>
@@ -635,7 +765,7 @@
   <span class="md-ellipsis">
     
   
-  Integer Multiplier
+  Finite State Machine (FSM)
 
     
   </span>
@@ -652,7 +782,7 @@
   <span class="md-ellipsis">
     
   
-  Integer Multiplier
+  Finite State Machine (FSM)
 
     
   </span>
@@ -678,10 +808,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-changelog" class="md-nav__link">
+  <a href="#1-overview" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        1. Changelog
+        1. Overview
       </span>
     </span>
   </a>
@@ -689,10 +819,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-overview" class="md-nav__link">
+  <a href="#2-state-machine-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        2. Overview
+        2. State Machine Architecture
       </span>
     </span>
   </a>
@@ -700,44 +830,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-architectural-requirements" class="md-nav__link">
+  <a href="#3-detailed-state-operations-transition-logic" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        3. Architectural Requirements
+        3. Detailed State Operations &amp; Transition Logic
       </span>
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-interfaces" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        4. Interfaces
-      </span>
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-functional-description" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        5. Functional Description
-      </span>
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="5. Functional Description">
+    <nav class="md-nav" aria-label="3. Detailed State Operations &amp; Transition Logic">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#51-multiplication-architecture" class="md-nav__link">
+  <a href="#31-state-idle" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        5.1 Multiplication Architecture
+        3.1 State <code>IDLE</code>
       </span>
     </span>
   </a>
@@ -745,10 +853,54 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#52-speculative-flush-active-pipeline-reset" class="md-nav__link">
+  <a href="#32-state-tlb_check-address-security-evaluation" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        5.2 Speculative Flush (Active Pipeline Reset)
+        3.2 State <code>TLB_CHECK</code> (Address &amp; Security Evaluation)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-state-request-memory-grant-phase" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.3 State <code>REQUEST</code> (Memory Grant Phase)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-state-wait-memory-response-phase" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.4 State <code>WAIT</code> (Memory Response Phase)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-state-exception-trap-formatting" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.5 State <code>EXCEPTION</code> (Trap Formatting)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-state-respond-writeback-phase" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.6 State <code>RESPOND</code> (Writeback Phase)
       </span>
     </span>
   </a>
@@ -761,22 +913,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#6-timing-and-performance" class="md-nav__link">
+  <a href="#4-pipeline-flush-behavior-flush_i" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        6. Timing and Performance
+        4. Pipeline Flush Behavior (<code>flush_i</code>)
       </span>
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="6. Timing and Performance">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Verification
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Verification">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#61-pipeline-stall-propagation-bypassing" class="md-nav__link">
+  <a href="#formal-sva-assertion-table" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        6.1 Pipeline Stall Propagation &amp; Bypassing
+        Formal SVA Assertion Table
       </span>
     </span>
   </a>
@@ -784,10 +947,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#62-future-superscalar-scalability" class="md-nav__link">
+  <a href="#testbench-coverage-goals" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        6.2 Future Superscalar Scalability
+        Testbench Coverage Goals
       </span>
     </span>
   </a>
@@ -796,17 +959,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#7-verification" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        7. Verification
-      </span>
-    </span>
-  </a>
   
 </li>
       
@@ -826,137 +978,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sync_instructions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-  Synchronization Instructions
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4_8" >
-        
-          
-          <label class="md-nav__link" for="__nav_4_4_8" id="__nav_4_4_8_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-  Lsu
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_8_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_4_8">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-  Lsu
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../lsu/lsu_arbiter/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-  Port Arbiter & Subsystem Interface
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../lsu/lsu_fsm/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-  Finite State Machine (FSM)
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../lsu/overview/" class="md-nav__link">
+      <a href="../overview/" class="md-nav__link">
         
   
   
@@ -983,7 +1005,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../lsu/stb/" class="md-nav__link">
+      <a href="../stb/" class="md-nav__link">
         
   
   
@@ -1075,7 +1097,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../mmu/overview/" class="md-nav__link">
+      <a href="../../../mmu/overview/" class="md-nav__link">
         
   
   
@@ -1102,7 +1124,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../mmu/pma/" class="md-nav__link">
+      <a href="../../../mmu/pma/" class="md-nav__link">
         
   
   
@@ -1129,7 +1151,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../mmu/pmp/" class="md-nav__link">
+      <a href="../../../mmu/pmp/" class="md-nav__link">
         
   
   
@@ -1156,7 +1178,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../mmu/ptw/" class="md-nav__link">
+      <a href="../../../mmu/ptw/" class="md-nav__link">
         
   
   
@@ -1183,7 +1205,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../mmu/tlb/" class="md-nav__link">
+      <a href="../../../mmu/tlb/" class="md-nav__link">
         
   
   
@@ -1267,7 +1289,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../writeback/csr/" class="md-nav__link">
+      <a href="../../../writeback/csr/" class="md-nav__link">
         
   
   
@@ -1294,7 +1316,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../writeback/writeback/" class="md-nav__link">
+      <a href="../../../writeback/writeback/" class="md-nav__link">
         
   
   
@@ -1321,7 +1343,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../writeback/writeback_bypass/" class="md-nav__link">
+      <a href="../../../writeback/writeback_bypass/" class="md-nav__link">
         
   
   
@@ -1397,10 +1419,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-changelog" class="md-nav__link">
+  <a href="#1-overview" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        1. Changelog
+        1. Overview
       </span>
     </span>
   </a>
@@ -1408,10 +1430,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-overview" class="md-nav__link">
+  <a href="#2-state-machine-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        2. Overview
+        2. State Machine Architecture
       </span>
     </span>
   </a>
@@ -1419,44 +1441,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-architectural-requirements" class="md-nav__link">
+  <a href="#3-detailed-state-operations-transition-logic" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        3. Architectural Requirements
+        3. Detailed State Operations &amp; Transition Logic
       </span>
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-interfaces" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        4. Interfaces
-      </span>
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-functional-description" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        5. Functional Description
-      </span>
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="5. Functional Description">
+    <nav class="md-nav" aria-label="3. Detailed State Operations &amp; Transition Logic">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#51-multiplication-architecture" class="md-nav__link">
+  <a href="#31-state-idle" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        5.1 Multiplication Architecture
+        3.1 State <code>IDLE</code>
       </span>
     </span>
   </a>
@@ -1464,10 +1464,54 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#52-speculative-flush-active-pipeline-reset" class="md-nav__link">
+  <a href="#32-state-tlb_check-address-security-evaluation" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        5.2 Speculative Flush (Active Pipeline Reset)
+        3.2 State <code>TLB_CHECK</code> (Address &amp; Security Evaluation)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-state-request-memory-grant-phase" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.3 State <code>REQUEST</code> (Memory Grant Phase)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-state-wait-memory-response-phase" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.4 State <code>WAIT</code> (Memory Response Phase)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-state-exception-trap-formatting" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.5 State <code>EXCEPTION</code> (Trap Formatting)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-state-respond-writeback-phase" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.6 State <code>RESPOND</code> (Writeback Phase)
       </span>
     </span>
   </a>
@@ -1480,22 +1524,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#6-timing-and-performance" class="md-nav__link">
+  <a href="#4-pipeline-flush-behavior-flush_i" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        6. Timing and Performance
+        4. Pipeline Flush Behavior (<code>flush_i</code>)
       </span>
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="6. Timing and Performance">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Verification
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Verification">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#61-pipeline-stall-propagation-bypassing" class="md-nav__link">
+  <a href="#formal-sva-assertion-table" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        6.1 Pipeline Stall Propagation &amp; Bypassing
+        Formal SVA Assertion Table
       </span>
     </span>
   </a>
@@ -1503,10 +1558,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#62-future-superscalar-scalability" class="md-nav__link">
+  <a href="#testbench-coverage-goals" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        6.2 Future Superscalar Scalability
+        Testbench Coverage Goals
       </span>
     </span>
   </a>
@@ -1515,17 +1570,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#7-verification" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        7. Verification
-      </span>
-    </span>
-  </a>
   
 </li>
       
@@ -1554,7 +1598,7 @@
   
   
     <li class="md-path__item">
-      <a href="../../.." class="md-path__link">
+      <a href="../../../.." class="md-path__link">
         
   
   <span class="md-ellipsis">
@@ -1576,7 +1620,7 @@
     
     
       <li class="md-path__item">
-        <a href="../../cache/" class="md-path__link">
+        <a href="../../../cache/" class="md-path__link">
           
   
   <span class="md-ellipsis">
@@ -1598,11 +1642,33 @@
     
     
       <li class="md-path__item">
-        <a href="../alu/" class="md-path__link">
+        <a href="../../alu/" class="md-path__link">
           
   
   <span class="md-ellipsis">
     Execute
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="../lsu_arbiter/" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Lsu
   </span>
 
         </a>
@@ -1622,7 +1688,7 @@
   
 
 
-<h1 id="integer-multiplier-module">Integer Multiplier Module</h1>
+<h1 id="load-store-unit-finite-state-machine-lsu-fsm">Load-Store Unit Finite State Machine (LSU FSM)</h1>
 <div class="admonition abstract">
 <p class="admonition-title">Module Card</p>
 <ul>
@@ -1630,175 +1696,135 @@
 <li><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 2.03v2.02c4.39.54 7.5 4.53 6.96 8.92-.46 3.64-3.32 6.53-6.96 6.96v2c5.5-.55 9.5-5.43 8.95-10.93-.45-4.75-4.22-8.5-8.95-8.97m-2 .03c-1.95.19-3.81.94-5.33 2.2L7.1 5.74c1.12-.9 2.47-1.48 3.9-1.68zM4.26 5.67A9.9 9.9 0 0 0 2.05 11h2c.19-1.42.75-2.77 1.64-3.9zM2.06 13c.2 1.96.97 3.81 2.21 5.33l1.42-1.43A8 8 0 0 1 4.06 13zm5.04 5.37-1.43 1.37A10 10 0 0 0 11 22v-2a8 8 0 0 1-3.9-1.63m9.72-3.18-4.11-4.11c.41-1.04.18-2.26-.68-3.11-.9-.91-2.25-1.09-3.34-.59l1.94 1.94-1.35 1.36-1.99-1.95c-.54 1.09-.29 2.44.59 3.35.86.86 2.08 1.08 3.12.68l4.11 4.1c.18.19.45.19.63 0l1.04-1.03c.22-.18.22-.5.04-.64"/></svg></span> <strong>Status:</strong> <code>Draft</code></li>
 </ul>
 </div>
-<h2 id="1-changelog">1. Changelog</h2>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Date</th>
-<th style="text-align: center;">Version</th>
-<th style="text-align: left;">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;">2026-08-05</td>
-<td style="text-align: center;">v0.2</td>
-<td style="text-align: left;">Added flush_i port and active pipeline clear, and renamed headers to exe_headers_t</td>
-</tr>
-<tr>
-<td style="text-align: left;">2026-05-23</td>
-<td style="text-align: center;">v0.1</td>
-<td style="text-align: left;">First draft</td>
-</tr>
-</tbody>
-</table>
-<h2 id="2-overview">2. Overview</h2>
-<h2 id="3-architectural-requirements">3. Architectural Requirements</h2>
-<p>The module is required to implement the following RISC-V Unprivileged ISA specifications:</p>
+<h2 id="1-overview">1. Overview</h2>
+<p>The <strong>LSU FSM</strong> is the internal control state machine of the Load-Store Unit. It manages the execution lifecycle of memory requests received from Stage 5 (Dispatch), coordinates alignment and PMP/PMA security checks with the D-TLB, formats request signals to the LSU Port Arbiter, and drives writeback/trap results to Stage 7 (Writeback).</p>
+<h2 id="2-state-machine-architecture">2. State Machine Architecture</h2>
+<pre class="mermaid"><code>stateDiagram
+    [*] --&gt; IDLE
+
+    IDLE --&gt; TLB_CHECK: disp_valid_i == 1
+
+    TLB_CHECK --&gt; TLB_CHECK: tlbpm_rvalid_i == 0 (TLB Miss / Await PTW)
+    TLB_CHECK --&gt; REQUEST: tlbpm_rvalid_i == 1 (TLB Hit / Access Allowed)
+
+    REQUEST --&gt; WAIT: dmem_gnt_i == 1
+    WAIT --&gt; RESPOND: dmem_rvalid_i == 1
+    RESPOND --&gt; IDLE: wb_ready_i == 1
+
+    WAIT --&gt; EXCEPTION: dmem_err_i == 1 (Bus Error)
+    TLB_CHECK --&gt; EXCEPTION: PMP Violation / Misaligned / Page Fault
+    EXCEPTION --&gt; RESPOND: Drive Exception and badaddr
+    TLB_CHECK --&gt; RESPOND: SC Reservation Fail (Result = 1)</code></pre>
+<h2 id="3-detailed-state-operations-transition-logic">3. Detailed State Operations &amp; Transition Logic</h2>
+<h3 id="31-state-idle">3.1 State <code>IDLE</code></h3>
 <ul>
-<li><strong>RV64M:</strong> <code>MUL</code>, <code>MULH</code>, <code>MULHU</code>, <code>MULHSU</code>, <code>MULW</code> instructions with <em>XLEN=64</em>.</li>
-<li><strong>Data width:</strong> Support for 64-bit operands.</li>
-<li><strong>Pipeline:</strong> Operations should be executed in a 3-stage pipelined execution unit, allowing the dispatcher to issue a new multiplication instruction every cycle.</li>
+<li><strong>Operation:</strong> Idle state. Deasserts memory request signals and holds <code>disp_ready_o = 1</code> if no internal pipeline stall or pending serialized access is active.</li>
+<li><strong>Transition to <code>TLB_CHECK</code>:</strong> Triggered when a valid uOp is issued by Dispatch (<code>disp_valid_i == 1 &amp;&amp; disp_ready_o == 1</code>). Latches instruction metadata (<code>op</code>, <code>addr</code>, <code>wdata</code>, <code>size</code>, <code>tag</code>).</li>
+<li><strong>Ordering Constraint (AMO / MMIO):</strong> Atomic Memory Operations (AMOs) and uncacheable MMIO accesses remain held in <code>IDLE</code> until the instruction reaches the head of the ROB in Stage 7 (Commit) (<code>is_rob_head_i == 1</code>) and the Store Buffer is completely empty (<code>stb_empty_i == 1</code>). While awaiting these conditions, <strong><code>disp_ready_o</code> is deasserted (<code>0</code>)</strong> to prevent Dispatch from issuing subsequent instructions.</li>
 </ul>
-<h2 id="4-interfaces">4. Interfaces</h2>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Signal</th>
-<th style="text-align: center;">Type</th>
-<th style="text-align: center;">Width</th>
-<th style="text-align: center;">Direction</th>
-<th style="text-align: left;">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><code>clk_i</code></td>
-<td style="text-align: center;"><code>logic</code></td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">IN</td>
-<td style="text-align: left;">Clock signal</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>rst_ni</code></td>
-<td style="text-align: center;"><code>logic</code></td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">IN</td>
-<td style="text-align: left;">Asynchronous active-low reset signal</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>flush_i</code></td>
-<td style="text-align: center;"><code>logic</code></td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">IN</td>
-<td style="text-align: left;">Pipeline flush signal (clears pipeline stages EX1, EX2, EX3)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>disp_valid_i</code></td>
-<td style="text-align: center;"><code>logic</code></td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">IN</td>
-<td style="text-align: left;">Dispatcher handshake indicating valid multiplication request</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>disp_ready_o</code></td>
-<td style="text-align: center;"><code>logic</code></td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">OUT</td>
-<td style="text-align: left;">Handshake indicating multiplier is ready to accept a new request</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>disp_headers_i</code></td>
-<td style="text-align: center;"><code>exe_headers_t</code></td>
-<td style="text-align: center;">-</td>
-<td style="text-align: center;">IN</td>
-<td style="text-align: left;">Input execution stage header metadata from Dispatcher</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>operand_a_i</code></td>
-<td style="text-align: center;"><code>logic</code></td>
-<td style="text-align: center;">64</td>
-<td style="text-align: center;">IN</td>
-<td style="text-align: left;">First operand (typically RS1)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>operand_b_i</code></td>
-<td style="text-align: center;"><code>logic</code></td>
-<td style="text-align: center;">64</td>
-<td style="text-align: center;">IN</td>
-<td style="text-align: left;">Second operand (typically RS2 or IMM)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>operator_i</code></td>
-<td style="text-align: center;"><code>logic</code></td>
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">IN</td>
-<td style="text-align: left;">Operation code provided by Decoder</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>wb_valid_o</code></td>
-<td style="text-align: center;"><code>logic</code></td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">OUT</td>
-<td style="text-align: left;">Writeback handshake indicating valid result is ready</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>wb_ready_i</code></td>
-<td style="text-align: center;"><code>logic</code></td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">IN</td>
-<td style="text-align: left;">Handshake indicating Writeback Arbiter can accept result</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>wb_result_o</code></td>
-<td style="text-align: center;"><code>logic</code></td>
-<td style="text-align: center;">64</td>
-<td style="text-align: center;">OUT</td>
-<td style="text-align: left;">Calculated multiplication result</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>wb_headers_o</code></td>
-<td style="text-align: center;"><code>exe_headers_t</code></td>
-<td style="text-align: center;">-</td>
-<td style="text-align: center;">OUT</td>
-<td style="text-align: left;">Output execution stage header metadata to Writeback Buffer</td>
-</tr>
-</tbody>
-</table>
-<h2 id="5-functional-description">5. Functional Description</h2>
-<h3 id="51-multiplication-architecture">5.1 Multiplication Architecture</h3>
-<p>To meet timing requirements, the multiplier is split into three pipeline stages (EX1, EX2, EX3). It calculates the full 128-bit product of the two 64-bit inputs to support high-part multiplication:</p>
+<h3 id="32-state-tlb_check-address-security-evaluation">3.2 State <code>TLB_CHECK</code> (Address &amp; Security Evaluation)</h3>
 <ul>
-<li><strong><code>MUL</code> / <code>MULW</code></strong>: Returns the lower 64 bits of the product. <code>MULW</code> truncates inputs to 32 bits and sign-extends the 32-bit result.</li>
-<li><strong><code>MULH</code></strong>: Returns the upper 64 bits of the signed <span class="arithmatex">\(\times\)</span> signed product.</li>
-<li><strong><code>MULHU</code></strong>: Returns the upper 64 bits of the unsigned <span class="arithmatex">\(\times\)</span> unsigned product.</li>
-<li><strong><code>MULHSU</code></strong>: Returns the upper 64 bits of the signed <span class="arithmatex">\(\times\)</span> unsigned product.</li>
+<li><strong>Operation:</strong> Address translation, security checks, and exception filtering are strictly evaluated in priority order:<ol>
+<li><strong>D-TLB Request &amp; Handshake:</strong><ul>
+<li>Virtual Address is submitted to the D-TLB (<code>tlbpm_addr_o = VA</code>).</li>
+<li><strong>TLB Hit (<code>tlbpm_rvalid_i == 1</code>):</strong> D-TLB returns <code>tlbpm_addr_i</code> (<code>PA[55:0]</code>), <code>tlbpm_pma_amo_level_i</code>, permission error flags (<code>tlbpm_err_r_i</code>, <code>tlbpm_err_w_i</code>), and exact cause codes (<code>tlbpm_cause_r_i</code>, <code>tlbpm_cause_w_i</code>) in a single cycle.</li>
+<li><strong>TLB Miss (<code>tlbpm_rvalid_i == 0</code>):</strong> The FSM holds in <code>TLB_CHECK</code>, stalling Stage 6 until the central Hardware PTW completes the page table walk and refills the D-TLB.</li>
 </ul>
-<h3 id="52-speculative-flush-active-pipeline-reset">5.2 Speculative Flush (Active Pipeline Reset)</h3>
-<p>To prevent the <strong>Late Writeback Hazard</strong> (where a multiplication completes after its ROB tag is reassigned), the multiplier actively monitors <code>flush_i</code>:</p>
-<ul>
-<li>When <code>flush_i</code> is asserted, all internal pipeline registers (EX1, EX2, EX3) are immediately cleared.</li>
-<li>Valid bits associated with each pipeline stage are reset to <code>0</code>, and <code>wb_valid_o</code> is deasserted.</li>
-<li>This actively kills any in-flight multiplication operations, ensuring they never write back stale results to the ROB after a flush.</li>
+</li>
+<li><strong>Alignment Check (Parallel):</strong> Evaluated on lower virtual address bits <code>VA[2:0]</code> against access size (<span class="arithmatex">\(VA[2:0] \equiv PA[2:0]\)</span> in Sv39). On misalignment <span class="arithmatex">\(\rightarrow\)</span> transitions to <code>EXCEPTION</code> (<code>cause = 4</code> Load Misaligned, <code>cause = 6</code> Store/AMO Misaligned).</li>
+<li><strong>PMP &amp; Translation Permission Check:</strong> Evaluated from D-TLB response (<code>tlbpm_err_r_i</code>, <code>tlbpm_err_w_i</code>). If access is denied <span class="arithmatex">\(\rightarrow\)</span> transitions to <code>EXCEPTION</code>, capturing the exact cause code from <code>tlbpm_cause_r_i</code> (<code>cause = 5</code> Access Fault or <code>13</code> Page Fault) or <code>tlbpm_cause_w_i</code> (<code>cause = 7</code> Access Fault or <code>15</code> Page Fault). <strong>This check has strict priority over SC reservation state.</strong></li>
+<li><strong>PMA AMO Capability Verification:</strong> For AMO and LR/SC instructions, verifies if <code>tlbpm_pma_amo_level_i</code> satisfies the required level. If unsupported <span class="arithmatex">\(\rightarrow\)</span> transitions to <code>EXCEPTION</code> (<code>cause = 7</code> Store/AMO Access Fault).</li>
+<li><strong>SC Reservation Matching (Evaluated ONLY after Steps 2–4 PASS):</strong> For <code>SC</code> instructions, verifies <code>reservation_valid</code> and matching address:<ul>
+<li><strong>Match &amp; Valid:</strong> Store is passed as speculative to STB, <code>wb_result_o = 0</code> (Success), and transitions to <code>REQUEST</code>.</li>
+<li><strong>Mismatch or Invalid:</strong> No entry is allocated in STB, <code>wb_result_o = 1</code> (Failure), and transitions directly to <code>RESPOND</code> without issuing a D-Cache write.</li>
 </ul>
-<h2 id="6-timing-and-performance">6. Timing and Performance</h2>
-<p>The module implements multiplication in 3 pipeline stages. The pipeline registers are placed to balance delays and minimize the critical path.</p>
-<h3 id="61-pipeline-stall-propagation-bypassing">6.1 Pipeline Stall Propagation &amp; Bypassing</h3>
-<ul>
-<li><strong>Stalling:</strong> If the Writeback Arbiter deasserts <code>wb_ready_i</code> while a valid result is in the EX3 output stage (<code>wb_valid_o</code> is high), the EX3 stage registers stall. This stall propagates backward: EX3 stalls EX2, and EX2 stalls EX1. If EX1 is stalled, <code>disp_ready_o</code> is deasserted to prevent the dispatcher from issuing new instructions.</li>
-<li><strong>Bypassing:</strong> While a completed multiplication result sits in the EX3 output register (<code>wb_result_o</code>) due to a writeback stall, the register bypass logic can forward this value directly to the dispatcher's execution operands.</li>
-</ul>
-<h3 id="62-future-superscalar-scalability">6.2 Future Superscalar Scalability</h3>
-<p>In a superscalar upgrade (dual/multi-issue), the Writeback Arbiter must scale to support multiple concurrent writeback channels. It is recommended that the multiplier's writeback port is mapped to a dedicated writeback channel or a prioritized channel that is decoupled from simple single-cycle ALU lanes to avoid stalling the multiplier when it completes.</p>
-<p>When no operation is being processed or stalled, the corresponding stage registers should be gated (dynamic clock gating) to save power.</p>
-<h2 id="7-verification">7. Verification</h2>
-<p>Multiply Module verification is based on constrained random tests:</p>
-<ol>
-<li><strong>Unit Tests:</strong> Verification of all valid ISA instructions with edge cases.</li>
-<li><strong>Reference Model:</strong> RTL results must be identical to the programmatic reference model (C, C++, or Python).</li>
-<li><strong>Coverage:</strong> Full 100% coverage of <code>operator_i</code> codes and all operand bits.</li>
-<li><strong>Pipeline:</strong> DUT must return input headers at the end of the pipeline with correct fields and changes applied.</li>
+</li>
 </ol>
+</li>
+</ul>
+<h3 id="33-state-request-memory-grant-phase">3.3 State <code>REQUEST</code> (Memory Grant Phase)</h3>
+<ul>
+<li><strong>Operation:</strong> Asserts <code>lsu_req_o = 1</code> to the LSU Port Arbiter. Drives physical address <code>dmem_addr_o = PA[55:0]</code>, <code>we</code>, <code>size</code>, and byte enables. For AMOs, asserts <code>dmem_amo_req_o = 1</code> and outputs <code>dmem_amo_op_o = funct5</code>.</li>
+<li><strong>Transition:</strong> Holds in <code>REQUEST</code> while <code>dmem_gnt_i == 0</code>. Transitions to <code>WAIT</code> on the cycle when <code>dmem_gnt_i == 1</code>.</li>
+</ul>
+<h3 id="34-state-wait-memory-response-phase">3.4 State <code>WAIT</code> (Memory Response Phase)</h3>
+<ul>
+<li><strong>Operation:</strong> Deasserts <code>lsu_req_o</code>. Awaits memory subsystem response from L1 Data Cache.</li>
+<li><strong>Transition:</strong> Transitions to <code>RESPOND</code> when <code>dmem_rvalid_i == 1</code>. If <code>dmem_err_i == 1</code> is returned by the bus <span class="arithmatex">\(\rightarrow\)</span> transitions to <code>EXCEPTION</code> with bus error cause.</li>
+</ul>
+<h3 id="35-state-exception-trap-formatting">3.5 State <code>EXCEPTION</code> (Trap Formatting)</h3>
+<ul>
+<li><strong>Operation:</strong> Asserts <code>wb_trap_o = 1</code>, drives <code>wb_cause_o</code> with latched exception code, and routes faulting virtual address (<code>badaddr</code>) to <code>wb_result_o</code>. Transitions to <code>RESPOND</code>.</li>
+</ul>
+<h3 id="36-state-respond-writeback-phase">3.6 State <code>RESPOND</code> (Writeback Phase)</h3>
+<ul>
+<li><strong>Operation:</strong> Asserts <code>wb_valid_o = 1</code>. For standard loads and AMOs, drives <code>wb_result_o = dmem_rdata_i</code> (with sign-extension or NaN-boxing applied for 32-bit operations). For SC, drives <code>wb_result_o = sc_status</code> (0 = Success, 1 = Fail).</li>
+<li><strong>Transition:</strong> Clears internal FSM registers and returns to <code>IDLE</code> when <code>wb_ready_i == 1</code>. If stalled by Writeback Arbiter (<code>wb_ready_i == 0</code>), holds <code>RESPOND</code> state and maintains stable outputs.</li>
+</ul>
+<h2 id="4-pipeline-flush-behavior-flush_i">4. Pipeline Flush Behavior (<code>flush_i</code>)</h2>
+<p>When a global pipeline flush occurs (<code>flush_i == 1</code>):</p>
+<ul>
+<li><strong>In <code>IDLE</code>, <code>TLB_CHECK</code>, <code>REQUEST</code>:</strong> The FSM immediately aborts and returns to <code>IDLE</code> in 1 cycle.</li>
+<li><strong>In <code>WAIT</code>:</strong> The FSM returns to <code>IDLE</code>. Any late <code>dmem_rvalid_i</code> data returned by D-Cache in subsequent cycles is discarded.</li>
+<li><strong>In <code>RESPOND</code>:</strong> If <code>wb_ready_i</code> was low, the flush clears <code>wb_valid_o</code> and resets to <code>IDLE</code>.</li>
+</ul>
+<h2 id="5-verification">5. Verification</h2>
+<p>The LSU FSM control path is verified against the following formal properties:</p>
+<h3 id="formal-sva-assertion-table">Formal SVA Assertion Table</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Assertion ID</th>
+<th style="text-align: left;">Property / Condition</th>
+<th style="text-align: center;">Severity</th>
+<th style="text-align: center;">Checkpoint</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>SVA_FSM_01</code></td>
+<td style="text-align: left;"><code>(fsm_state == TLB_CHECK &amp;&amp; !tlbpm_rvalid_i) |=&gt; (fsm_state == TLB_CHECK)</code></td>
+<td style="text-align: center;"><code>ERROR</code></td>
+<td style="text-align: center;"><strong>CHK-LSU-08</strong></td>
+<td style="text-align: left;">FSM must hold in TLB_CHECK during TLB Miss until PTW Refill completes</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SVA_FSM_02</code></td>
+<td style="text-align: left;"><code>(fsm_state == REQUEST &amp;&amp; !dmem_gnt_i) |=&gt; (fsm_state == REQUEST)</code></td>
+<td style="text-align: center;"><code>ERROR</code></td>
+<td style="text-align: center;"><strong>CHK-MMU-02</strong></td>
+<td style="text-align: left;">FSM must hold in REQUEST until L1 D-Cache grants the address phase</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SVA_FSM_03</code></td>
+<td style="text-align: left;"><code>flush_i |=&gt; (fsm_state == IDLE)</code></td>
+<td style="text-align: center;"><code>FATAL</code></td>
+<td style="text-align: center;"><strong>CHK-PIPE-03</strong></td>
+<td style="text-align: left;">FSM must abort any speculative state to IDLE in 1 cycle on pipeline flush</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SVA_FSM_04</code></td>
+<td style="text-align: left;"><code>(tlbpm_err_r_i &amp;&amp; fsm_state == TLB_CHECK) |=&gt; (wb_cause_o == tlbpm_cause_r_i)</code></td>
+<td style="text-align: center;"><code>ERROR</code></td>
+<td style="text-align: center;"><strong>CHK-MMU-01</strong></td>
+<td style="text-align: left;">LSU exception cause must strictly propagate the exact cause code from D-TLB</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SVA_FSM_05</code></td>
+<td style="text-align: left;"><code>(is_amo &amp;&amp; fsm_state == IDLE &amp;&amp; !is_rob_head_i) |-&gt; (disp_ready_o == 1'b0)</code></td>
+<td style="text-align: center;"><code>ERROR</code></td>
+<td style="text-align: center;"><strong>CHK-LSU-04</strong></td>
+<td style="text-align: left;">Dispatch ready must be deasserted while awaiting ROB commit head for AMO</td>
+</tr>
+</tbody>
+</table>
+<h3 id="testbench-coverage-goals">Testbench Coverage Goals</h3>
+<ul>
+<li><strong>State Coverage:</strong> 100% reachability of all FSM states (<code>IDLE</code>, <code>TLB_CHECK</code>, <code>REQUEST</code>, <code>WAIT</code>, <code>EXCEPTION</code>, <code>RESPOND</code>).</li>
+<li><strong>Transition Coverage:</strong> 100% arc coverage, including early aborts on <code>flush_i</code> from every state.</li>
+<li><strong>Trap Code Integrity:</strong> Verification of correct <code>mcause</code> encoding for misaligned accesses, PMP access faults, and page faults.</li>
+</ul>
 
 
 
@@ -1857,12 +1883,12 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate":null,"base":"../../..","features":["navigation.expand","navigation.sections","navigation.path"],"search":"../../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+      <script id="__config" type="application/json">{"annotate":null,"base":"../../../..","features":["navigation.expand","navigation.sections","navigation.path"],"search":"../../../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.e886cdf1.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.e886cdf1.min.js"></script>
       
-        <script src="../../../javascripts/mathjax.js"></script>
+        <script src="../../../../javascripts/mathjax.js"></script>
       
         <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
       

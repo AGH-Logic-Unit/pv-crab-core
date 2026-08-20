@@ -13,33 +13,33 @@
       
       
       
-        <link rel="prev" href="../fMulAdd/">
+        <link rel="prev" href="../overview/">
       
       
-        <link rel="next" href="../sync_instructions/">
+        <link rel="next" href="../../../mmu/overview/">
       
       
         
       
       
-      <link rel="icon" href="../../../assets/images/favicon.png">
+      <link rel="icon" href="../../../../assets/images/favicon.png">
       <meta name="generator" content="zensical-0.0.56">
     
     
       
-        <title>Integer Multiplier - Crab Docs</title>
+        <title>Store Buffer (STB) - Crab Docs</title>
       
     
     
       
         
       
-      <link rel="stylesheet" href="../../../assets/stylesheets/modern/main.20815dad.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/modern/main.20815dad.min.css">
       
         
           
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/modern/palette.dfe2e883.min.css">
+        <link rel="stylesheet" href="../../../../assets/stylesheets/modern/palette.dfe2e883.min.css">
       
       
 
@@ -58,7 +58,7 @@
       
     
     
-    <script>__md_scope=new URL("../../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    <script>__md_scope=new URL("../../../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
     
       
 
@@ -83,7 +83,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#integer-multiplier-module" class="md-skip">
+        <a href="#store-buffer-stb-module" class="md-skip">
           Skip to content
         </a>
       
@@ -99,7 +99,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="Crab Docs" class="md-header__button md-logo" aria-label="Crab Docs" data-md-component="logo">
+    <a href="../../../.." title="Crab Docs" class="md-header__button md-logo" aria-label="Crab Docs" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
@@ -119,7 +119,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Integer Multiplier
+              Store Buffer (STB)
             
           </span>
         </div>
@@ -194,7 +194,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="Crab Docs" class="md-nav__button md-logo" aria-label="Crab Docs" data-md-component="logo">
+    <a href="../../../.." title="Crab Docs" class="md-nav__button md-logo" aria-label="Crab Docs" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
@@ -224,7 +224,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href="../../../.." class="md-nav__link">
         
   
   
@@ -250,7 +250,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../about/" class="md-nav__link">
+      <a href="../../../../about/" class="md-nav__link">
         
   
   
@@ -276,7 +276,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../rules/" class="md-nav__link">
+      <a href="../../../../rules/" class="md-nav__link">
         
   
   
@@ -354,7 +354,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cache/" class="md-nav__link">
+      <a href="../../../cache/" class="md-nav__link">
         
   
   
@@ -381,7 +381,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../parameters/" class="md-nav__link">
+      <a href="../../../parameters/" class="md-nav__link">
         
   
   
@@ -408,7 +408,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../types/" class="md-nav__link">
+      <a href="../../../types/" class="md-nav__link">
         
   
   
@@ -484,7 +484,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../alu/" class="md-nav__link">
+      <a href="../../alu/" class="md-nav__link">
         
   
   
@@ -511,7 +511,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../div/" class="md-nav__link">
+      <a href="../../div/" class="md-nav__link">
         
   
   
@@ -538,7 +538,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../fDiv/" class="md-nav__link">
+      <a href="../../fDiv/" class="md-nav__link">
         
   
   
@@ -565,7 +565,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../fMisc/" class="md-nav__link">
+      <a href="../../fMisc/" class="md-nav__link">
         
   
   
@@ -592,7 +592,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../fMulAdd/" class="md-nav__link">
+      <a href="../../fMulAdd/" class="md-nav__link">
         
   
   
@@ -600,6 +600,190 @@
     
   
   Floating-Point FMA, Multiplier & Adder
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mul/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Integer Multiplier
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sync_instructions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Synchronization Instructions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_8" id="__nav_4_4_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lsu
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Lsu
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lsu_arbiter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Port Arbiter & Subsystem Interface
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lsu_fsm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Finite State Machine (FSM)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Overview
 
     
   </span>
@@ -635,7 +819,7 @@
   <span class="md-ellipsis">
     
   
-  Integer Multiplier
+  Store Buffer (STB)
 
     
   </span>
@@ -652,7 +836,7 @@
   <span class="md-ellipsis">
     
   
-  Integer Multiplier
+  Store Buffer (STB)
 
     
   </span>
@@ -678,77 +862,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-changelog" class="md-nav__link">
+  <a href="#1-parameters-queue-layout" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        1. Changelog
+        1. Parameters &amp; Queue Layout
       </span>
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#2-overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        2. Overview
-      </span>
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-architectural-requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        3. Architectural Requirements
-      </span>
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-interfaces" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        4. Interfaces
-      </span>
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-functional-description" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        5. Functional Description
-      </span>
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="5. Functional Description">
+    <nav class="md-nav" aria-label="1. Parameters &amp; Queue Layout">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#51-multiplication-architecture" class="md-nav__link">
+  <a href="#entry-fields" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        5.1 Multiplication Architecture
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#52-speculative-flush-active-pipeline-reset" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        5.2 Speculative Flush (Active Pipeline Reset)
+        Entry Fields
       </span>
     </span>
   </a>
@@ -761,22 +890,55 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#6-timing-and-performance" class="md-nav__link">
+  <a href="#2-module-interface" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        6. Timing and Performance
+        2. Module Interface
       </span>
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="6. Timing and Performance">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-entry-lifecycle-pipeline-flush" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Entry Lifecycle &amp; Pipeline Flush
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-store-to-load-forwarding-load-bypassing" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Store-to-Load Forwarding (Load Bypassing)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Verification
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Verification">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#61-pipeline-stall-propagation-bypassing" class="md-nav__link">
+  <a href="#formal-sva-assertion-table" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        6.1 Pipeline Stall Propagation &amp; Bypassing
+        Formal SVA Assertion Table
       </span>
     </span>
   </a>
@@ -784,10 +946,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#62-future-superscalar-scalability" class="md-nav__link">
+  <a href="#coverage-metrics" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        6.2 Future Superscalar Scalability
+        Coverage Metrics
       </span>
     </span>
   </a>
@@ -796,17 +958,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#7-verification" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        7. Verification
-      </span>
-    </span>
-  </a>
   
 </li>
       
@@ -814,190 +965,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../sync_instructions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-  Synchronization Instructions
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4_8" >
-        
-          
-          <label class="md-nav__link" for="__nav_4_4_8" id="__nav_4_4_8_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-  Lsu
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_8_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_4_8">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-  Lsu
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../lsu/lsu_arbiter/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-  Port Arbiter & Subsystem Interface
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../lsu/lsu_fsm/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-  Finite State Machine (FSM)
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../lsu/overview/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-  Overview
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../lsu/stb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-  Store Buffer (STB)
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -1075,7 +1042,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../mmu/overview/" class="md-nav__link">
+      <a href="../../../mmu/overview/" class="md-nav__link">
         
   
   
@@ -1102,7 +1069,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../mmu/pma/" class="md-nav__link">
+      <a href="../../../mmu/pma/" class="md-nav__link">
         
   
   
@@ -1129,7 +1096,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../mmu/pmp/" class="md-nav__link">
+      <a href="../../../mmu/pmp/" class="md-nav__link">
         
   
   
@@ -1156,7 +1123,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../mmu/ptw/" class="md-nav__link">
+      <a href="../../../mmu/ptw/" class="md-nav__link">
         
   
   
@@ -1183,7 +1150,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../mmu/tlb/" class="md-nav__link">
+      <a href="../../../mmu/tlb/" class="md-nav__link">
         
   
   
@@ -1267,7 +1234,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../writeback/csr/" class="md-nav__link">
+      <a href="../../../writeback/csr/" class="md-nav__link">
         
   
   
@@ -1294,7 +1261,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../writeback/writeback/" class="md-nav__link">
+      <a href="../../../writeback/writeback/" class="md-nav__link">
         
   
   
@@ -1321,7 +1288,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../writeback/writeback_bypass/" class="md-nav__link">
+      <a href="../../../writeback/writeback_bypass/" class="md-nav__link">
         
   
   
@@ -1397,77 +1364,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-changelog" class="md-nav__link">
+  <a href="#1-parameters-queue-layout" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        1. Changelog
+        1. Parameters &amp; Queue Layout
       </span>
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#2-overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        2. Overview
-      </span>
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-architectural-requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        3. Architectural Requirements
-      </span>
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-interfaces" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        4. Interfaces
-      </span>
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-functional-description" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        5. Functional Description
-      </span>
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="5. Functional Description">
+    <nav class="md-nav" aria-label="1. Parameters &amp; Queue Layout">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#51-multiplication-architecture" class="md-nav__link">
+  <a href="#entry-fields" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        5.1 Multiplication Architecture
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#52-speculative-flush-active-pipeline-reset" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        5.2 Speculative Flush (Active Pipeline Reset)
+        Entry Fields
       </span>
     </span>
   </a>
@@ -1480,22 +1392,55 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#6-timing-and-performance" class="md-nav__link">
+  <a href="#2-module-interface" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        6. Timing and Performance
+        2. Module Interface
       </span>
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="6. Timing and Performance">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-entry-lifecycle-pipeline-flush" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Entry Lifecycle &amp; Pipeline Flush
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-store-to-load-forwarding-load-bypassing" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Store-to-Load Forwarding (Load Bypassing)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Verification
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Verification">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#61-pipeline-stall-propagation-bypassing" class="md-nav__link">
+  <a href="#formal-sva-assertion-table" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        6.1 Pipeline Stall Propagation &amp; Bypassing
+        Formal SVA Assertion Table
       </span>
     </span>
   </a>
@@ -1503,10 +1448,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#62-future-superscalar-scalability" class="md-nav__link">
+  <a href="#coverage-metrics" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        6.2 Future Superscalar Scalability
+        Coverage Metrics
       </span>
     </span>
   </a>
@@ -1515,17 +1460,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#7-verification" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        7. Verification
-      </span>
-    </span>
-  </a>
   
 </li>
       
@@ -1554,7 +1488,7 @@
   
   
     <li class="md-path__item">
-      <a href="../../.." class="md-path__link">
+      <a href="../../../.." class="md-path__link">
         
   
   <span class="md-ellipsis">
@@ -1576,7 +1510,7 @@
     
     
       <li class="md-path__item">
-        <a href="../../cache/" class="md-path__link">
+        <a href="../../../cache/" class="md-path__link">
           
   
   <span class="md-ellipsis">
@@ -1598,11 +1532,33 @@
     
     
       <li class="md-path__item">
-        <a href="../alu/" class="md-path__link">
+        <a href="../../alu/" class="md-path__link">
           
   
   <span class="md-ellipsis">
     Execute
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="../lsu_arbiter/" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Lsu
   </span>
 
         </a>
@@ -1622,7 +1578,7 @@
   
 
 
-<h1 id="integer-multiplier-module">Integer Multiplier Module</h1>
+<h1 id="store-buffer-stb-module">Store Buffer (STB) Module</h1>
 <div class="admonition abstract">
 <p class="admonition-title">Module Card</p>
 <ul>
@@ -1630,37 +1586,84 @@
 <li><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 2.03v2.02c4.39.54 7.5 4.53 6.96 8.92-.46 3.64-3.32 6.53-6.96 6.96v2c5.5-.55 9.5-5.43 8.95-10.93-.45-4.75-4.22-8.5-8.95-8.97m-2 .03c-1.95.19-3.81.94-5.33 2.2L7.1 5.74c1.12-.9 2.47-1.48 3.9-1.68zM4.26 5.67A9.9 9.9 0 0 0 2.05 11h2c.19-1.42.75-2.77 1.64-3.9zM2.06 13c.2 1.96.97 3.81 2.21 5.33l1.42-1.43A8 8 0 0 1 4.06 13zm5.04 5.37-1.43 1.37A10 10 0 0 0 11 22v-2a8 8 0 0 1-3.9-1.63m9.72-3.18-4.11-4.11c.41-1.04.18-2.26-.68-3.11-.9-.91-2.25-1.09-3.34-.59l1.94 1.94-1.35 1.36-1.99-1.95c-.54 1.09-.29 2.44.59 3.35.86.86 2.08 1.08 3.12.68l4.11 4.1c.18.19.45.19.63 0l1.04-1.03c.22-.18.22-.5.04-.64"/></svg></span> <strong>Status:</strong> <code>Draft</code></li>
 </ul>
 </div>
-<h2 id="1-changelog">1. Changelog</h2>
+<h2 id="1-parameters-queue-layout">1. Parameters &amp; Queue Layout</h2>
+<p>The STB is a circular FIFO queue of size <code>STB_DEPTH</code> holding speculative and committed store instructions.</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Date</th>
-<th style="text-align: center;">Version</th>
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">Default</th>
 <th style="text-align: left;">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">2026-08-05</td>
-<td style="text-align: center;">v0.2</td>
-<td style="text-align: left;">Added flush_i port and active pipeline clear, and renamed headers to exe_headers_t</td>
+<td style="text-align: left;"><code>STB_DEPTH</code></td>
+<td style="text-align: center;"><code>int</code></td>
+<td style="text-align: center;"><code>4</code></td>
+<td style="text-align: left;">Queue entries count (Must be power of 2, typically <span class="arithmatex">\(\le 4\)</span>).</td>
 </tr>
 <tr>
-<td style="text-align: left;">2026-05-23</td>
-<td style="text-align: center;">v0.1</td>
-<td style="text-align: left;">First draft</td>
+<td style="text-align: left;"><code>TAG_WIDTH</code></td>
+<td style="text-align: center;"><code>int</code></td>
+<td style="text-align: center;"><code>4</code></td>
+<td style="text-align: left;">ROB instruction tag bit width.</td>
 </tr>
 </tbody>
 </table>
-<h2 id="2-overview">2. Overview</h2>
-<h2 id="3-architectural-requirements">3. Architectural Requirements</h2>
-<p>The module is required to implement the following RISC-V Unprivileged ISA specifications:</p>
-<ul>
-<li><strong>RV64M:</strong> <code>MUL</code>, <code>MULH</code>, <code>MULHU</code>, <code>MULHSU</code>, <code>MULW</code> instructions with <em>XLEN=64</em>.</li>
-<li><strong>Data width:</strong> Support for 64-bit operands.</li>
-<li><strong>Pipeline:</strong> Operations should be executed in a 3-stage pipelined execution unit, allowing the dispatcher to issue a new multiplication instruction every cycle.</li>
-</ul>
-<h2 id="4-interfaces">4. Interfaces</h2>
+<h3 id="entry-fields">Entry Fields</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Field</th>
+<th style="text-align: center;">Width</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>valid</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Entry contains valid data</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>speculative</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: left;"><code>1</code> = Speculative (uncommitted), <code>0</code> = Committed (ready to drain)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>addr</code></td>
+<td style="text-align: center;">56</td>
+<td style="text-align: left;">Physical target address (<code>PA[55:0]</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>wdata</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: left;">Store write payload</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>be</code></td>
+<td style="text-align: center;">8</td>
+<td style="text-align: left;">Byte enable mask</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>size</code></td>
+<td style="text-align: center;">2</td>
+<td style="text-align: left;">Access size (<code>00</code>=B, <code>01</code>=H, <code>10</code>=W, <code>11</code>=D)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tag</code></td>
+<td style="text-align: center;"><code>TAG_WIDTH</code></td>
+<td style="text-align: left;">ROB tracking tag</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Power Optimization (130nm ASIC)</p>
+<p>To minimize dynamic switching power across inactive storage registers, entries with <code>valid == 0</code> must have clock gating applied via ICG (Integrated Clock Gating) cells.</p>
+</div>
+<h2 id="2-module-interface">2. Module Interface</h2>
 <table>
 <thead>
 <tr>
@@ -1673,132 +1676,277 @@
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>clk_i</code></td>
+<td style="text-align: left;"><strong>Stage 6 Write</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>stb_write_valid_i</code></td>
 <td style="text-align: center;"><code>logic</code></td>
 <td style="text-align: center;">1</td>
 <td style="text-align: center;">IN</td>
-<td style="text-align: left;">Clock signal</td>
+<td style="text-align: left;">Push new store entry from LSU Execute</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>rst_ni</code></td>
+<td style="text-align: left;"><code>stb_write_addr_i</code></td>
 <td style="text-align: center;"><code>logic</code></td>
-<td style="text-align: center;">1</td>
+<td style="text-align: center;">56</td>
 <td style="text-align: center;">IN</td>
-<td style="text-align: left;">Asynchronous active-low reset signal</td>
+<td style="text-align: left;">Target physical address (<code>PA[55:0]</code>)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>flush_i</code></td>
-<td style="text-align: center;"><code>logic</code></td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">IN</td>
-<td style="text-align: left;">Pipeline flush signal (clears pipeline stages EX1, EX2, EX3)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>disp_valid_i</code></td>
-<td style="text-align: center;"><code>logic</code></td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">IN</td>
-<td style="text-align: left;">Dispatcher handshake indicating valid multiplication request</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>disp_ready_o</code></td>
-<td style="text-align: center;"><code>logic</code></td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">OUT</td>
-<td style="text-align: left;">Handshake indicating multiplier is ready to accept a new request</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>disp_headers_i</code></td>
-<td style="text-align: center;"><code>exe_headers_t</code></td>
-<td style="text-align: center;">-</td>
-<td style="text-align: center;">IN</td>
-<td style="text-align: left;">Input execution stage header metadata from Dispatcher</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>operand_a_i</code></td>
+<td style="text-align: left;"><code>stb_write_wdata_i</code></td>
 <td style="text-align: center;"><code>logic</code></td>
 <td style="text-align: center;">64</td>
 <td style="text-align: center;">IN</td>
-<td style="text-align: left;">First operand (typically RS1)</td>
+<td style="text-align: left;">Write payload data</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>operand_b_i</code></td>
+<td style="text-align: left;"><code>stb_write_be_i</code></td>
 <td style="text-align: center;"><code>logic</code></td>
-<td style="text-align: center;">64</td>
+<td style="text-align: center;">8</td>
 <td style="text-align: center;">IN</td>
-<td style="text-align: left;">Second operand (typically RS2 or IMM)</td>
+<td style="text-align: left;">Byte enable mask</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>operator_i</code></td>
+<td style="text-align: left;"><code>stb_write_size_i</code></td>
 <td style="text-align: center;"><code>logic</code></td>
-<td style="text-align: center;">3</td>
+<td style="text-align: center;">2</td>
 <td style="text-align: center;">IN</td>
-<td style="text-align: left;">Operation code provided by Decoder</td>
+<td style="text-align: left;">Access size</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>wb_valid_o</code></td>
+<td style="text-align: left;"><code>stb_write_tag_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;"><code>TAG_WIDTH</code></td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">ROB instruction tag</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>stb_full_o</code></td>
 <td style="text-align: center;"><code>logic</code></td>
 <td style="text-align: center;">1</td>
 <td style="text-align: center;">OUT</td>
-<td style="text-align: left;">Writeback handshake indicating valid result is ready</td>
+<td style="text-align: left;">STB full stall signal to Stage 5 Dispatch</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>wb_ready_i</code></td>
+<td style="text-align: left;"><strong>Stage 7 Commit</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>stb_commit_valid_i</code></td>
 <td style="text-align: center;"><code>logic</code></td>
 <td style="text-align: center;">1</td>
 <td style="text-align: center;">IN</td>
-<td style="text-align: left;">Handshake indicating Writeback Arbiter can accept result</td>
+<td style="text-align: left;">Commit signal from Writeback stage</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>wb_result_o</code></td>
+<td style="text-align: left;"><code>stb_commit_tag_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;"><code>TAG_WIDTH</code></td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Tag of committing store instruction</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>stb_empty_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Active high when all entries (speculative and committed) are clear</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Stage 6 Bypass Query</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>load_addr_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">56</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Target physical address of concurrent load (<code>PA[55:0]</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>load_size_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">Access size of load</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>load_bypass_hit_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Asserted on full byte match with a STB entry</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>load_bypass_data_o</code></td>
 <td style="text-align: center;"><code>logic</code></td>
 <td style="text-align: center;">64</td>
 <td style="text-align: center;">OUT</td>
-<td style="text-align: left;">Calculated multiplication result</td>
+<td style="text-align: left;">Forwarded store payload data</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>wb_headers_o</code></td>
-<td style="text-align: center;"><code>exe_headers_t</code></td>
-<td style="text-align: center;">-</td>
+<td style="text-align: left;"><code>load_bypass_stall_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
 <td style="text-align: center;">OUT</td>
-<td style="text-align: left;">Output execution stage header metadata to Writeback Buffer</td>
+<td style="text-align: left;">Asserted on partial address overlap (requires load stall)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>D-Cache Drain Port</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>stb_dmem_req_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Request to drain committed store to Cache</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>stb_dmem_addr_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">56</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Target physical address (<code>PA[55:0]</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>stb_dmem_wdata_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Write payload data</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>stb_dmem_be_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Byte enable strobes</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>stb_dmem_size_o</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">OUT</td>
+<td style="text-align: left;">Transaction size</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>stb_dmem_gnt_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">D-Cache address phase grant</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>dmem_rvalid_i</code></td>
+<td style="text-align: center;"><code>logic</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">IN</td>
+<td style="text-align: left;">D-Cache write completion ack</td>
 </tr>
 </tbody>
 </table>
-<h2 id="5-functional-description">5. Functional Description</h2>
-<h3 id="51-multiplication-architecture">5.1 Multiplication Architecture</h3>
-<p>To meet timing requirements, the multiplier is split into three pipeline stages (EX1, EX2, EX3). It calculates the full 128-bit product of the two 64-bit inputs to support high-part multiplication:</p>
+<h2 id="3-entry-lifecycle-pipeline-flush">3. Entry Lifecycle &amp; Pipeline Flush</h2>
+<pre class="mermaid"><code>stateDiagram-v2
+    [*] --&gt; EMPTY
+    EMPTY --&gt; SPECULATIVE : Push Entry (stb_write_valid_i, spec=1)
+    SPECULATIVE --&gt; COMMITTED : Commit Signal (stb_commit_valid_i, spec=0)
+    SPECULATIVE --&gt; EMPTY : Pipeline Flush (flush_i == 1)
+    COMMITTED --&gt; DRAINING : Arbiter Selects STB (dmem_gnt_i)
+    DRAINING --&gt; EMPTY : D-Cache Ack (dmem_rvalid_i == 1)</code></pre>
 <ul>
-<li><strong><code>MUL</code> / <code>MULW</code></strong>: Returns the lower 64 bits of the product. <code>MULW</code> truncates inputs to 32 bits and sign-extends the 32-bit result.</li>
-<li><strong><code>MULH</code></strong>: Returns the upper 64 bits of the signed <span class="arithmatex">\(\times\)</span> signed product.</li>
-<li><strong><code>MULHU</code></strong>: Returns the upper 64 bits of the unsigned <span class="arithmatex">\(\times\)</span> unsigned product.</li>
-<li><strong><code>MULHSU</code></strong>: Returns the upper 64 bits of the signed <span class="arithmatex">\(\times\)</span> unsigned product.</li>
+<li><strong>Allocation (Stage 6):</strong> Pushes store to <code>write_ptr</code> with <code>valid = 1</code> and <code>speculative = 1</code>.</li>
+<li><strong>Commit (Stage 7):</strong> On ROB tag match, clears <code>speculative</code> flag (<code>speculative &lt;= 0</code>).</li>
+<li><strong>Drain (Background):</strong> Drains oldest committed entry (<code>speculative == 0</code>) to L1 Cache when memory bus is granted.</li>
+<li><strong>Pipeline Flush (<code>flush_i == 1</code>):</strong> Instantly clears all entries with <code>speculative == 1</code> and rolls back <code>write_ptr</code>. Committed entries (<code>speculative == 0</code>) <strong>are preserved</strong> and allowed to drain.</li>
 </ul>
-<h3 id="52-speculative-flush-active-pipeline-reset">5.2 Speculative Flush (Active Pipeline Reset)</h3>
-<p>To prevent the <strong>Late Writeback Hazard</strong> (where a multiplication completes after its ROB tag is reassigned), the multiplier actively monitors <code>flush_i</code>:</p>
-<ul>
-<li>When <code>flush_i</code> is asserted, all internal pipeline registers (EX1, EX2, EX3) are immediately cleared.</li>
-<li>Valid bits associated with each pipeline stage are reset to <code>0</code>, and <code>wb_valid_o</code> is deasserted.</li>
-<li>This actively kills any in-flight multiplication operations, ensuring they never write back stale results to the ROB after a flush.</li>
-</ul>
-<h2 id="6-timing-and-performance">6. Timing and Performance</h2>
-<p>The module implements multiplication in 3 pipeline stages. The pipeline registers are placed to balance delays and minimize the critical path.</p>
-<h3 id="61-pipeline-stall-propagation-bypassing">6.1 Pipeline Stall Propagation &amp; Bypassing</h3>
-<ul>
-<li><strong>Stalling:</strong> If the Writeback Arbiter deasserts <code>wb_ready_i</code> while a valid result is in the EX3 output stage (<code>wb_valid_o</code> is high), the EX3 stage registers stall. This stall propagates backward: EX3 stalls EX2, and EX2 stalls EX1. If EX1 is stalled, <code>disp_ready_o</code> is deasserted to prevent the dispatcher from issuing new instructions.</li>
-<li><strong>Bypassing:</strong> While a completed multiplication result sits in the EX3 output register (<code>wb_result_o</code>) due to a writeback stall, the register bypass logic can forward this value directly to the dispatcher's execution operands.</li>
-</ul>
-<h3 id="62-future-superscalar-scalability">6.2 Future Superscalar Scalability</h3>
-<p>In a superscalar upgrade (dual/multi-issue), the Writeback Arbiter must scale to support multiple concurrent writeback channels. It is recommended that the multiplier's writeback port is mapped to a dedicated writeback channel or a prioritized channel that is decoupled from simple single-cycle ALU lanes to avoid stalling the multiplier when it completes.</p>
-<p>When no operation is being processed or stalled, the corresponding stage registers should be gated (dynamic clock gating) to save power.</p>
-<h2 id="7-verification">7. Verification</h2>
-<p>Multiply Module verification is based on constrained random tests:</p>
+<h2 id="4-store-to-load-forwarding-load-bypassing">4. Store-to-Load Forwarding (Load Bypassing)</h2>
+<p>Concurrent loads in Stage 6 query the STB in parallel with the L1 Data Cache:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>    Load Address (Stage 6) ──► STB Comparator (All Entries)
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                                        │
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>             ┌──────────────────────────┼──────────────────────────┐
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>             ▼                          ▼                          ▼
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>     Full Byte Match           Partial Byte Overlap            No Overlap
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>   (load_bypass_hit_o=1)     (load_bypass_stall_o=1)    (load_bypass_hit_o=0)
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>             │                          │                          │
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>             ▼                          ▼                          ▼
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a> Forward Youngest `wdata`     Stall Load in Stage 6      Read L1 D-Cache
+</span></code></pre></div>
 <ol>
-<li><strong>Unit Tests:</strong> Verification of all valid ISA instructions with edge cases.</li>
-<li><strong>Reference Model:</strong> RTL results must be identical to the programmatic reference model (C, C++, or Python).</li>
-<li><strong>Coverage:</strong> Full 100% coverage of <code>operator_i</code> codes and all operand bits.</li>
-<li><strong>Pipeline:</strong> DUT must return input headers at the end of the pipeline with correct fields and changes applied.</li>
+<li><strong>Youngest Entry Selection:</strong> When multiple entries in the STB match the target load address, the entry with the highest modular index relative to <code>read_ptr</code> (i.e. the newest/youngest store closest to the FIFO tail) is selected for forwarding.</li>
+<li><strong>Full Match:</strong> Load address &amp; size fall entirely within byte enable (<code>be</code>) of a STB entry <span class="arithmatex">\(\rightarrow\)</span> bypass data from the youngest matching entry (<code>load_bypass_hit_o = 1</code>).</li>
+<li><strong>Partial Overlap:</strong> Load overlaps a STB entry, but the entry does not cover all requested bytes <span class="arithmatex">\(\rightarrow\)</span> assert <code>load_bypass_stall_o = 1</code> to stall the load until conflicting stores drain to D-Cache.</li>
+<li><strong>No Overlap:</strong> No matching STB bytes <span class="arithmatex">\(\rightarrow\)</span> read normally from L1 D-Cache.</li>
 </ol>
+<h2 id="5-verification">5. Verification</h2>
+<p>The Store Buffer module is verified using formal assertions and random testing:</p>
+<h3 id="formal-sva-assertion-table">Formal SVA Assertion Table</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Assertion ID</th>
+<th style="text-align: left;">Property / Condition</th>
+<th style="text-align: center;">Severity</th>
+<th style="text-align: center;">Checkpoint</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>SVA_STB_01</code></td>
+<td style="text-align: left;"><code>(load_partial_overlap) |-&gt; (load_bypass_stall_o == 1'b1)</code></td>
+<td style="text-align: center;"><code>FATAL</code></td>
+<td style="text-align: center;"><strong>CHK-LSU-05</strong></td>
+<td style="text-align: left;">Partial address overlap between load and STB store MUST force a bypass stall</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SVA_STB_02</code></td>
+<td style="text-align: left;"><code>flush_i |=&gt; (stb_speculative_count == '0)</code></td>
+<td style="text-align: center;"><code>ERROR</code></td>
+<td style="text-align: center;"><strong>CHK-LSU-01</strong></td>
+<td style="text-align: left;">Pipeline flush must clear all speculative entries without discarding committed</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SVA_STB_03</code></td>
+<td style="text-align: left;"><code>(stb_entry_committed &amp;&amp; !rst_ni_flush) |=&gt; (stb_entry_valid)</code></td>
+<td style="text-align: center;"><code>FATAL</code></td>
+<td style="text-align: center;"><strong>CHK-LSU-04</strong></td>
+<td style="text-align: left;">Committed STB entries must persist until acknowledged by D-Cache drain ack</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SVA_STB_04</code></td>
+<td style="text-align: left;"><code>(stb_full_o &amp;&amp; stb_write_valid_i) |-&gt; $error</code></td>
+<td style="text-align: center;"><code>FATAL</code></td>
+<td style="text-align: center;"><strong>CHK-LSU-05</strong></td>
+<td style="text-align: left;">Write into full STB without prior commit/drain is forbidden</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SVA_STB_05</code></td>
+<td style="text-align: left;"><code>(load_bypass_hit_o &amp;&amp; (matching_count &gt; 1)) |-&gt; (forwarded_entry == youngest_entry)</code></td>
+<td style="text-align: center;"><code>ERROR</code></td>
+<td style="text-align: center;"><strong>CHK-LSU-06</strong></td>
+<td style="text-align: left;">Bypassed load data must strictly originate from the youngest matching store</td>
+</tr>
+</tbody>
+</table>
+<h3 id="coverage-metrics">Coverage Metrics</h3>
+<ul>
+<li>100% functional coverage of forwarding hit permutations (8-bit byte mask combinations).</li>
+<li>Verification of pointer wrap-around and rollback during branch mispredictions.</li>
+</ul>
 
 
 
@@ -1857,12 +2005,12 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate":null,"base":"../../..","features":["navigation.expand","navigation.sections","navigation.path"],"search":"../../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+      <script id="__config" type="application/json">{"annotate":null,"base":"../../../..","features":["navigation.expand","navigation.sections","navigation.path"],"search":"../../../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.e886cdf1.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.e886cdf1.min.js"></script>
       
-        <script src="../../../javascripts/mathjax.js"></script>
+        <script src="../../../../javascripts/mathjax.js"></script>
       
         <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
       

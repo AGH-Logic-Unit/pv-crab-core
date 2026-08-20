@@ -1,0 +1,2099 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Pulsar-V Crab Core specification for RISC-V RV64GC">
+      
+      
+        <meta name="author" content="AGH Logic Unit">
+      
+      
+      
+        <link rel="prev" href="../ptw/">
+      
+      
+        <link rel="next" href="../../writeback/csr/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.56">
+    
+    
+      
+        <title>Distributed Translation Lookaside Buffers (TLB) - Crab Docs</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../../assets/stylesheets/modern/main.20815dad.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="deep-orange" data-md-color-accent="orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#distributed-translation-lookaside-buffers-tlb" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Crab Docs" class="md-header__button md-logo" aria-label="Crab Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Crab Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Distributed Translation Lookaside Buffers (TLB)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="deep-orange" data-md-color-accent="orange"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/AGH-Logic-Unit/pv-crab-core" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Crab Docs" class="md-nav__button md-logo" aria-label="Crab Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    Crab Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/AGH-Logic-Unit/pv-crab-core" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Index
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  About
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Repository Standards
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Uarch
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Uarch
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  L1 Data Cache Design Specs
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Parameters
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Types
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Execute
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Execute
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/alu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Arithmetic Logic Unit
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/div/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Integer Divider
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/fDiv/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Floating-Point Divider & Square Root
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/fMisc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Floating-Point Miscellaneous
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/fMulAdd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Floating-Point FMA, Multiplier & Adder
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/mul/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Integer Multiplier
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/sync_instructions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Synchronization Instructions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4_8" id="__nav_4_4_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lsu
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Lsu
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/lsu/lsu_arbiter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Port Arbiter & Subsystem Interface
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/lsu/lsu_fsm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Finite State Machine (FSM)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/lsu/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Overview
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../execute/lsu/stb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Store Buffer (STB)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Mmu
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Mmu
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  MMU & Address Translation Overview
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Physical Memory Attributes (PMA)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Physical Memory Protection (PMP)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ptw/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Hardware Page Table Walker (PTW)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Distributed Translation Lookaside Buffers (TLB)
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Distributed Translation Lookaside Buffers (TLB)
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Overview
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-distributed-tlb-partitioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Distributed TLB Partitioning
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Distributed TLB Partitioning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tlb-entry-layout-variable-mask-cam-entry" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        TLB Entry Layout (Variable-Mask CAM Entry)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-vipt-timing-integration-and-cam-lookup-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. VIPT Timing Integration and CAM Lookup Logic
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. VIPT Timing Integration and CAM Lookup Logic">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cam-lookup-matching-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        CAM Lookup Matching Rules:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#physical-address-generation-on-hit" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Physical Address Generation on Hit:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-replacement-policy-binary-tree-plru" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Replacement Policy: Binary Tree-PLRU
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Replacement Policy: Binary Tree-PLRU">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-tree-state-representation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.1 Tree State Representation
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-victim-selection-on-tlb-refill" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.2 Victim Selection (on TLB Refill)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-state-update-on-tlb-hit-or-refill" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.3 State Update (on TLB Hit or Refill)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-tlb-invalidation-and-lifecycle-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. TLB Invalidation and Lifecycle Rules
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. TLB Invalidation and Lifecycle Rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-sfencevma-invalidation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.1 <code>SFENCE.VMA</code> Invalidation
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-pmp-csr-modification-invalidation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.2 PMP CSR Modification Invalidation
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Verification
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Verification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#formal-sva-assertion-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Formal SVA Assertion Table
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coverage-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Coverage Strategy
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Writeback
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Writeback
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../writeback/csr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Control and Status Registers (CSR)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../writeback/writeback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Writeback Module
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../writeback/writeback_bypass/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Writeback & Register Bypass Specs
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Overview
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-distributed-tlb-partitioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Distributed TLB Partitioning
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Distributed TLB Partitioning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tlb-entry-layout-variable-mask-cam-entry" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        TLB Entry Layout (Variable-Mask CAM Entry)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-vipt-timing-integration-and-cam-lookup-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. VIPT Timing Integration and CAM Lookup Logic
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. VIPT Timing Integration and CAM Lookup Logic">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cam-lookup-matching-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        CAM Lookup Matching Rules:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#physical-address-generation-on-hit" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Physical Address Generation on Hit:
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-replacement-policy-binary-tree-plru" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Replacement Policy: Binary Tree-PLRU
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Replacement Policy: Binary Tree-PLRU">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-tree-state-representation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.1 Tree State Representation
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-victim-selection-on-tlb-refill" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.2 Victim Selection (on TLB Refill)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-state-update-on-tlb-hit-or-refill" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.3 State Update (on TLB Hit or Refill)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-tlb-invalidation-and-lifecycle-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. TLB Invalidation and Lifecycle Rules
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. TLB Invalidation and Lifecycle Rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-sfencevma-invalidation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.1 <code>SFENCE.VMA</code> Invalidation
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-pmp-csr-modification-invalidation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.2 PMP CSR Modification Invalidation
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Verification
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Verification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#formal-sva-assertion-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Formal SVA Assertion Table
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coverage-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Coverage Strategy
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../.." class="md-path__link">
+        
+  
+  <span class="md-ellipsis">
+    Index
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="../../cache/" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Uarch
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="../overview/" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Mmu
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+  
+
+
+<h1 id="distributed-translation-lookaside-buffers-tlb">Distributed Translation Lookaside Buffers (TLB)</h1>
+<div class="admonition abstract">
+<p class="admonition-title">Module Card</p>
+<ul>
+<li><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m.12 13.5 3.74 3.74 1.42-1.41-2.33-2.33 2.33-2.33-1.42-1.41zm11.16 0-3.74-3.74-1.42 1.41 2.33 2.33-2.33 2.33 1.42 1.41z"/></svg></span> <strong>RTL file:</strong> <code>N/A</code></li>
+<li><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 2.03v2.02c4.39.54 7.5 4.53 6.96 8.92-.46 3.64-3.32 6.53-6.96 6.96v2c5.5-.55 9.5-5.43 8.95-10.93-.45-4.75-4.22-8.5-8.95-8.97m-2 .03c-1.95.19-3.81.94-5.33 2.2L7.1 5.74c1.12-.9 2.47-1.48 3.9-1.68zM4.26 5.67A9.9 9.9 0 0 0 2.05 11h2c.19-1.42.75-2.77 1.64-3.9zM2.06 13c.2 1.96.97 3.81 2.21 5.33l1.42-1.43A8 8 0 0 1 4.06 13zm5.04 5.37-1.43 1.37A10 10 0 0 0 11 22v-2a8 8 0 0 1-3.9-1.63m9.72-3.18-4.11-4.11c.41-1.04.18-2.26-.68-3.11-.9-.91-2.25-1.09-3.34-.59l1.94 1.94-1.35 1.36-1.99-1.95c-.54 1.09-.29 2.44.59 3.35.86.86 2.08 1.08 3.12.68l4.11 4.1c.18.19.45.19.63 0l1.04-1.03c.22-.18.22-.5.04-.64"/></svg></span> <strong>Status:</strong> <code>Draft</code></li>
+</ul>
+</div>
+<h2 id="1-overview">1. Overview</h2>
+<p>The <strong>Translation Lookaside Buffers (TLB)</strong> are distributed, high-speed Content-Addressable Memory (CAM) arrays embedded directly within the L1 Instruction Cache (Stage 1) and L1 Data Cache (Stage 6) subsystems. They cache recent virtual-to-physical address translations (<code>VA -&gt; PA</code>) along with pre-evaluated Physical Memory Protection (PMP) and Physical Memory Attribute (PMA) metadata to enable single-cycle memory access.</p>
+<h2 id="2-distributed-tlb-partitioning">2. Distributed TLB Partitioning</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Subsystem</th>
+<th style="text-align: center;">Parameter Name</th>
+<th style="text-align: center;">Default Entries</th>
+<th style="text-align: center;">Matching Mode</th>
+<th style="text-align: left;">Target Pipeline Stage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>I-TLB</code></td>
+<td style="text-align: center;"><code>ITLB_ENTRIES</code></td>
+<td style="text-align: center;"><code>16</code></td>
+<td style="text-align: center;">Fully-Associative CAM (Tree-PLRU)</td>
+<td style="text-align: left;">Stage 1 (Instruction Fetch)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>D-TLB</code></td>
+<td style="text-align: center;"><code>DTLB_ENTRIES</code></td>
+<td style="text-align: center;"><code>32</code></td>
+<td style="text-align: center;">Fully-Associative CAM (Tree-PLRU)</td>
+<td style="text-align: left;">Stage 6 (Memory Execution)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tlb-entry-layout-variable-mask-cam-entry">TLB Entry Layout (Variable-Mask CAM Entry)</h3>
+<p>To support arbitrary Physical Memory Protection (PMP) bounds (down to NA4 4-byte granularity and arbitrary NAPOT power-of-two regions) alongside standard Sv39 page sizes (4 KiB, 2 MiB, 1 GiB), each TLB entry covers a range equal to <span class="arithmatex">\(\min(\text{Page Size}, \text{PMP/PMA Region})\)</span>. The entry layout is defined as:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Field</th>
+<th style="text-align: center;">Width</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>valid</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Entry contains a valid translation and permission cache</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>is_bare</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Entry was allocated in BARE mode (1:1 identity mapping, bypasses page table lookup but caches PMP/PMA checks)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>asid</code></td>
+<td style="text-align: center;">16</td>
+<td style="text-align: left;">Address Space Identifier (for Sv39 mode; ignored in BARE mode)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>va_tag</code></td>
+<td style="text-align: center;">37</td>
+<td style="text-align: left;">Virtual Address tag bits (<code>VA[38:2]</code>) used for CAM comparison</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pa_tag</code></td>
+<td style="text-align: center;">54</td>
+<td style="text-align: left;">Physical Address translation payload (<code>PA[55:2]</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>mask</code></td>
+<td style="text-align: center;">37</td>
+<td style="text-align: left;">Comparison mask (<code>1</code> = match bit, <code>0</code> = ignore bit) covering <span class="arithmatex">\(\min(\text{Page Size}, \text{PMP/PMA Region})\)</span></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pte_flags</code></td>
+<td style="text-align: center;">8</td>
+<td style="text-align: left;">RISC-V PTE permission &amp; attribute flags (<code>R</code>, <code>W</code>, <code>X</code>, <code>U</code>, <code>G</code>, <code>A</code>, <code>D</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pmp_fault</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Pre-evaluated PMP access fault flag for the range covered by this entry</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pma_cacheable</code></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Pre-evaluated PMA cacheability attribute (<code>1</code> = Cacheable DRAM, <code>0</code> = Non-cacheable MMIO)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pma_amo_level</code></td>
+<td style="text-align: center;">2</td>
+<td style="text-align: left;">Pre-evaluated PMA atomic capability level (<code>None</code>, <code>Swap</code>, <code>Logical</code>, <code>Arithmetic</code>)</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">PBMT Integration into TLB Attributes</p>
+<p>Page-Based Memory Type bits (<code>PTE[62:61]</code> - <code>PBMT</code>) from the Sv39 page table are consumed by the PMA Checker during the PTW <code>REFILL</code> phase. The combined attributes (post-PBMT override) are cached directly in the TLB entry as <code>pma_cacheable</code> and <code>pma_amo_level</code>. Consequently, separate dedicated PBMT bit storage is not required in the TLB CAM, saving area and registers.</p>
+</div>
+<h2 id="3-vipt-timing-integration-and-cam-lookup-logic">3. VIPT Timing Integration and CAM Lookup Logic</h2>
+<p>To meet the 100 MHz clock timing (<span class="arithmatex">\(T_{clk} = 10\text{ ns}\)</span>) on the 130nm ASIC process, the TLBs operate in parallel with L1 Cache SRAM tag indexing using <strong>Virtually Indexed, Physically Tagged (VIPT)</strong> timing:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>                  Virtual Address (VA[38:0])
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                             │
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>           ┌─────────────────┴─────────────────┐
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>           ▼                                   ▼
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>     [ VA[11:0] Index ]                 [ VA[38:2] Lookup Tag ]
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>           │                                   │
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>           v                                   v
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    +--------------+                    +--------------+
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    | L1 Cache     |                    | TLB CAM      |
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    | SRAM Array   |                    | Array Lookup |
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    +------+-------+                    +------+-------+
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>           │ SRAM Tag                          │ Physical PA[55:2] + Flags
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>           └─────────────────┬─────────────────┘
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>                             v
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>                  [ Physical Tag Comparator ] ──► Single-Cycle Hit / Miss
+</span></code></pre></div>
+<h3 id="cam-lookup-matching-rules">CAM Lookup Matching Rules:</h3>
+<p>An entry <span class="arithmatex">\(i\)</span> is considered a <strong>Hit</strong> if all of the following conditions are met:</p>
+<ol>
+<li><code>entry.valid == 1</code></li>
+<li><strong>Address Match under Mask:</strong> <code>(VA[38:2] &amp; entry.mask) == (entry.va_tag &amp; entry.mask)</code></li>
+<li><strong>Privilege &amp; Translation Mode Match:</strong><ul>
+<li><strong>In BARE Mode</strong> (identity mapping): Matches only if <code>entry.is_bare == 1</code>.</li>
+<li><strong>In Sv39 translation Mode</strong>: Matches only if <code>entry.is_bare == 0</code> AND either:<ul>
+<li>Global Page: <code>entry.pte_flags.G == 1</code></li>
+<li>ASID Match: <code>entry.asid == satp.ASID</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="physical-address-generation-on-hit">Physical Address Generation on Hit:</h3>
+<p>When an entry hits, the resulting 56-bit Physical Address is generated by combining the translated base from <code>pa_tag</code> with unmasked low-order address bits:</p>
+<div class="arithmatex">\[
+\text{PA}[55:2] = (\text{VA}[55:2] \ \&amp; \ \sim\text{entry.mask}) \ | \ (\text{entry.pa_tag} \ \&amp; \ \text{entry.mask})
+\]</div>
+<div class="arithmatex">\[
+\text{PA}[1:0] = \text{VA}[1:0]
+\]</div>
+<p>The TLB simultaneously outputs <code>pmp_fault</code>, <code>pma_cacheable</code>, <code>pma_amo_level</code>, and <code>pte_flags</code>.</p>
+<h2 id="4-replacement-policy-binary-tree-plru">4. Replacement Policy: Binary Tree-PLRU</h2>
+<p>To guarantee deterministic, high-efficiency victim selection without the hardware overhead of true LRU, both TLBs employ a <strong>Binary Tree Pseudo-LRU (Tree-PLRU)</strong> algorithm.</p>
+<h3 id="41-tree-state-representation">4.1 Tree State Representation</h3>
+<ul>
+<li><strong>I-TLB (16 entries):</strong> 4-level binary tree requiring <span class="arithmatex">\(16 - 1 = \mathbf{15\text{ bits}}\)</span> of state (<code>plru_tree[14:0]</code>).</li>
+<li><strong>D-TLB (32 entries):</strong> 5-level binary tree requiring <span class="arithmatex">\(32 - 1 = \mathbf{31\text{ bits}}\)</span> of state (<code>plru_tree[30:0]</code>).</li>
+</ul>
+<h3 id="42-victim-selection-on-tlb-refill">4.2 Victim Selection (on TLB Refill)</h3>
+<ol>
+<li><strong>Invalid Entry Priority:</strong> If any entry has <code>valid == 0</code>, the lowest-index invalid entry is selected immediately without consulting the PLRU tree.</li>
+<li><strong>PLRU Tree Traversal:</strong> If all entries are valid (<code>valid == 1</code>), the FSM traverses the tree from root (<code>Node 0</code>):<ul>
+<li>At each node, if the bit is <code>0</code>, branch to the <strong>left</strong> child; if <code>1</code>, branch to the <strong>right</strong> child.</li>
+<li>The reached leaf index designates the replacement victim (<strong>PLRU Victim</strong>).</li>
+</ul>
+</li>
+</ol>
+<h3 id="43-state-update-on-tlb-hit-or-refill">4.3 State Update (on TLB Hit or Refill)</h3>
+<p>Upon a hit or refill at entry index <span class="arithmatex">\(K\)</span>:</p>
+<ul>
+<li>All tree node bits on the path from root (<code>Node 0</code>) to leaf <span class="arithmatex">\(K\)</span> are inverted to point <strong>away from <span class="arithmatex">\(K\)</span></strong>, protecting the newly referenced entry from eviction in subsequent cycles.</li>
+</ul>
+<h2 id="5-tlb-invalidation-and-lifecycle-rules">5. TLB Invalidation and Lifecycle Rules</h2>
+<h3 id="51-sfencevma-invalidation">5.1 <code>SFENCE.VMA</code> Invalidation</h3>
+<p>When an <code>SFENCE.VMA</code> instruction commits in Stage 7, an invalidation pulse (<code>sfence_vma_valid_i</code>) is broadcast to both TLBs:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">always_ff</span><span class="w"> </span><span class="p">@(</span><span class="k">posedge</span><span class="w"> </span><span class="n">clk_i</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="k">negedge</span><span class="w"> </span><span class="n">rst_ni</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">rst_ni</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">TLB_ENTRIES</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="n">tlb_array</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">valid</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mb">1'b0</span><span class="p">;</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="k">end</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sfence_vma_valid_i</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">TLB_ENTRIES</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">      </span><span class="c1">// Global pages (G=1) and BARE mode entries are preserved across SFENCE.VMA</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">tlb_array</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">pte_flags</span><span class="p">.</span><span class="n">G</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">tlb_array</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">is_bare</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">sfence_vma_asid_i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">16'd0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">sfence_vma_asid_i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">tlb_array</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">asid</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">            </span><span class="p">(</span><span class="n">sfence_vma_addr_i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">64'd0</span><span class="w"> </span><span class="o">||</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">             </span><span class="p">((</span><span class="n">sfence_vma_addr_i</span><span class="p">[</span><span class="mi">38</span><span class="o">:</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">tlb_array</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">mask</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">(</span><span class="n">tlb_array</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">va_tag</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">tlb_array</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">mask</span><span class="p">))))</span><span class="w"> </span><span class="k">begin</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">          </span><span class="n">tlb_array</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">valid</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mb">1'b0</span><span class="p">;</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">        </span><span class="k">end</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">      </span><span class="k">end</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="k">end</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span><span class="k">end</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="k">end</span>
+</span></code></pre></div>
+<h3 id="52-pmp-csr-modification-invalidation">5.2 PMP CSR Modification Invalidation</h3>
+<p>While <code>is_bare == 1</code> entries are exempt from <code>SFENCE.VMA</code>, they cache pre-evaluated PMP permission flags. When any PMP CSR (<code>pmpcfg*</code> or <code>pmpaddr*</code>) is written:</p>
+<ul>
+<li>The resulting pipeline flush clears all TLB entries with <code>is_bare == 1</code> to prevent stale security permissions from being used.</li>
+</ul>
+<div class="admonition info">
+<p class="admonition-title">Preservation Rules</p>
+<ul>
+<li><code>SFENCE.VMA</code> invalidates Sv39 non-global mappings matching address/ASID filters.</li>
+<li><code>PMP CSR Writes</code> invalidate all BARE mode mappings across both TLBs.</li>
+<li><code>satp</code> writes trigger a full pipeline flush and flush all non-global Sv39 entries.</li>
+<li>Entries with Global flag <code>G == 1</code> or <code>is_bare == 1</code> are <strong>exempt</strong> from standard <code>SFENCE.VMA</code> flushes and remain valid across context switches.</li>
+</ul>
+</div>
+<h2 id="6-verification">6. Verification</h2>
+<p>The TLB arrays and Tree-PLRU replacement logic are verified through formal assertion checking (SVA) and functional simulations:</p>
+<h3 id="formal-sva-assertion-table">Formal SVA Assertion Table</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Assertion ID</th>
+<th style="text-align: left;">Property / Condition</th>
+<th style="text-align: center;">Severity</th>
+<th style="text-align: center;">Checkpoint</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>SVA_TLB_01</code></td>
+<td style="text-align: left;"><code>$onehot0(hit_vector)</code></td>
+<td style="text-align: center;"><code>FATAL</code></td>
+<td style="text-align: center;"><strong>CHK-MMU-03</strong></td>
+<td style="text-align: left;">CAM lookup must never yield multiple conflicting entry hits for a single VA</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SVA_TLB_02</code></td>
+<td style="text-align: left;"><code>(sfence_vma_valid_i &amp;&amp; (is_bare || pte_flags.G)) |=&gt; (entry_valid)</code></td>
+<td style="text-align: center;"><code>ERROR</code></td>
+<td style="text-align: center;"><strong>CHK-MMU-05</strong></td>
+<td style="text-align: left;">SFENCE.VMA must strictly preserve BARE mode and Global (<span class="arithmatex">\(G=1\)</span>) mappings</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SVA_TLB_03</code></td>
+<td style="text-align: left;"><code>pmp_write_valid_i |=&gt; (!entry_valid || !is_bare)</code></td>
+<td style="text-align: center;"><code>FATAL</code></td>
+<td style="text-align: center;"><strong>CHK-MMU-05</strong></td>
+<td style="text-align: left;">Any PMP CSR write MUST invalidate all cached BARE TLB entries</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SVA_TLB_04</code></td>
+<td style="text-align: left;"><code>(sfence_vma_valid_i &amp;&amp; (sfence_asid != 0) &amp;&amp; (entry.asid != sfence_asid)) |=&gt; (entry_valid)</code></td>
+<td style="text-align: center;"><code>ERROR</code></td>
+<td style="text-align: center;"><strong>CHK-MMU-05</strong></td>
+<td style="text-align: left;">SFENCE.VMA with non-zero ASID must not invalidate entries with distinct ASIDs</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SVA_TLB_05</code></td>
+<td style="text-align: left;"><code>(refill_valid &amp;&amp; has_invalid_entry) |-&gt; (victim_idx == first_invalid_idx)</code></td>
+<td style="text-align: center;"><code>ERROR</code></td>
+<td style="text-align: center;"><strong>CHK-MMU-06</strong></td>
+<td style="text-align: left;">TLB replacement must always prioritize invalid entries over PLRU eviction</td>
+</tr>
+</tbody>
+</table>
+<h3 id="coverage-strategy">Coverage Strategy</h3>
+<ul>
+<li><strong>CAM Hit Matrix:</strong> 100% coverage of single hits across all 16/32 entry indices.</li>
+<li><strong>SFENCE Permutations:</strong> Testing full invalidate (<code>rs1=0, rs2=0</code>), address-only (<code>rs1!=0, rs2=0</code>), ASID-only (<code>rs1=0, rs2!=0</code>), and address+ASID (<code>rs1!=0, rs2!=0</code>).</li>
+<li><strong>PLRU Eviction Distribution:</strong> Uniform distribution verification across replacement cycles without hot-spot starvation.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 AGH University of Kraków; Delivered by AGH Logic Unit
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"../../..","features":["navigation.expand","navigation.sections","navigation.path"],"search":"../../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.e886cdf1.min.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
