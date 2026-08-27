@@ -298,15 +298,15 @@ sequenceDiagram
 
 ### 7.4 Reservation Invalidation
 
-Reservation is made while `LR` execution is processed. Flag and address is stored locally respectively in `reservation_valid <= 1` and `reservation_address <= addr[63:6]`.
+Reservation is established when an `LR` instruction is executed. The reservation status and physical cache-line address are stored locally: `reservation_valid <= 1` and `reservation_address <= pa[55:6]`.
 
-It is invalidated in the following cases:
+The reservation is invalidated strictly under the following conditions:
 
-1. On `Store` or `SC` instructions commit, or completion in local core
+1. On `Store` or `SC` instruction commit in Stage 7 (Commit / Retire)
 2. On `FENCE.I` or `SFENCE.VMA` commit
-3. On `satp` modification
-4. On trap
-5. On external signal from coherence bus (`dmem_snoop_invalidate_valid_i` with `dmem_snoop_invalidate_addr_i[63:6] == reservation_addr`) [*multi-hart only]
+3. On `satp` modification (address space switch)
+4. On trap / interrupt entry
+5. On external signal from coherence bus (`dmem_snoop_invalidate_valid_i` with `dmem_snoop_invalidate_addr_i[55:6] == reservation_address`) [*multi-hart only]
 
 ### 7.5 Port Arbiter and STB Drain Policy
 

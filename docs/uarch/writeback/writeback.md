@@ -34,7 +34,7 @@ Writeback module must implement the following functional requirements:
 
 | Parameter | Type | Default | Description | Architectural Impact |
 | :--- | :---: | :---: | :--- | :--- |
-| `RB_SIZE` | `int unsigned` | `8` | Total slots in the Retirment Buffer. | Determines tag width: `TAG_WIDTH = $clog2(RB_SIZE)`. Affects occupancy tracking. Must be a power of 2. |
+| `RB_SIZE` | `int unsigned` | `16` | Total slots in the Retirment Buffer. | Determines tag width: `TAG_WIDTH = $clog2(RB_SIZE)`. Affects occupancy tracking. Must be a power of 2. |
 | `TAG_WIDTH` | `int unsigned` | `$clog2(RB_SIZE)` | Bit width of tag assigned to operation. | Affects size of registers in execute modules. |
 
 ## 5. Interfaces
@@ -98,13 +98,13 @@ The Retirement Buffer is designed using a **Split-Array Architecture** to avoid 
 
 1. **Metadata Array (Static Array):**
       * **Ports:** 1 Write Port (used by Decode/Dispatch at Stage 5), 1 Read Port (used by Retire at Stage 7).
-      * **Contents:** `pc` (64-bit program counter), `is_rvc` (1-bit compressed instruction flag), `rd_addr` (5-bit), `rd_type` (1-bit), `rd_we` (1-bit), `op_class` (3-bit `op_class_t`), and CSR static metadata (`meta.csr.addr`, `meta.csr.op`, `meta.trap.is_interrupt`).
+      * **Contents:** `pc` (64-bit program counter), `is_rvc` (1-bit compressed instruction flag), `rd_addr` (5-bit), `rd_type` (1-bit), `rd_we` (1-bit), `op_class` (4-bit `op_class_t`).
       * **Behavior:** Written once at Dispatch. It is never modified by execution stages.
 
 2. **Result/Status Array (Dynamic Array):**
       * **Ports:** 1 Write Port (used by the Writeback Arbiter / Flush controller), 1 Read Port (used by Retire).
-      * **Contents:** `valid` (1-bit completion flag), `trap` (1-bit trap flag), `result` (64-bit data), and execution-dynamic status (`meta.fp.fflags`, `meta.trap.cause`).
-      * **Behavior:** Written by execution units via the Writeback Arbiter upon completion.
+      * **Contents:** `valid` (1-bit completion flag), `trap` (1-bit trap flag), `result` (64-bit data), and the unified 14-bit `meta` (`rb_meta_t` carrying CSR `{op, addr}`, System `{sys_op}`, FPU `fflags`, or Trap `{cause, is_interrupt}`).
+      * **Behavior:** Written by execution units via the Writeback Arbiter upon completion. Single-cycle control instructions (CSR, SYS, Decode-Trap, FENCE) pass their payload through the ALU pipeline channel at Dispatch, entering the Result Array at Writeback.
 
 #### Register contents
 
@@ -112,14 +112,14 @@ The Retirement Buffer is designed using a **Split-Array Architecture** to avoid 
 | :--- | :---: | :---: | :--- |
 | `valid` | `logic` | 1 | Operation completed, result/metadata valid (in Result Array) |
 | `trap` | `logic` | 1 | Instruction encountered a trap (in Result Array) |
-| `op_class` | `op_class_t` | 3 | Class of operation (in Metadata Array) |
+| `op_class` | `op_class_t` | 4 | Class of operation (in Metadata Array) |
 | `rd_we` | `logic` | 1 | Destination register write enable (in Metadata Array) |
 | `rd_type` | `logic` | 1 | Destination register type (`0` = GPR, `1` = FPR) (in Metadata Array) |
 | `rd_addr` | `logic` | 5 | Destination register address (in Metadata Array) |
 | `pc` | `logic` | 64 | Program Counter (in Metadata Array) |
 | `is_rvc` | `logic` | 1 | RVC compressed instruction indicator (in Metadata Array) |
 | `result` | `logic` | 64 | Execution result / CSR `wdata` / Trap `badaddr` (in Result Array) |
-| `meta` | `rb_meta_t` | 14 | Packed union: FPU flag `fflags` / trap `cause`/`is_interrupt` / CSR `addr`/`op` |
+| `meta` | `rb_meta_t` | 14 | Unified packed union: CSR `{op, addr}`, SYS `{sys_op}`, FPU `fflags`, Trap `{cause, is_interrupt}` (in Result Array) |
 
 #### Invalidation upon Flush:
 When a pipeline flush is triggered:

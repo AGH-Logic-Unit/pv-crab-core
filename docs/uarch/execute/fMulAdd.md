@@ -41,7 +41,7 @@ The module is required to implement the following RISC-V Unprivileged ISA specif
 | `operand_a_i` | `logic` | 64 | IN | First floating-point operand (multiplicand, or first term for FADD/FSUB) |
 | `operand_b_i` | `logic` | 64 | IN | Second floating-point operand (multiplier, or set to 1.0 for FADD/FSUB) |
 | `operand_c_i` | `logic` | 64 | IN | Third floating-point operand (addend for FMA, second term for FADD/FSUB, tied to 0 for FMUL) |
-| `operator_i` | `logic` | 3 | IN | Operation encoding (FADD, FSUB, FMUL, FMADD, FMSUB, etc.) |
+| `operator_i` | `logic` | 4 | IN | Operation encoding (FADD, FSUB, FMUL, FMADD, FMSUB, etc. in SP and DP) |
 | `rm_i` | `logic` | 3 | IN | Rounding mode from floating-point control register `frm` |
 | `wb_valid_o` | `logic` | 1 | OUT | Writeback handshake indicating valid result is ready |
 | `wb_ready_i` | `logic` | 1 | IN | Handshake indicating Writeback Arbiter can accept result |

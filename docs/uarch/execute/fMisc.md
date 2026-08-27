@@ -50,6 +50,7 @@ The module is required to implement the following RISC-V Unprivileged ISA specif
 | :--- | :---: | :---: | :---: | :--- |
 | `clk_i` | `logic` | 1 | IN | Clock signal |
 | `rst_ni` | `logic` | 1 | IN | Asynchronous active-low reset signal |
+| `flush_i` | `logic` | 1 | IN | Pipeline flush signal (resets execution state to IDLE) |
 | `disp_valid_i` | `logic` | 1 | IN | Dispatcher handshake indicating valid instruction |
 | `disp_ready_o` | `logic` | 1 | OUT | Handshake indicating unit can accept new inputs |
 | `disp_headers_i`| `exe_headers_t`| - | IN | Input execution stage header metadata from Dispatcher |

@@ -50,7 +50,11 @@ For area optimization, both `ADD` and `SUB` (and their `W` variants) utilize a s
 Implemented as a 64-bit barrel shifter, it supports arithmetic right (`SRA`/`SRAW`) and both logical right (`SRL`/`SRLW`) and logical left (`SLL`/`SLLW`) shifts.
 
 ### 5.3 Comparator
-The ALU generates logical outputs for `SLT`/`SLTU` operations. Additionally, it produces a binary flag for branch instructions (`BEQ`, `BNE`, `BLT`, `BGE`, `BLTU`, `BGEU`) by comparing operands and checking flags: zero, negative, and carry-out. This unit is implemented by reusing the subtraction hardware.
+The ALU generates logical comparison outputs for `SLT`/`SLTU` operations by reusing the subtraction datapath. Branch instruction conditions (`BEQ`, `BNE`, `BLT`, `BGE`, `BLTU`, `BGEU`) map directly onto these comparison mechanisms:
+
+* `BEQ` / `BNE`: Evaluated via equality comparison / `zero_o` from subtraction.
+* `BLT` / `BGE`: Evaluated via signed comparison (`SLT` result bit `result_o[0]`).
+* `BLTU` / `BGEU`: Evaluated via unsigned comparison (`SLTU` result bit `result_o[0]`).
 
 ### 5.4 Operations
 
