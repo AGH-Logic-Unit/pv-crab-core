@@ -28,7 +28,7 @@ repos:
       entry: verible-verilog-format
       language: system
       types_or: [verilog, system-verilog]
-      args: [--flagfile, .rules.verible_format, --inline]
+      args: [--flagfile, .rules.verible_format, --inplace]
 
   - repo: local
     hooks:
