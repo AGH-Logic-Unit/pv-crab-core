@@ -29,7 +29,7 @@ repos:
       language: system
       types_or: [verilog, system-verilog]
       exclude: ^vendor/
-      args: [--flagfile, .rules.verible_format, --inline]
+      args: [--flagfile, .rules.verible_format, --inplace]
 
   - repo: local
     hooks:
