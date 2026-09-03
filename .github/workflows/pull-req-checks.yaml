@@ -129,7 +129,17 @@ jobs:
           if [ -n "$FILES" ]; then
             echo "Checking formatting for:"
             echo "$FILES"
-            verible-verilog-format --verify --flagfile=.rules.verible_format $FILES
+            failed=0
+            for file in $FILES; do
+              if ! verible-verilog-format --verify --flagfile=.rules.verible_format "$file"; then
+                echo "❌ Formatting check failed for: $file"
+                failed=1
+              fi
+            done
+            if [ $failed -ne 0 ]; then
+              echo "Error: One or more Verilog/SystemVerilog files are not formatted correctly."
+              exit 1
+            fi
           else
             echo "No Verilog/SystemVerilog files modified. Skipping check."
           fi

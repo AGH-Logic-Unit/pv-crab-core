@@ -2,20 +2,25 @@
 title: Writeback & Register Bypass Specs
 ---
 
+!!! abstract "Module Card"
+    * :material-progress-wrench: **Status:** `Not ratified - notes only`
+
 # Writeback & Register Bypass Specification
 
 ## 1. Overview
-The Crab Core execution stage implements a decoupled, out-of-order execution completion pipeline with in-order dispatch. Because execution units have varying latencies (combinational, pipelined, or multi-cycle FSM), the core utilizes a Scoreboard to track register dependencies and a central Writeback Buffer. A dynamic register bypass network is implemented to prevent dependency stalls from degrading performance.
+The Crab Core execution stage implements a decoupled execution completion pipeline with in-order dispatch and in-order retirement. To maximize performance while minimizing area and timing complexity, the core utilizes a Scoreboard to track register dependencies and a simplified, low-overhead register forwarding (bypass) network.
+
+Instead of complex multi-entry multiplexing from the writeback/retirement buffers, the forwarding network directly connects the outputs of the execution modules to the Dispatch stage.
 
 ---
 
 ## 2. Register Scoreboard & Tracking
 
 To track outstanding writes to the Register File (GPR/FPR):
-* **Override Flag:** Each register is associated with an `override` (or pending) status bit.
-* **Instruction Tag:** Each register tracks a `tag` (4 bits) matching the instruction allocated to write to it.
-* **Allocation:** When an instruction is dispatched, its destination register `rd` is marked as pending, and its `tag` is registered.
-* **Commit:** When the instruction completes writeback and commits to the register file, the pending bit is cleared.
+
+* **Pending Status (Busy Bit):** Each register is associated with a single pending (busy) bit in the Scoreboard.
+* **Allocation:** When an instruction is dispatched, its destination register `rd` is marked as pending (busy).
+* **Commit:** When the instruction completes writeback and commits to the architectural Register File at the Retirement stage (Stage 7), the pending bit is cleared.
 
 ---
 
@@ -29,26 +34,27 @@ To track outstanding writes to the Register File (GPR/FPR):
 
 ## 4. Register Bypassing (Forwarding)
 
-To maximize Instruction Per Cycle (IPC) performance, operands are bypassed directly to the dispatcher's execution stage:
+To maximize Instruction Per Cycle (IPC) performance, a simple, direct forwarding network is implemented from the execution module outputs back to the Dispatcher's operand selection multiplexers.
+
+Unlike complex designs, operands are **not** forwarded from the Retirement FIFO (Stage 7) or the Writeback Buffer. Consequently, bypassed data is only available for a limited window.
 
 ### 4.1 0-Cycle Combinational ALU Bypass
-* Since the ALU is purely combinational, its output is available in the dispatch cycle.
-* The combinational output is routed directly back to the dispatcher's operand multiplexers. This allows back-to-back dependent ALU instructions to execute without incurring any stall cycles.
+* Since the ALU is purely combinational, its output is available in the same cycle as dispatch.
+* The combinational output is routed directly back to the dispatcher's operand multiplexers, allowing back-to-back dependent ALU instructions to execute without stalls.
 
-### 4.2 Output Register Bypassing (1-Cycle Latency)
-* If an execution unit completes but is stalled by the arbiter, its result sits in its output register (`wb_result_o`).
-* The bypass network monitors these unread output registers. If a dispatched instruction depends on a pending register and its tag matches the tag of an active output register, the operand is bypassed directly from `wb_result_o`.
-
-### 4.3 Writeback Buffer Bypassing
-* Completed instructions waiting in the Writeback Buffer to write to the Register File also participate in the bypass network. Operands are forwarded from matching tag entries in the Writeback Buffer.
+### 4.2 1-Cycle Execute Output Forwarding
+* When an execution unit completes its operation and drives its result on `wb_result_o` (valid when `wb_valid_o` is asserted), a dependent instruction in the Dispatch stage (Stage 5) can read this value directly.
+* **1-Cycle Window Constraint:** The bypassed data is **only available for exactly one cycle**—the cycle in which the execution unit completes and exposes its result.
+* **Valid Flag Clearing:** This 1-cycle availability window is a direct consequence of the writeback handshake. When the Writeback Arbiter reads/accepts the result from the execution unit to buffer it into the Retirement FIFO (Stage 7), the execution unit immediately clears its `wb_valid_o` flag in the next clock cycle. This prevents the forwarding network from pulling duplicate or stale data from completed units.
+* If the dependent instruction in the Dispatch stage cannot be dispatched in that exact cycle (due to structural stalls, branch mispredict flushes, or other hazards), the result is buffered into the Retirement FIFO (Stage 7) and is **no longer available** on the forwarding network. In this case, the dependent instruction must stall until the writing instruction commits (retires) and writes its result to the Register File, after which it is read normally from the Register File.
 
 ---
 
 ## 5. Physical Layout & Area Efficiency
 
-By restricting bypass forwarding inputs to only:
-1. The Writeback Buffer entries (typically 2–4 slots).
-2. The active execution unit output registers (`wb_result_o`).
-3. The combinational ALU output.
+By restricting bypass forwarding inputs strictly to:
 
-The core avoids routing bypass lines from the middle of deep internal pipelines (like the 3-stage multiplier or FPU). This centralized bypass multiplexing structure minimizes silicon area and simplifies timing closure.
+1. The combinational ALU output (0-cycle).
+2. The active execution module outputs (`wb_result_o` from active units).
+
+The core eliminates multiplexing logic from internal pipeline stages and the Writeback Buffer/Retirement FIFO. This direct forwarding network significantly reduces silicon area, cuts down wire routing complexity, and simplifies timing closure in the Dispatch-to-Execute path.

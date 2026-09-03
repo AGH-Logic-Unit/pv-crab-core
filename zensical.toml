@@ -2,13 +2,15 @@
 site_name = "Crab Docs"
 site_description = "Pulsar-V Crab Core specification for RISC-V RV64GC"
 site_author = "AGH Logic Unit"
-copyright = "Copyright &copy; <year> AGH Logic Unit"
+copyright = "Copyright &copy; 2026 AGH University of Kraków; Delivered by AGH Logic Unit"
+repo_url = "https://github.com/AGH-Logic-Unit/pv-crab-core"
 extra_javascript = [
     "javascripts/mathjax.js",
     "https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js",
 ]
 
 [project.theme]
+language = "en"
 variant = "modern"
 palette.scheme = "slate"
 palette.primary = "deep orange"

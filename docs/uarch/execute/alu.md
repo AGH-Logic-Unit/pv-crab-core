@@ -37,7 +37,7 @@ The module is required to fully implement the following RISC-V Unprivileged ISA 
 | `operand_b_i` | `logic` | 64 | IN | Second operand (typically RS2 or IMM) |
 | `operator_i` | `logic` | 5 | IN | Operation code provided by Decoder |
 | `result_o` | `logic` | 64 | OUT | Result of selected operation |
-| `branch_valid_o` | `logic` | 1 | OUT | Flag indicating that branch comparison condition was met `1` or not `0` |
+| `zero_o` | `logic` | 1 | OUT | Flag indicating result being zero |
 
 ## 5. Functional Description
 
@@ -69,6 +69,7 @@ The ALU generates logical outputs for `SLT`/`SLTU` operations. Additionally, it 
 
 ### 5.5 32-bit Operations (W-variants)
 For instructions with the `W` suffix (`ADDW`, `SUBW`, `SLLW`, `SRLW`, `SRAW`):
+
 * The operations are performed on the lower 32 bits of the inputs.
 * The 32-bit result is sign-extended to 64 bits before being driven on `result_o`.
 * For shift operations (`SLLW`, `SRLW`, `SRAW`), the shift amount is truncated to 5 bits (`B[4:0]`).

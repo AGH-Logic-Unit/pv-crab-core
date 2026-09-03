@@ -24,27 +24,58 @@ To prevent DRAM or system bus write latency from stalling the execution pipeline
 
 ## 3. Atomic Operations (AMO)
 
-The core utilizes a **Core-Side RMW** execution model to maintain low AMO latencies:
-* The LSO-AMO module performs the atomic calculations locally.
-* On an AMO hit, the L1 D-Cache controller ensures the line is in Exclusive or Modified state. The local FSM performs the read, logic modification, and writeback within the L1 cache.
-* If a miss occurs, the cache line is loaded into L1 first, and then the RMW sequence is completed.
+The system utilizes a **Cache-Side RMW** execution model to simplify the core execution stages and optimize bus transactions:
+* The L1 D-Cache controller performs the atomic calculations and RMW sequence locally.
+* The LSO-AMO module in the core sends the target physical address, operand data, and operation code (`dmem_amo_op_o` carrying the 5-bit RISC-V `funct5` value) to the L1 D-Cache.
+* The L1 D-Cache controller reads the target word, sends the original (unmodified) data back to the core on `dmem_rdata_i` (to write back to the destination GPR/FPR), applies the arithmetic/logical operation, and writes the modified result back to the cache line in a single atomic sequence.
+* If a cache miss occurs, the L1 Cache controller loads the targeted line first (using standard Write-Allocate fetch) before performing the atomic RMW sequence.
 
 ---
 
 ## 4. Load-Reserved / Store-Conditional (LR/SC) Reservation
 
 To manage memory atomicity and prepare the core for multi-hart coherence:
-
 * **Local Reservation Controller:** In single-hart operation, reservations are registered and tracked inside the core's local logic.
 * **Cache-Line Granularity:** Reservations are tracked at the **cache-line boundary** (comparing only the upper address bits `[63:6]` for a 64-byte line) instead of exact byte matches.
 * **Coherence Snoop Invalidation:** When the core receives an external snoop invalidation indicating another controller has written to the cached address, the D-Cache controller asserts `disp_snoop_invalidate_valid_i` along with the address to invalidate the reservation.
-* **Context Clear:** The reservation is automatically cleared on interrupts, context switches, or any standard store instructions.
+* **Context Clear:** The reservation is automatically cleared on interrupts, context switches (specifically any write to the `satp` address translation CSR), or any standard store instructions executed by the local hart.
 
 ---
 
-## 5. Line Locking Protocol (`dmem_lock_o`)
+## 5. Line Locking Protocol (Deprecated)
 
-During active AMO FSM sequences, the LSO-AMO module asserts the `dmem_lock_o` signal.
-* When `dmem_lock_o` is asserted, the L1 D-Cache controller must lock the targeted cache line.
-* The cache controller blocks external snoop requests and prevents cache-line evictions for the locked line.
-* The lock is held through the read request, modify, and writeback phases, and is released only when `dmem_lock_o` is deasserted.
+With the transition to **Cache-Side RMW**, the physical `dmem_lock_o` signal at the core-to-cache interface is **deprecated**:
+* Atomicity is managed internally by the L1 D-Cache controller's state machine.
+* The L1 D-Cache controller locks the targeted cache line from external evictions or snoop invalidations during its internal hit/miss/modify cycles, guaranteeing that no other agent can modify the line until the local RMW is completed.
+
+---
+
+## 6. MMIO Bypass Routing (Non-Cacheable Accesses)
+
+To support peripherals (UART, USB, SPI) and memory-mapped configuration registers, the L1 D-Cache controller implements a **PMA-based Bypass Route**:
+
+* **PMA Check:** Any access where the Physical Address is in the MMIO range (typically `PA < 0x8000_0000`) is classified as non-cacheable.
+* **Cache Array Isolation:** For non-cacheable accesses, the cache controller does not read the tag arrays or allocate lines in the data SRAM.
+* **Direct Bus Routing:** The transaction is routed directly to the external system bus (Wishbone B4 Master) as a single-beat transfer with the size matching the original request (byte, halfword, word, or doubleword).
+* **Synchronization:** The cache controller waits for the external Wishbone bus acknowledgment (`ACK`) and forwards it directly to the core on `dmem_rvalid_i` along with the read data.
+
+---
+
+## 7. Cache Maintenance Operations (DMA Coherence)
+
+Because the L1 D-Cache does not implement hardware bus snooping for DMA transfers in LiteX, the cache controller must provide a hardware interface for **Software-Managed Coherence**:
+
+### 7.1 Interface CSR Registers
+The cache controller exposes three memory-mapped registers (or custom CSRs) to the CPU:
+1. **`DCACHE_CLEAN_ADDR`:** Specifies the starting physical address of the range to be cleaned.
+2. **`DCACHE_INVALIDATE_ADDR`:** Specifies the starting physical address of the range to be invalidated.
+3. **`DCACHE_MAINT_LEN`:** Specifies the length of the range (in bytes) and triggers the operation when written.
+
+### 7.2 Operation Flow
+* **Cache Clean (Flush):**
+  * When `DCACHE_MAINT_LEN` is written after setting `DCACHE_CLEAN_ADDR`, the cache controller steps through the target cache lines.
+  * If a line is **hit** and marked **dirty**, the controller schedules an eviction, writing the line back to main memory (DDR/HyperRAM) and clearing the dirty bit.
+* **Cache Invalidate:**
+  * When `DCACHE_MAINT_LEN` is written after setting `DCACHE_INVALIDATE_ADDR`, the cache controller steps through the target cache lines.
+  * The controller clears the valid bit (`valid = 0`) of all matching cache lines in the specified address range, discarding their cached contents.
+* **Stalling:** During a Cache Maintenance operation, the cache controller deasserts `dmem_gnt_i` to the CPU core, stalling new memory requests until the operation completes.

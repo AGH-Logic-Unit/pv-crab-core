@@ -1,24 +1,21 @@
 ---
-title: Crab Core
+title: Index
 ---
 
 # Pulsar-V in-order core - Crab
 
 Welcome to the official **Crab Core** documentation, an in-order core implementing RV64GC.
 
-## About Project
+## Documentation Map
 
-Crab is an in-order RISC-V core (hart) designed to implement the RV64GC ISA for general-purpose CPU usage. It is performance optimized for both FPGA and ASIC implementations.
-
-## Structure of Documentation
-
-Documentation is structured as follows:
-
-*   **Guides & Guidelines:**
+*   **Project Overview:**
+    *   [About & Goals](about.md) — High-level description, goals, and key hardware requirements of Crab Core.
     *   [Repository Standards](rules.md) — Guidelines for code quality, formatting, verification, and contribution workflows.
+
 *   **Microarchitecture (uArch):** Detailed specifications of the core stages and components:
     *   **Common Types:**
         *   [uArch Types](uarch/types.md) — Base data types and headers.
+        *   [uArch Parameters](uarch/parameters.md) - Global parameters and config.
     *   **Memory Subsystem:**
         *   [L1 Data Cache Design](uarch/cache.md) — Write policy, local reservations, and core-side AMOs.
     *   **Execute Stage (`execute/`):**
@@ -30,7 +27,9 @@ Documentation is structured as follows:
         *   [FP Divider/Sqrt (fDiv)](uarch/execute/fDiv.md) — Non-pipelined division and square root.
         *   [FP Miscellaneous (fMisc)](uarch/execute/fMisc.md) — Moves, conversions, comparisons, and classification.
     *   **Writeback Stage (`writeback/`):**
-        *   [Writeback & Register Bypass](uarch/writeback/writeback_bypass.md) — Scoreboarding, priority writeback, and data forwarding.
+        *   [Register Bypass Notes](uarch/writeback/writeback_bypass.md) — Scoreboarding, priority writeback, and data forwarding.
+        *   [Writeback Stage](uarch/writeback/writeback.md) — Retirement Buffer (ROB) layout, Split-Array ROB, dynamic stalls, and retirement commits.
+        *   [Control & Status Registers (CSR)](uarch/writeback/csr.md) — System state, privilege levels, trap handling, and Physical Memory Protection (PMP).
 
 ---
 !!! note "Project Status"

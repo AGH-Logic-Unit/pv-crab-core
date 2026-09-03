@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026 AGH University of Krakow
+# Developed by AGH Logic Unit
+# SPDX-License-Identifier: Apache-2.0
 """
 Simple filelist generator for Verible Language Server and Simulators.
 
