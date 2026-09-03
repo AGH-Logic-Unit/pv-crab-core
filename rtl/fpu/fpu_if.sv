@@ -1,3 +1,7 @@
+// Copyright (c) 2026 AGH University of Krakow
+// Developed by AGH Logic Unit
+// SPDX-License-Identifier: Apache-2.0
+
 import fpu_pkg::*;
 import defs_pkg::*;
 
@@ -62,9 +66,8 @@ endinterface  // fdiv_if
 
 interface fmuladd_if #(
   // DEFAULT IS DOUBLE PRECISION
-  parameter int EXP_WIDTH  = 11,
-  parameter int SIG_WIDTH  = 53,
-  parameter int MULADD_LAT = 3
+  parameter int EXP_WIDTH = 11,
+  parameter int SIG_WIDTH = 53
 );
   logic                                     clk_i;
   logic                                     rst_ni;

@@ -1,6 +1,10 @@
-`include "/workspaces/pv-crab-core/vendor/HardFloat-1/source/mulAddRecFN.v"
-`include "/workspaces/pv-crab-core/vendor/HardFloat-1/source/addRecFN.v"
-`include "/workspaces/pv-crab-core/vendor/HardFloat-1/source/mulRecFN.v"
+// Copyright (c) 2026 AGH University of Krakow
+// Developed by AGH Logic Unit
+// SPDX-License-Identifier: Apache-2.0
+
+`include "mulAddRecFN.v"
+`include "addRecFN.v"
+`include "mulRecFN.v"
 
 import fpu_pkg::*;
 import defs_pkg::*;
@@ -10,46 +14,26 @@ module fMulAdd #(
   parameter int SIG_WIDTH  = 53,
   parameter int MULADD_LAT = 3
 ) (
-  fmuladd_if#(
-    .EXP_WIDTH (EXP_WIDTH),
-    .SIG_WIDTH (SIG_WIDTH),
-    .MULADD_LAT(MULADD_LAT)
-  ).dut fpu_i
+  fmuladd_if.dut fpu_i
 );
   // Output selector
-  logic  [(EXP_WIDTH+SIG_WIDTH-1):0] add_out_rec;
-  logic  [(EXP_WIDTH+SIG_WIDTH-1):0] mul_out_rec;
-  logic  [(EXP_WIDTH+SIG_WIDTH-1):0] madd_out_rec;
+  logic  [  (EXP_WIDTH+SIG_WIDTH):0] add_out_rec;
+  logic  [  (EXP_WIDTH+SIG_WIDTH):0] mul_out_rec;
+  logic  [  (EXP_WIDTH+SIG_WIDTH):0] madd_out_rec;
 
   flag_t                             add_exc;
   flag_t                             mul_exc;
   flag_t                             madd_exc;
 
-  logic  [(EXP_WIDTH+SIG_WIDTH-1):0] out_rec_sel;
+  logic  [  (EXP_WIDTH+SIG_WIDTH):0] out_rec_sel;
   logic  [(EXP_WIDTH+SIG_WIDTH-1):0] out_ieee_sel;
   flag_t                             exc_sel;
-  /*
-  /////////////
-  // MAPPERS //
-  /////////////
 
-  function automatic logic [2:0] hf_round(input rounding_m_t rm);
-    unique case (rm)
-      ROUND_NEAR_EVEN:   return 3'b000;
-      ROUND_NEAR_MAXMAG: return 3'b001;
-      ROUND_MINMAG:      return 3'b010;
-      ROUND_MIN:         return 3'b011;
-      ROUND_MAX:         return 3'b100;
-      ROUND_ODD:         return 3'b110;
-      default:           return 3'b000;
-    endcase
-  endfunction
-*/
   /////////////////////
   // BERKLEY MODULES //
   /////////////////////
 
-  logic [(EXP_WIDTH+SIG_WIDTH-1):0] a_rec, b_rec, c_rec;
+  logic [(EXP_WIDTH+SIG_WIDTH):0] a_rec, b_rec, c_rec;
 
   // IEEE -> recFN
   fNToRecFN #(
@@ -152,10 +136,10 @@ module fMulAdd #(
   // PIPELINE //
   //////////////
 
-  logic                                     valid_pipe  [fpu_i.MULADD_LAT];
-  logic         [(EXP_WIDTH+SIG_WIDTH-1):0] result_pipe [fpu_i.MULADD_LAT];
-  flag_t                                    flag_pipe   [fpu_i.MULADD_LAT];
-  exe_headers_t                             headers_pipe[fpu_i.MULADD_LAT];
+  logic                                     valid_pipe  [MULADD_LAT];
+  logic         [(EXP_WIDTH+SIG_WIDTH-1):0] result_pipe [MULADD_LAT];
+  flag_t                                    flag_pipe   [MULADD_LAT];
+  exe_headers_t                             headers_pipe[MULADD_LAT];
 
   // Backpressure
   assign fpu_i.disp_ready_o = fpu_i.wb_ready_i;
@@ -164,21 +148,21 @@ module fMulAdd #(
   integer i;
   always_ff @(posedge fpu_i.clk_i or negedge fpu_i.rst_ni) begin
     if (!fpu_i.rst_ni) begin
-      for (i = 0; i <= fpu_i.MULADD_LAT - 1; i++) begin
+      for (i = 0; i <= MULADD_LAT - 1; i++) begin
         valid_pipe[i]   <= 1'b0;
         result_pipe[i]  <= '0;
         flag_pipe[i]    <= '0;
         headers_pipe[i] <= '0;
       end
     end else if (fpu_i.wb_ready_i) begin
-      for (i = fpu_i.MULADD_LAT - 1; i > 0; i--) begin
+      for (i = MULADD_LAT - 1; i > 0; i--) begin
         valid_pipe[i]   <= valid_pipe[i-1];
         result_pipe[i]  <= result_pipe[i-1];
         flag_pipe[i]    <= flag_pipe[i-1];
         headers_pipe[i] <= headers_pipe[i-1];
       end
 
-      valid_pipe[0]   <= fpu_i.wb_ready_i;
+      valid_pipe[0]   <= fpu_i.disp_valid_i;
       result_pipe[0]  <= out_ieee_sel;
       flag_pipe[0]    <= exc_sel;
       headers_pipe[0] <= fpu_i.disp_headers_i;
@@ -186,8 +170,8 @@ module fMulAdd #(
   end
 
   // Outputs
-  assign fpu_i.wb_valid_o   = valid_pipe[fpu_i.MULADD_LAT-1];
-  assign fpu_i.wb_result_o  = result_pipe[fpu_i.MULADD_LAT-1];
-  assign fpu_i.wb_fflags_o  = `logic(flag_pipe[fpu_i.MULADD_LAT-1]);
-  assign fpu_i.wb_headers_o = headers_pipe[fpu_i.MULADD_LAT-1];
+  assign fpu_i.wb_valid_o   = valid_pipe[MULADD_LAT-1];
+  assign fpu_i.wb_result_o  = result_pipe[MULADD_LAT-1];
+  assign fpu_i.wb_fflags_o  = flag_pipe[MULADD_LAT-1];
+  assign fpu_i.wb_headers_o = headers_pipe[MULADD_LAT-1];
 endmodule  // fMulAdd
