@@ -37,8 +37,8 @@ stateDiagram
 
 ### 3.1 State `IDLE`
 * **Operation:** Idle state. Deasserts memory request signals and holds `disp_ready_o = 1` if no internal pipeline stall or pending serialized access is active.
-* **Transition to `TLB_CHECK`:** Triggered when a valid uOp is issued by Dispatch (`disp_valid_i == 1 && disp_ready_o == 1`). Latches instruction metadata (`op`, `addr`, `wdata`, `size`, `tag`).
-* **Ordering Constraint (AMO / MMIO):** Atomic Memory Operations (AMOs) and uncacheable MMIO accesses remain held in `IDLE` until the instruction reaches the head of the ROB in Stage 7 (Commit) (`is_rob_head_i == 1`) and the Store Buffer is completely empty (`stb_empty_i == 1`). While awaiting these conditions, **`disp_ready_o` is deasserted (`0`)** to prevent Dispatch from issuing subsequent instructions.
+* **Transition to `TLB_CHECK`:** Triggered when a valid standard memory uOp is issued by Dispatch (`disp_valid_i == 1 && disp_ready_o == 1`). Latches instruction metadata (`op`, `addr`, `wdata`, `size`, `tag`).
+* **Ordering Constraint (AMO / MMIO):** When an Atomic Memory Operation (AMO) or uncacheable MMIO access is dispatched, the LSU accepts and latches the instruction into its internal holding register (`lsu_holding_valid <= 1'b1`) during the initial handshake cycle (`disp_valid_i && disp_ready_o`). Once latched, **`disp_ready_o` is deasserted (`0`)** to prevent Dispatch from issuing subsequent memory requests until the held AMO reaches the head of the ROB in Stage 7 (Commit) (`is_rob_head_i == 1`) and the Store Buffer is completely empty (`stb_empty_i == 1`). Once both conditions are fulfilled, the FSM transitions to `TLB_CHECK` to execute the atomic transaction.
 
 ### 3.2 State `TLB_CHECK` (Address & Security Evaluation)
 * **Operation:** Address translation, security checks, and exception filtering are strictly evaluated in priority order:
@@ -88,7 +88,7 @@ The LSU FSM control path is verified against the following formal properties:
 | `SVA_FSM_02` | `(fsm_state == REQUEST && !dmem_gnt_i) |=> (fsm_state == REQUEST)` | `ERROR` | **CHK-MMU-02** | FSM must hold in REQUEST until L1 D-Cache grants the address phase |
 | `SVA_FSM_03` | `flush_i |=> (fsm_state == IDLE)` | `FATAL` | **CHK-PIPE-03** | FSM must abort any speculative state to IDLE in 1 cycle on pipeline flush |
 | `SVA_FSM_04` | `(tlbpm_err_r_i && fsm_state == TLB_CHECK) |=> (wb_cause_o == tlbpm_cause_r_i)` | `ERROR` | **CHK-MMU-01** | LSU exception cause must strictly propagate the exact cause code from D-TLB |
-| `SVA_FSM_05` | `(is_amo && fsm_state == IDLE && !is_rob_head_i) |-> (disp_ready_o == 1'b0)` | `ERROR` | **CHK-LSU-04** | Dispatch ready must be deasserted while awaiting ROB commit head for AMO |
+| `SVA_FSM_05` | `(is_amo && lsu_holding_valid && !is_rob_head_i) |-> (disp_ready_o == 1'b0)` | `ERROR` | **CHK-LSU-04** | Dispatch ready must be deasserted while awaiting ROB commit head for held AMO |
 
 ### Testbench Coverage Goals
 * **State Coverage:** 100% reachability of all FSM states (`IDLE`, `TLB_CHECK`, `REQUEST`, `WAIT`, `EXCEPTION`, `RESPOND`).

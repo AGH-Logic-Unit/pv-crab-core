@@ -6,6 +6,7 @@ title: Types
 
 | Date | Version | Description |
 | :-- | :--: | :-- |
+| 2026-09-06 | v0.3 | Added formal definition of rb_static_meta_t for the Split-Array ROB Metadata Array written at Dispatch. |
 | 2026-08-05 | v0.2 | Standardized type names to use the _t suffix, cleaned up and moved private Writeback ROB types to their respective files, and added priv_mode_t. |
 | 2026-04-26 | v0.1 | Initial draft |
 
@@ -84,6 +85,19 @@ Used by the MMU, D-TLB, and LSU to enforce physical memory attribute atomic oper
 | `PMA_AMO_SWAP` | `2'b01` | Swap Only | Supports `AMOSWAP` only (simple synchronization registers). |
 | `PMA_AMO_LOGICAL` | `2'b10` | Logical | Supports `AMOSWAP`, `AMOAND`, `AMOOR`, `AMOXOR` (bitmask controllers). |
 | `PMA_AMO_ARITHMETIC` | `2'b11` | Arithmetic & Full | Supports all AMOs (`AMOADD`, `AMOMIN`, `AMOMAX`, etc.) and `LR/SC`. |
+
+### 2.7 `rb_static_meta_t` (Static Metadata Array Entry)
+
+Written exclusively at **Stage 5 (Dispatch)** into the single-write-port Metadata Array of the Split-Array ROB, and read at **Stage 7 (Commit)**. It encapsulates all static instruction attributes required for retirement and architectural register update:
+
+| Field Name | Type / Width | Description |
+| :--- | :---: | :--- |
+| `pc` | `logic [63:0]` | Program Counter of the instruction. |
+| `rd_addr` | `logic [4:0]` | Destination register address (`x0`–`x31` or `f0`–`f31`). |
+| `rd_type` | `logic` | Destination register file (`0` = GPR, `1` = FPR). |
+| `rd_we` | `logic` | Destination register write enable. |
+| `op_class` | `op_class_t` | 4-bit instruction class governing commit actions. |
+| `is_rvc` | `logic` | Compressed 16-bit RVC instruction flag. |
 
 
 ## 3. Future Scalability (Superscalar Upgrades)

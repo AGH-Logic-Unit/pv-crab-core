@@ -12,14 +12,15 @@ title: Arithmetic Logic Unit
 
 | Date | Version | Description |
 | :-- | :--: | :-- |
+| 2026-09-06 | v0.2 | Clarified pipeline framing: combinational ALU datapath operates in Stage 6 framed by physical registers R_DISP_EX (Stage 5/6) and R_EX_WB (Stage 6/7), yielding 1-cycle execution latency with 0-stall EX-to-EX forwarding. |
 | 2026-04-26 | v0.1 | First draft |
 
 ## 2. Overview
 
-The ALU module is a stateless, purely **combinational** arithmetic-logical unit for the RISC-V 64-bit architecture located in the execution (EX) stage of the Pulsar-V pipeline. It performs *arithmetic*, *logical*, and *shift* operations on the provided inputs.
+The ALU module is a stateless, **combinational** arithmetic-logical unit for the RISC-V 64-bit architecture located in the execution (EX / Stage 6) stage of the Crab Core pipeline. It performs *arithmetic*, *logical*, and *shift* operations on the provided inputs.
 
-!!! info "Characteristics"
-    This module is **purely combinational** and has no state or buffer registers, therefore it does not perform any decisions on its own.
+!!! info "Pipeline Framing & Characteristics"
+    While the ALU core datapath is **purely combinational**, in the 7-stage Crab Core it is framed by two physical pipeline registers: **`R_DISP_EX`** (Stage 5/6 boundary) on the input, and **`R_EX_WB`** (Stage 6/7 boundary) on the output. This provides clean clock isolation, a **1-cycle execution latency**, and supports **0-stall EX-to-EX forwarding (Tap 1 bypass)** directly back to the Dispatch stage.
 
 ## 3. Architectural Requirements
 
@@ -80,13 +81,13 @@ For instructions with the `W` suffix (`ADDW`, `SUBW`, `SLLW`, `SRLW`, `SRAW`):
 
 ## 6. Timing and Performance
 
-Since the module is combinational, it has 0-cycle latency.
+The ALU datapath executes within **1 clock cycle** (Stage 6), reading from the `R_DISP_EX` pipeline register and driving the `R_EX_WB` pipeline register.
 
-!!! note "0-Cycle Combinational Bypass"
-    To avoid pipeline stalls on back-to-back dependent ALU instructions, the raw output `result_o` is routed directly back to the dispatcher's execution operands via a **0-cycle combinational bypass**.
+!!! note "0-Stall EX-to-EX Forwarding (Tap 1 Bypass)"
+    To avoid pipeline stalls on back-to-back dependent ALU instructions, the raw combinational output `result_o` is routed directly back to the Dispatcher's operand multiplexers via **Tap 1 EX-to-EX forwarding** (prior to the `R_DISP_EX` input register). This ensures continuous execution with $IPC = 1.0$ and 0 stall penalty for ALU-to-ALU dependencies.
 
 !!! info "Stalling & Buffer Isolation"
-    Because the ALU is stateless, it does not implement any `disp_` (dispatch) or `wb_` (writeback) handshake signals and cannot stall internally. Any stalling of ALU operations or buffering of their results is managed externally by the pipeline dispatcher and the Writeback Buffer.
+    Because the ALU core datapath is combinational, it does not implement internal state machines. Pipeline stalling and holding of ALU results are managed externally by the pipeline registers (`R_DISP_EX`, `R_EX_WB`), the Dispatch controller, and the Stage 7 Writeback Arbiter.
 
 !!! warning "Critical Path"
     Probable critical paths: <br/>
