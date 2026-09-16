@@ -1,6 +1,10 @@
+// Copyright (c) 2026 AGH University of Krakow
+// Developed by AGH Logic Unit
+// SPDX-License-Identifier: Apache-2.0
+
 package fpu_pkg;
   // Exception flags
-  typedef struct {
+  typedef struct packed {
     logic NV;
     logic DZ;
     logic OF;
