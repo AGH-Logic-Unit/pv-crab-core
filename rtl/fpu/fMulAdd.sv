@@ -20,10 +20,12 @@ module fMulAdd #(
   logic  [  (EXP_WIDTH+SIG_WIDTH):0] add_out_rec;
   logic  [  (EXP_WIDTH+SIG_WIDTH):0] mul_out_rec;
   logic  [  (EXP_WIDTH+SIG_WIDTH):0] madd_out_rec;
+  logic  [  (EXP_WIDTH+SIG_WIDTH):0] neg_madd_out_rec;
 
   flag_t                             add_exc;
   flag_t                             mul_exc;
   flag_t                             madd_exc;
+  flag_t                             neg_madd_exc;
 
   logic  [  (EXP_WIDTH+SIG_WIDTH):0] out_rec_sel;
   logic  [(EXP_WIDTH+SIG_WIDTH-1):0] out_ieee_sel;
@@ -74,6 +76,22 @@ module fMulAdd #(
     .exceptionFlags(madd_exc)
   );  //mulAddRecFN
 
+  // Compute the non-negated operation first for FNMSUB/FNMADD.  Negating
+  // the final result preserves the IEEE sign of an exact zero.
+  mulAddRecFN #(
+    .expWidth(11),
+    .sigWidth(53)
+  ) m_neg_muladd (
+    .control       (`flControl_tininessAfterRounding),
+    .op            (fpu_i.operator_i == FNMSUB ? 2'b01 : 2'b00),
+    .a             (a_rec),
+    .b             (b_rec),
+    .c             (c_rec),
+    .roundingMode  (fpu_i.rm_i),
+    .out           (neg_madd_out_rec),
+    .exceptionFlags(neg_madd_exc)
+  );
+
   addRecFN #(
     .expWidth(11),
     .sigWidth(53)
@@ -113,8 +131,14 @@ module fMulAdd #(
         exc_sel     = mul_exc;
       end
       FMADD, FMSUB, FNMSUB, FNMADD: begin
-        out_rec_sel = madd_out_rec;
-        exc_sel     = madd_exc;
+        if (fpu_i.operator_i == FNMSUB || fpu_i.operator_i == FNMADD) begin
+          out_rec_sel                      = neg_madd_out_rec;
+          out_rec_sel[EXP_WIDTH+SIG_WIDTH] = ~neg_madd_out_rec[EXP_WIDTH+SIG_WIDTH];
+          exc_sel                          = neg_madd_exc;
+        end else begin
+          out_rec_sel = madd_out_rec;
+          exc_sel     = madd_exc;
+        end
       end
       default: begin
         out_rec_sel = '0;
