@@ -50,6 +50,10 @@ softfloat.f64_mulAdd.argtypes = [
 ]
 softfloat.f64_mulAdd.restype = ctypes.c_uint64
 
+softfloat_rounding_mode = ctypes.c_ubyte.in_dll(
+    softfloat, "softfloat_roundingMode"
+)
+
 ###################################
 ##### float-64 expected funcs #####
 ###################################
@@ -63,7 +67,14 @@ def softfloat_mul(a, b):
 def softfloat_mulAdd(a, b, c):
     return softfloat.f64_mulAdd(a, b, c)
 
-def softfloat_expected(a, b, c, op):
+
+def negate_float(value):
+    return value ^ 0x8000000000000000
+
+
+def softfloat_expected(a, b, c, op, rm):
+    softfloat_rounding_mode.value = rm
+
     match op:
         case 0:
             expected = softfloat_add(a, b)
@@ -74,15 +85,15 @@ def softfloat_expected(a, b, c, op):
         case 4:
             expected = softfloat_mulAdd(a, b, c)
         case 5:
-            c = softfloat_sub(0, c)
+            c = negate_float(c)
             expected = softfloat_mulAdd(a, b, c)
         case 6:
-            c = softfloat_sub(0, c)
+            c = negate_float(c)
             expected = softfloat_mulAdd(a, b, c)
-            expected = softfloat_sub(0, expected)
+            expected = negate_float(expected)
         case 7:
             expected = softfloat_mulAdd(a, b, c)
-            expected = softfloat_sub(0, expected)
+            expected = negate_float(expected)
         case _:
             raise ValueError(f"Unsupported fMulAdd opcode: {op}")
     return expected
@@ -104,21 +115,24 @@ SPECIAL_VALUES = [
 range_relation = lambda val_, bin_: bin_[0] <= val_ <= bin_[1]
 OPCODES = [0, 1, 2, 4, 5, 6, 7]
 OPCODE_LABELS = ["FADD", "FSUB", "FMUL", "FMADD", "FMSUB", "FNMSUB", "FNMADD"]
+ROUNDING_MODES = [0,1,2,3,4,6]
+ROUNDING_MODE_LABELS = ["ROUND_NEAR_EVEN", "ROUND_NEAR_MAXMAG", "ROUND_MINMAG", "ROUND_MIN", "ROUND_MAX", "ROUND_ODD"]
 OPERAND_BINS = [
     (0x0000000000000000, 0x7FFFFFFFFFFFFFFF),
     (0x8000000000000000, 0xFFFFFFFFFFFFFFFF),
 ]
-
-@CoverPoint("top.op", xf=lambda a, b, c, op: op,
+@CoverPoint("top.rm", xf=lambda a, b, c, op, rm: rm,
+            bins=ROUNDING_MODES, bins_labels=ROUNDING_MODE_LABELS)
+@CoverPoint("top.op", xf=lambda a, b, c, op, rm: op,
             bins=OPCODES, bins_labels=OPCODE_LABELS)
-@CoverPoint("top.a_val", xf=lambda a, b, c, op: a, bins=OPERAND_BINS,
+@CoverPoint("top.a_val", xf=lambda a, b, c, op, rm: a, bins=OPERAND_BINS,
             bins_labels=["positive", "negative"], rel=range_relation)
-@CoverPoint("top.b_val", xf=lambda a, b, c, op: b, bins=OPERAND_BINS,
+@CoverPoint("top.b_val", xf=lambda a, b, c, op, rm: b, bins=OPERAND_BINS,
             bins_labels=["positive", "negative"], rel=range_relation)
-@CoverPoint("top.c_val", xf=lambda a, b, c, op: c, bins=OPERAND_BINS,
+@CoverPoint("top.c_val", xf=lambda a, b, c, op, rm: c, bins=OPERAND_BINS,
             bins_labels=["positive", "negative"], rel=range_relation)
-@CoverCross("top.op_cross_a_b_c", items=["top.op", "top.a_val", "top.b_val", "top.c_val"])
-def sample_coverage(a, b, c, op):
+@CoverCross("top.op_cross_a_b_c", items=["top.op", "top.a_val", "top.b_val", "top.c_val", "top.rm"])
+def sample_coverage(a, b, c, op, rm):
     pass
 
 # --- Stimulus Generation Helper ---
@@ -171,6 +185,7 @@ async def mulAdd_functional_verif(dut):
 
     expected_q = queue.Queue()
     op_q = queue.Queue()
+    rm_q = queue.Queue()
 
     dut.rst_ni.value = 0
     await RisingEdge(dut.clk_i)
@@ -182,13 +197,15 @@ async def mulAdd_functional_verif(dut):
         b = get_random_operand()
         c = get_random_operand()
         op = random.choice(OPCODES)
-        sample_coverage(a, b, c, op)
+        rm = random.choice(ROUNDING_MODES)
+        sample_coverage(a, b, c, op, rm)
 
         # Drive the design
         dut.operand_a_i.value = a
         dut.operand_b_i.value = b
         dut.operand_c_i.value = c
         dut.opcode_i.value = op
+        dut.rm_i.value = rm
 
         # Wait for Rising Edge
         await RisingEdge(dut.clk_i)
@@ -196,20 +213,23 @@ async def mulAdd_functional_verif(dut):
 
         res = int(dut.result_o.value)
         result_valid = int(dut.result_valid_o.value)
-        expected_q.put(softfloat_expected(a, b, c, op))
+        expected_q.put(softfloat_expected(a, b, c, op, rm))
         op_q.put(op_string(op))
+        rm_q.put(rm)
 
         if result_valid:
             expected = expected_q.get()
             op_str = op_q.get()
+            result_rm = rm_q.get()
+            rm_name = ROUNDING_MODE_LABELS[ROUNDING_MODES.index(result_rm)]
 
             if results_match(res, expected):
                 matches += 1
                 # Log matches at debug level to keep logs clean, or info for small tests
-                log.debug(f"Match: {a:#x} {op_str[0]} {b:#x} {op_str[1]} {c:#x} = {res:#x}")
+                log.debug(f"Match: rm={rm_name}({result_rm}) {a:#x} {op_str[0]} {b:#x} {op_str[1]} {c:#x} = {res:#x}")
             else:
                 mismatches += 1
-                log.error(f"Mismatch at iteration {i}: {a:#x} {op_str[0]} {b:#x} {op_str[1]} {c:#x} (Result: {res:#x} Expected: {expected:#x})")
+                log.error(f"Mismatch at iteration {i}: rm={rm_name}({result_rm}) {a:#x} {op_str[0]} {b:#x} {op_str[1]} {c:#x} (Result: {res:#x} Expected: {expected:#x})")
 
 # Print results summary
     log.info("==================================================")
