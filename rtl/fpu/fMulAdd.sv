@@ -164,9 +164,17 @@ module fMulAdd #(
   logic         [(EXP_WIDTH+SIG_WIDTH-1):0] result_pipe [MULADD_LAT];
   flag_t                                    flag_pipe   [MULADD_LAT];
   exe_headers_t                             headers_pipe[MULADD_LAT];
+  logic                                     ready_pipe  [MULADD_LAT];
 
   // Backpressure
-  assign fpu_i.disp_ready_o = fpu_i.wb_ready_i;
+  assign ready_pipe[MULADD_LAT-1] = !valid_pipe[MULADD_LAT-1] | fpu_i.wb_ready_i;
+  genvar g;
+  generate
+    for (g = MULADD_LAT - 2; g >= 0; g--) begin : gen_ready_pipe
+      assign ready_pipe[g] = !valid_pipe[g] | ready_pipe[g+1];
+    end
+  endgenerate
+  assign fpu_i.disp_ready_o = ready_pipe[0];
 
   // Pipeline process
   integer i;
@@ -178,18 +186,21 @@ module fMulAdd #(
         flag_pipe[i]    <= '0;
         headers_pipe[i] <= '0;
       end
-    end else if (fpu_i.wb_ready_i) begin
+    end else begin
       for (i = MULADD_LAT - 1; i > 0; i--) begin
-        valid_pipe[i]   <= valid_pipe[i-1];
-        result_pipe[i]  <= result_pipe[i-1];
-        flag_pipe[i]    <= flag_pipe[i-1];
-        headers_pipe[i] <= headers_pipe[i-1];
+        if (ready_pipe[i]) begin
+          valid_pipe[i]   <= valid_pipe[i-1];
+          result_pipe[i]  <= result_pipe[i-1];
+          flag_pipe[i]    <= flag_pipe[i-1];
+          headers_pipe[i] <= headers_pipe[i-1];
+        end
       end
-
-      valid_pipe[0]   <= fpu_i.disp_valid_i;
-      result_pipe[0]  <= out_ieee_sel;
-      flag_pipe[0]    <= exc_sel;
-      headers_pipe[0] <= fpu_i.disp_headers_i;
+      if (ready_pipe[0]) begin
+        valid_pipe[0]   <= fpu_i.disp_valid_i;
+        result_pipe[0]  <= out_ieee_sel;
+        flag_pipe[0]    <= exc_sel;
+        headers_pipe[0] <= fpu_i.disp_headers_i;
+      end
     end
   end
 

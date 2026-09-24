@@ -226,10 +226,10 @@ async def mulAdd_functional_verif(dut):
             if results_match(res, expected):
                 matches += 1
                 # Log matches at debug level to keep logs clean, or info for small tests
-                log.debug(f"Match: rm={rm_name}({result_rm}) {a:#x} {op_str[0]} {b:#x} {op_str[1]} {c:#x} = {res:#x}")
+                log.debug(f"Match: rm={rm_name} {a:#x} {op_str[0]} {b:#x} {op_str[1]} {c:#x} = {res:#x}")
             else:
                 mismatches += 1
-                log.error(f"Mismatch at iteration {i}: rm={rm_name}({result_rm}) {a:#x} {op_str[0]} {b:#x} {op_str[1]} {c:#x} (Result: {res:#x} Expected: {expected:#x})")
+                log.error(f"Mismatch at iteration {i}: rm={rm_name} {a:#x} {op_str[0]} {b:#x} {op_str[1]} {c:#x} (Result: {res:#x} Expected: {expected:#x})")
 
 # Print results summary
     log.info("==================================================")
