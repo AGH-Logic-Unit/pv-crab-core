@@ -179,7 +179,7 @@ module fMulAdd #(
   // Pipeline process
   integer i;
   always_ff @(posedge fpu_i.clk_i or negedge fpu_i.rst_ni) begin
-    if (!fpu_i.rst_ni) begin
+    if (!fpu_i.rst_ni | fpu_i.flush_i) begin
       for (i = 0; i <= MULADD_LAT - 1; i++) begin
         valid_pipe[i]   <= 1'b0;
         result_pipe[i]  <= '0;

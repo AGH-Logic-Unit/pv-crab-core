@@ -54,6 +54,10 @@ softfloat_rounding_mode = ctypes.c_ubyte.in_dll(
     softfloat, "softfloat_roundingMode"
 )
 
+softfloat_exceptionFlags = ctypes.c_ubyte.in_dll(
+    softfloat, "softfloat_exceptionFlags"
+)
+
 ###################################
 ##### float-64 expected funcs #####
 ###################################
@@ -66,7 +70,8 @@ def softfloat_mul(a, b):
     return softfloat.f64_mul(a, b)
 def softfloat_mulAdd(a, b, c):
     return softfloat.f64_mulAdd(a, b, c)
-
+def getExceptionFlags():
+    return softfloat_exceptionFlags.value
 
 def negate_float(value):
     return value ^ 0x8000000000000000
@@ -74,6 +79,7 @@ def negate_float(value):
 
 def softfloat_expected(a, b, c, op, rm):
     softfloat_rounding_mode.value = rm
+    softfloat_exceptionFlags.value = 0
 
     match op:
         case 0:
@@ -96,7 +102,7 @@ def softfloat_expected(a, b, c, op, rm):
             expected = negate_float(expected)
         case _:
             raise ValueError(f"Unsupported fMulAdd opcode: {op}")
-    return expected
+    return expected, getExceptionFlags()
 
 ##########################
 ##### Coverage model #####
@@ -212,24 +218,27 @@ async def mulAdd_functional_verif(dut):
         await ReadWrite()
 
         res = int(dut.result_o.value)
+        resFlags = int(dut.wb_fflags_o.value)
         result_valid = int(dut.result_valid_o.value)
         expected_q.put(softfloat_expected(a, b, c, op, rm))
         op_q.put(op_string(op))
         rm_q.put(rm)
 
         if result_valid:
-            expected = expected_q.get()
+            expected, expFlags = expected_q.get()
             op_str = op_q.get()
             result_rm = rm_q.get()
             rm_name = ROUNDING_MODE_LABELS[ROUNDING_MODES.index(result_rm)]
 
-            if results_match(res, expected):
+            if results_match(res, expected) and expFlags == resFlags:
                 matches += 1
                 # Log matches at debug level to keep logs clean, or info for small tests
                 log.debug(f"Match: rm={rm_name} {a:#x} {op_str[0]} {b:#x} {op_str[1]} {c:#x} = {res:#x}")
             else:
                 mismatches += 1
                 log.error(f"Mismatch at iteration {i}: rm={rm_name} {a:#x} {op_str[0]} {b:#x} {op_str[1]} {c:#x} (Result: {res:#x} Expected: {expected:#x})")
+                log.error(f"Flags: (Result: {resFlags} Expected: {expFlags})")
+
 
 # Print results summary
     log.info("==================================================")
