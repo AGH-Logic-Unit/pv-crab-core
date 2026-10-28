@@ -13,70 +13,70 @@ import logging
 # --- Functional Coverage Model ---
 range_relation = lambda val_, bin_: bin_[0] <= val_ <= bin_[1]
 
-@CoverPoint("operator_i", xf=lambda a, b, op: op,
+@CoverPoint("alu.operator_i", xf=lambda a, b, op: op,
   bins = [
     "ADD","SUB","AND","OR","XOR",
     "SLL","SRL","SRA","SLT","SLTU",
     "ADDW","SUBW","SLLW","SRLW","SRAW"
   ],
-  bin_labels = [
+  bins_labels = [
     "ADD","SUB","AND","OR","XOR",
     "SLL","SRL","SRA","SLT","SLTU",
     "ADDW","SUBW","SLLW","SRLW","SRAW"
   ])
 
-@CoverPoint("operand_a",xf=lambda a, b, op: a, bins=[
+@CoverPoint("alu.operand_a",xf=lambda a, b, op: a, bins=[
     (0x0000000000000000, 0x0000000000000000),
     (0x0000000000000001, 0x7FFFFFFFFFFFFFFF),
     (0x8000000000000000, 0xFFFFFFFFFFFFFFFE),
     (0xFFFFFFFFFFFFFFFF,0xFFFFFFFFFFFFFFFF)
-],bin_labels = ["zero","positive", "negative", "max"],rel = range_relation)
+],bins_labels = ["zero","positive", "negative", "max"],rel = range_relation)
 
-@CoverPoint("operand_b",xf=lambda a, b, op: b, bins=[
+@CoverPoint("alu.operand_b",xf=lambda a, b, op: b, bins=[
     (0x0000000000000000, 0x0000000000000000),
     (0x0000000000000001, 0x7FFFFFFFFFFFFFFF),
     (0x8000000000000000, 0xFFFFFFFFFFFFFFFE),
     (0xFFFFFFFFFFFFFFFF,0xFFFFFFFFFFFFFFFF)
-],bin_labels = ["zero","positive", "negative", "max"],rel = range_relation)
+],bins_labels = ["zero","positive", "negative", "max"],rel = range_relation)
 
-@CoverPoint("operand_a_word",xf=lambda a, b, op: a & 0xFFFFFFFF, bins=[
+@CoverPoint("alu.operand_a_word",xf=lambda a, b, op: a & 0xFFFFFFFF, bins=[
     (0x00000000, 0x00000000),
     (0x00000001, 0x7FFFFFFF),
     (0x80000000, 0xFFFFFFFE),
     (0xFFFFFFFF, 0xFFFFFFFF)
-],bin_labels = ["zero","positive", "negative", "max"],rel = range_relation)
+],bins_labels = ["zero","positive", "negative", "max"],rel = range_relation)
 
-@CoverPoint("operand_b_word",xf=lambda a, b, op: b & 0xFFFFFFFF, bins=[
+@CoverPoint("alu.operand_b_word",xf=lambda a, b, op: b & 0xFFFFFFFF, bins=[
     (0x00000000, 0x00000000),
     (0x00000001, 0x7FFFFFFF),
     (0x80000000, 0xFFFFFFFE),
     (0xFFFFFFFF, 0xFFFFFFFF)
-],bin_labels = ["zero","positive", "negative", "max"],rel = range_relation)
+],bins_labels = ["zero","positive", "negative", "max"],rel = range_relation)
 
-@CoverPoint("shift_amount_64", xf=lambda a, b, op: (b & 0x3F) if op in ["SLL", "SRL", "SRA"] else -1,
+@CoverPoint("alu.shift_amount_64", xf=lambda a, b, op: (b & 0x3F) if op in ["SLL", "SRL", "SRA"] else -1,
     bins=[
         (0,0), (1,1), (2,30),
         (31,31), (32,62), (63,63)
-], bin_labels = ["zero", "one", "low", "bit31", "high", "max"],rel = range_relation)
+], bins_labels = ["zero", "one", "low", "bit31", "high", "max"],rel = range_relation)
 
-@CoverPoint("shift_amount_32", xf=lambda a, b, op: (b & 0x1F) if op in ["SLLW", "SRLW", "SRAW"] else -1,
+@CoverPoint("alu.shift_amount_32", xf=lambda a, b, op: (b & 0x1F) if op in ["SLLW", "SRLW", "SRAW"] else -1,
     bins=[
         (0,0), (1,1), (2,14),
         (15,15), (16,30), (31,31)
-], bin_labels = ["zero", "one", "low", "bit15", "high", "max"],rel = range_relation)
+], bins_labels = ["zero", "one", "low", "bit15", "high", "max"],rel = range_relation)
 
 
-@CoverCross("top.cross_64bit", items=["top.operator_i", "top.operand_a", "top.operand_b"],
+@CoverCross("alu.cross_64bit", items=["alu.operator_i", "alu.operand_a", "alu.operand_b"],
     ign_bins={"operator_i": ["ADDW", "SUBW", "SLLW", "SRLW", "SRAW"]})
 def sample_64bit(a, b, op):
     pass
 
-@CoverCross("top.cross_word", items=["top.operator_i", "top.operand_a_word", "top.operand_b_word"],
+@CoverCross("alu.cross_word", items=["alu.operator_i", "alu.operand_a_word", "alu.operand_b_word"],
     ign_bins={"operator_i": ["ADD", "SUB", "AND", "OR", "XOR", "SLL", "SRL", "SRA", "SLT", "SLTU"]})
 def sample_word(a, b, op):
     pass
 
-@CoverCross("top.cross_shift_64", items=["top.operator_i", "top.shift_amount_64"],
+@CoverCross("alu.cross_shift_64", items=["alu.operator_i", "alu.shift_amount_64"],
     ign_bins={"operator_i": [
         "ADD", "SUB", "AND", "OR", "XOR", "SLT", "SLTU",
         "ADDW", "SUBW", "SLLW", "SRLW", "SRAW"
@@ -84,13 +84,21 @@ def sample_word(a, b, op):
 def sample_shift_cross_64(a, b, op):
     pass
 
-@CoverCross("top.cross_shift_32", items=["top.operator_i", "top.shift_amount_32"],
+@CoverCross("alu.cross_shift_32", items=["alu.operator_i", "alu.shift_amount_32"],
     ign_bins={"operator_i": [
         "ADD", "SUB", "AND", "OR", "XOR", "SLT", "SLTU",
         "ADDW", "SUBW", "SLL", "SRL", "SRA"
     ]})
 def sample_shift_cross_32(a, b, op):
     pass
+
+
+def sample_coverage(a: int, b: int, op: str):
+
+    sample_64bit(a, b, op)
+    sample_word(a, b, op)
+    sample_shift_cross_64(a, b, op)
+    sample_shift_cross_32(a, b, op)
 
 # --- Scenario Definitions ---
 
@@ -193,8 +201,9 @@ def get_z3_stimulus(scenario_name: str | None = None) -> tuple[int, int, str]:
         s.add(Extract(31, 0, a_bv) == rand_a)
         s.add(Extract(31, 0, b_bv) > 0)
         s.add(Extract(31, 0, b_bv) <= 0x7FFFFFFF)
-        sum_32 = s.add(Extract(31, 0, a_bv + b_bv) >= 0x80000000)
-        s.add(Extract(31, 31, sum_32) == 1)  # MSB of the result is 1, indicating signed overflow
+        sum_32 = Extract(31, 0, a_bv + b_bv)
+        s.add(sum_32 >= 0x80000000)
+        s.add(Extract(31, 31, sum_32) == 1) # MSB of the result is 1, indicating signed overflow
 
     elif scenario_name == "ADDW_LOW32_OVERFLOW":
         # Lower 32 bits exceed 0xFFFFFFFF (wrap around to zero)
@@ -344,9 +353,15 @@ def get_z3_stimulus(scenario_name: str | None = None) -> tuple[int, int, str]:
     # ========================================================
     if s.check() != sat:
         raise RuntimeError(
-        f"Unsat stimulus constraints for scenario: {scenario_name}"
-    )
+            f"Unsat stimulus constraints for scenario: {scenario_name}"
+        )
     else:
-        # Fallback in case of invalid constraints
         model = s.model()
-        return model[a_bv].as_long(), model[b_bv].as_long(), op
+
+        a_val = model[a_bv]
+        b_val = model[b_bv]
+
+        a_long = a_val.as_long() if a_val is not None else random.randint(0, 0xFFFFFFFFFFFFFFFF)
+        b_long = b_val.as_long() if b_val is not None else random.randint(0, 0xFFFFFFFFFFFFFFFF)
+
+        return a_long, b_long, op

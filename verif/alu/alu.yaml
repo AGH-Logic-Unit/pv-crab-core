@@ -1,0 +1,7 @@
+config:
+  name: "alu_sanity"
+
+tests:
+  - name: "z3"
+    module: tb_alu
+    toplevel: alu
