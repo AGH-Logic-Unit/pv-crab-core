@@ -1,47 +1,46 @@
+# Copyright (c) 2026 AGH University of Krakow
+# Developed by AGH Logic Unit
+# SPDX-License-Identifier: Apache-2.0
+
 default_install_hook_types:
   - pre-commit
-  - commit-msg
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
-      - id: trailing-whitespace   # remove trailing whitespaces
-      - id: end-of-file-fixer     # empty line at EOL
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
       - id: check-yaml
-      - id: check-added-large-files # block large files
+      - id: check-added-large-files
+        args: ['--maxkb=10000']
 
-  - repo: https://github.com/compilerla/conventional-pre-commit
-    rev: v4.4.0
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.10
     hooks:
-      - id: conventional-pre-commit
-        stages: [commit-msg]
-        args:
-          - --strict
-          - --scopes
-          - alu,lsu,fpu,mul,div,core
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
 
   - repo: local
     hooks:
-    - id: check-license
-      name: Check license headers
-      entry: python scripts/check_license.py
-      language: python
-      files: \.(sv|v|svh|vh|py)$
-      exclude: ^vendor/
+      - id: check-license
+        name: Check license headers
+        entry: python scripts/check_license.py
+        language: python
+        files: \.(sv|v|svh|vh|py)$
+        exclude: ^vendor/
 
-    - id: verible-format
-      name: Verible verilog format
-      entry: verible-verilog-format
-      language: system
-      types_or: [verilog, system-verilog]
-      args: [--flagfile, .rules.verible_format, --inplace]
+      - id: verible-format
+        name: Verible verilog format
+        entry: verible-verilog-format
+        language: system
+        types_or: [verilog, system-verilog]
+        args: [--flagfile, .rules.verible_format, --inplace]
 
-  - repo: local
-    hooks:
-    - id: verible-lint
-      name: Verible verilog lint
-      entry: verible-verilog-lint
-      language: system
-      types_or: [verilog, system-verilog]
-      args: [--rules_config, .rules.verible_lint]
+      - id: verible-lint
+        name: Verible verilog lint
+        entry: verible-verilog-lint
+        language: system
+        types_or: [verilog, system-verilog]
+        args: [--rules_config, .rules.verible_lint]
