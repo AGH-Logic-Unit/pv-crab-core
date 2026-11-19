@@ -3,9 +3,8 @@
 # Developed by AGH Logic Unit
 # SPDX-License-Identifier: Apache-2.0
 
-import os
 import sys
-
+import os
 
 def check_file(filepath):
     # Pomiń foldery i nieistniejące pliki
@@ -15,21 +14,20 @@ def check_file(filepath):
     # Całkowicie omiń pliki vendora (zezwalamy na brak naszej licencji w kodzie zewnętrznym)
     normalized_path = os.path.normpath(filepath)
     path_parts = normalized_path.split(os.sep)
-    if "vendor" in path_parts:
+    if 'vendor' in path_parts:
         return True
 
     # Sprawdź sygnaturę licencyjną w pierwszych 1000 znakach pliku
     try:
-        with open(filepath, encoding="utf-8", errors="ignore") as f:
+        with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
             header = f.read(1000)
-            if "SPDX-License-Identifier: Apache-2.0" in header:
+            if 'SPDX-License-Identifier: Apache-2.0' in header:
                 return True
     except Exception as e:
         print(f"Error reading {filepath}: {e}")
         return False
 
     return False
-
 
 def main():
     files_to_check = sys.argv[1:]
@@ -60,6 +58,5 @@ def main():
     print("All checked files have correct SPDX-License-Identifier headers.")
     sys.exit(0)
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
