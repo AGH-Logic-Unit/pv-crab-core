@@ -1,56 +1,68 @@
 {
-    "name": "Pulsar-V Crab Core",
-    "image": "ghcr.io/agh-logic-unit/pv-crab-core:main",
-    "imagePullPolicy": "always",
-    "initializeCommand": "docker pull ghcr.io/agh-logic-unit/pv-crab-core:main || true",
-    "remoteUser": "vscode",
-    "customizations": {
-        "vscode": {
-            "settings": {
-                "files.associations": {
-                    "*.sv": "systemverilog",
-                    "*.svh": "systemverilog",
-                    "*.v": "verilog",
-                    "*.vh": "verilog"
-                },
-                "python.defaultInterpreterPath": "/home/vscode/venv/bin/python3",
-                "editor.formatOnSave": true,
-                "editor.detectIndentation": false,
-                "verilog.linting.linter": "verible-verilog-lint",
-                "verilog.linting.veribleVerilogLint.path": "/usr/local/bin/verible-verilog-lint",
-                "verilog.linting.veribleVerilogLint.arguments": "--rules_config .rules.verible_lint",
-                "verilog.formatting.verilogHDL.formatter": "verible-verilog-format",
-                "verilog.formatting.veribleVerilogFormatter.path": "/usr/local/bin/verible-verilog-format",
-                "verilog.formatting.veribleVerilogFormatter.arguments": "--flagfile=.rules.verible_format",
-                "verilog.languageServer.name": "svlangserver",
-                "verilog.languageServer.svlangserver.path": "/usr/local/bin/svlangserver",
-                "svlangserver.settings.includeIndexing": ["**/*.sv", "**/*.svh", "**/*.v", "**/*.vh"],
-                "svlangserver.settings.excludeIndexing": ["output/**", "regression/**", ".cache/**", "site/**", "docs/**", "scripts/**"],
-                "[verilog]": {
-                    "editor.defaultFormatter": "mshr-h.veriloghdl",
-                    "editor.formatOnSave": true,
-                    "editor.insertSpaces": true,
-                    "editor.tabSize": 2
-                },
-                "[systemverilog]": {
-                    "editor.defaultFormatter": "mshr-h.veriloghdl",
-                    "editor.formatOnSave": true,
-                    "editor.insertSpaces": true,
-                    "editor.tabSize": 2
-                }
-            },
-            "extensions": [
-                "mshr-h.veriloghdl",
-                "surfer-project.surfer",
-                "ms-python.python",
-                "tamasfe.even-better-toml",
-                "eamodio.gitlens"
-            ]
+  "name": "AGH Logic Unit - Crab Core (Digital UDE)",
+  "image": "ghcr.io/agh-logic-unit/alu-rtl:latest",
+  "imagePullPolicy": "always",
+  "initializeCommand": "docker pull ghcr.io/agh-logic-unit/alu-rtl:latest || true",
+  "remoteUser": "vscode",
+  "mounts": [
+    "source=alu-ccache-vol,target=/home/vscode/.cache/ccache,type=volume",
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh-host,type=bind,readonly"
+  ],
+  "containerEnv": {
+    "CCACHE_DIR": "/home/vscode/.cache/ccache",
+    "VERILATOR_CCACHE": "1",
+    "PATH": "/opt/alu-venv/bin:/usr/local/bin:/usr/bin:/bin"
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "files.associations": {
+          "*.sv": "systemverilog",
+          "*.svh": "systemverilog",
+          "*.v": "verilog",
+          "*.vh": "verilog"
+        },
+        "python.defaultInterpreterPath": "/opt/alu-venv/bin/python3",
+        "editor.formatOnSave": true,
+        "editor.rulers": [100, 120],
+
+        "systemverilog.compilerType": "slang",
+        "systemverilog.slang.launchPath": "/usr/local/bin/slang",
+
+        "verilog.formatting.verilogHDL.formatter": "verible-verilog-format",
+        "verilog.formatting.veribleVerilogFormatter.path": "/usr/local/bin/verible-verilog-format",
+        "verilog.formatting.veribleVerilogFormatter.arguments": "--flagfile=.rules.verible_format",
+
+        "[systemverilog]": {
+          "editor.defaultFormatter": "mshr-h.veriloghdl",
+          "editor.tabSize": 2,
+          "editor.insertSpaces": true
+        },
+        "[verilog]": {
+          "editor.defaultFormatter": "mshr-h.veriloghdl",
+          "editor.tabSize": 2,
+          "editor.insertSpaces": true
+        },
+        "[python]": {
+          "editor.defaultFormatter": "charliermarsh.ruff",
+          "editor.codeActionsOnSave": {
+            "source.fixAll": "explicit",
+            "source.organizeImports": "explicit"
+          }
         }
-    },
-    "mounts": [
-        "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,readonly,consistency=cached"
-    ],
-    "postCreateCommand": "pre-commit install && pre-commit install --hook-type commit-msg",
-    "postAttachCommand": "bash .devcontainer/check.sh"
+      },
+      "extensions": [
+        "MikePopoloski.slang",
+        "mshr-h.veriloghdl",
+        "surfer-project.surfer",
+        "charliermarsh.ruff",
+        "ms-python.python",
+        "llvm-vs-code-extensions.vscode-clangd",
+        "tamasfe.even-better-toml",
+        "eamodio.gitlens",
+        "nefrob.vscode-just-syntax"
+      ]
+    }
+  },
+  "postCreateCommand": "mkdir -p ~/.ssh && (cp -rf ~/.ssh-host/* ~/.ssh/ 2>/dev/null || true) && chmod 700 ~/.ssh 2>/dev/null && chmod 600 ~/.ssh/* 2>/dev/null || true; just --version"
 }
