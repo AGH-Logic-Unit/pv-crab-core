@@ -2,11 +2,14 @@
 # Developed by AGH Logic Unit
 # SPDX-License-Identifier: Apache-2.0
 
+import logging
+import random
+
+from cocotb_coverage.coverage import CoverCross, CoverPoint, coverage_db
+
 import cocotb
 from cocotb.triggers import Timer
-from cocotb_coverage.coverage import CoverPoint, CoverCross, coverage_db
-import random
-import logging
+
 
 # --- Reference Model ---
 def model_addsub(a: int, b: int, op: int) -> int:
@@ -16,33 +19,40 @@ def model_addsub(a: int, b: int, op: int) -> int:
     else:
         return (a - b) & 0xFFFFFFFF
 
+
 # --- Functional Coverage Model ---
-range_relation = lambda val_, bin_: bin_[0] <= val_ <= bin_[1]
+def range_relation(val_, bin_):
+    return bin_[0] <= val_ <= bin_[1]
+
 
 # Define coverpoints for operations and operands
-@CoverPoint("top.op", xf=lambda a, b, op: 1 if op != 0 else 0, bins=[0, 1], bins_labels=["sub", "add"])
-@CoverPoint("top.a_val", xf=lambda a, b, op: a, bins=[
-    (0, 0),
-    (1, 100),
-    (101, 0x7FFFFFFF),
-    (0x80000000, 0xFFFFFFFE),
-    (0xFFFFFFFF, 0xFFFFFFFF)
-], bins_labels=["zero", "small_pos", "large_pos", "negative", "max"], rel=range_relation)
-@CoverPoint("top.b_val", xf=lambda a, b, op: b, bins=[
-    (0, 0),
-    (1, 100),
-    (101, 0x7FFFFFFF),
-    (0x80000000, 0xFFFFFFFE),
-    (0xFFFFFFFF, 0xFFFFFFFF)
-], bins_labels=["zero", "small_pos", "large_pos", "negative", "max"], rel=range_relation)
+@CoverPoint(
+    "top.op", xf=lambda a, b, op: 1 if op != 0 else 0, bins=[0, 1], bins_labels=["sub", "add"]
+)
+@CoverPoint(
+    "top.a_val",
+    xf=lambda a, b, op: a,
+    bins=[(0, 0), (1, 100), (101, 0x7FFFFFFF), (0x80000000, 0xFFFFFFFE), (0xFFFFFFFF, 0xFFFFFFFF)],
+    bins_labels=["zero", "small_pos", "large_pos", "negative", "max"],
+    rel=range_relation,
+)
+@CoverPoint(
+    "top.b_val",
+    xf=lambda a, b, op: b,
+    bins=[(0, 0), (1, 100), (101, 0x7FFFFFFF), (0x80000000, 0xFFFFFFFE), (0xFFFFFFFF, 0xFFFFFFFF)],
+    bins_labels=["zero", "small_pos", "large_pos", "negative", "max"],
+    rel=range_relation,
+)
 # Cross coverage across operation and both operand values
 @CoverCross("top.op_cross_a_b", items=["top.op", "top.a_val", "top.b_val"])
 def sample_coverage(a: int, b: int, op: int):
     """Callback function to record functional coverage metrics"""
     pass
 
+
 # --- Stimulus Generation Helper ---
 SPECIAL_VALS = [0, 1, 2, 0x7FFFFFFF, 0x80000000, 0xFFFFFFFF, 0x55555555, 0xAAAAAAAA]
+
 
 def get_random_operand() -> int:
     """Generate a 32-bit integer targeting representative value ranges and edge cases"""
@@ -59,6 +69,7 @@ def get_random_operand() -> int:
         return 0xFFFFFFFF
     else:
         return random.randint(0, 0xFFFFFFFF)
+
 
 # --- Testbench Entrypoint ---
 @cocotb.test()
@@ -87,13 +98,15 @@ async def run_addsub_test(dut):
         dut.op_i.value = int(op != 0)
 
         # 3. Wait for propagation delay (combinational settling)
-        await Timer(1, units='ns')
+        await Timer(1, units="ns")
 
         # 4. Check for undefined/unresolved values (X/Z) before comparing
-        if not (dut.a_i.value.is_resolvable and
-                dut.b_i.value.is_resolvable and
-                dut.op_i.value.is_resolvable and
-                dut.res_o.value.is_resolvable):
+        if not (
+            dut.a_i.value.is_resolvable
+            and dut.b_i.value.is_resolvable
+            and dut.op_i.value.is_resolvable
+            and dut.res_o.value.is_resolvable
+        ):
             log.warning(f"Iteration {i}: skipped comparison due to unresolved values")
             continue
 
@@ -108,14 +121,16 @@ async def run_addsub_test(dut):
             log.debug(f"Match: {a:#x} {op_str} {b:#x} = {res:#x}")
         else:
             mismatches += 1
-            log.error(f"Mismatch at iteration {i}: {a:#x} {op_str} {b:#x} = {res:#x} (Expected: {expected:#x})")
+            log.error(
+                f"Mismatch at iteration {i}: {a:#x} {op_str} {b:#x} = {res:#x} (Expected: {expected:#x})"
+            )
 
         # 6. Sample functional coverage
         sample_coverage(a, b, op)
 
     # Print results summary
     log.info("==================================================")
-    log.info(f"Test Execution Completed.")
+    log.info("Test Execution Completed.")
     log.info(f"Matches: {matches}")
     log.info(f"Mismatches: {mismatches}")
     log.info("==================================================")
@@ -128,6 +143,7 @@ async def run_addsub_test(dut):
 
     # Export coverage database
     import os
+
     results_dir = os.getenv("RESULTS_DIR", ".")
     cov_path = os.path.join(results_dir, "coverage.xml")
     coverage_db.export_to_xml(cov_path)

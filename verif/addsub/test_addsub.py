@@ -9,6 +9,7 @@ Supports sanity random testing, coverage feedback, and formal Z3 solver verifica
 from pathlib import Path
 
 import pytest
+
 from cocotb_test.simulator import run
 
 TEST_DIR = Path(__file__).resolve().parent
